@@ -1,4 +1,6 @@
-﻿Erdkunde
+﻿Informatik-Projekt:
+
+Erdkunde
 ========
 
 Lernprogramm mit Minispielen

@@ -1,4 +1,3 @@
-Steffen ist doof!
 Erdkunde
 ========
 

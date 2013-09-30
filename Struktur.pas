@@ -38,8 +38,8 @@ end;
 
 procedure TMenue.FormCreate(Sender: TObject);
 begin
-     Themenfarbe1 := RGB(233,169,58);         //Themenfarben können sich durchs ganze
-     Themenfarbe2 := RGB(107,142,35);         //Programm ziehen... (sind noch nicht beschlossen)
+     Themenfarbe1 := RGB(244,164,96);         //Themenfarben können sich durchs ganze
+     Themenfarbe2 := RGB(205,133,63);         //Programm ziehen... (sind noch nicht beschlossen)
      self.DoubleBuffered := true;
 end;
 
@@ -48,8 +48,20 @@ procedure TMenue.FormMouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
 var dif:integer;
 begin
-     if Y < 50 then Cursor := crHandpoint     // Wenn sich die Maus im oberen Bildschirmbereich
-     else Cursor := crDefault;                // befindet, bekommt sie ein Handsymbol
+     if Y < 50 then                              // Wenn sich die Maus im oberen Bildschirmbereich
+     begin
+          Cursor := crHandpoint;                 // befindet, bekommt sie ein Handsymbol und
+          Canvas.Brush.Color := Themenfarbe2;
+          Canvas.Pen.Color   := Themenfarbe2;    // mit Canvas wird der obere Bildschirmbereich
+          Canvas.Rectangle(0,0,ClientWidth,50);  // in der 2. Themenfarbe gefärbt.
+     end else
+     begin                                       // andererseits wird,
+          if Cursor = crHandpoint then           // nur wenn es nicht schon der Fall ist,
+          begin
+               Cursor := crDefault;              // der Maus der Normale Zeiger zugeordnet
+               refresh;                          // und der andersfarbige Bereich wieder gelöscht.
+          end;
+     end;
 
      if Menue.Align = alNone then             // Wenn das Menü-Fenster im verschiebbaren Modus ist,
      begin

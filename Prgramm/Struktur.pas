@@ -13,6 +13,7 @@ type
     Image3: TImage;
     Image4: TImage;
     Image5: TImage;
+    MenueEffekt: TTimer;
     procedure FormPaint(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -21,10 +22,12 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure FormMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure MenuePosition(Radius:integer);
     function Kreisposition_x(Objektnummer:integer;Objektanzahl:integer;
-             Zentrum:TPoint;Radius:integer): integer;
+             Zentrum:TPoint;Radius:real): integer;
     function Kreisposition_y(Objektnummer:integer;Objektanzahl:integer;
-             Zentrum:TPoint;Radius:integer): integer;
+             Zentrum:TPoint;Radius:real): integer;
+    procedure MenueEffektTimer(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -35,22 +38,44 @@ var
   Menue: TMenue;
   Themenfarbe1: TColor;
   Themenfarbe2: TColor;
+  MenuePos:integer = 1;
+  ScreenMitte:TPoint;
 
 implementation
 
 {$R *.DFM}
 
 procedure TMenue.FormPaint(Sender: TObject);
-var i : integer;
-    x,y : integer;
-    ScreenMitte: TPoint;
-    Anzahl:integer;
-    Radius_x,Radius_y : integer;
-    Buttonbreite : integer;
 begin
      Menue.Color := Themenfarbe1;
+end;
 
-     ButtonBreite := Screen.Width div 6;                    // Buttonbreite wird in Abhängigkeit der
+procedure TMenue.FormCreate(Sender: TObject);
+begin
+     Themenfarbe1 := RGB(244,164,96);         //Themenfarben können sich durchs ganze
+     Themenfarbe2 := RGB(205,133,63);         //Programm ziehen... (sind noch nicht beschlossen)
+     self.DoubleBuffered := true;
+
+     ScreenMitte := Point(Screen.Width div 2,Screen.Height div 2);    // Mitte des Screen wird ermittelt
+end;
+
+
+
+procedure TMenue.MenueEffektTimer(Sender: TObject);
+begin
+     inc(MenuePos,3);                 // Timer lässt das Menue aus der Bildschirmmitte erscheinen
+     MenuePosition(MenuePos);
+     if MenuePos >= Screen.Height div 3 then MenueEffekt.Enabled := false;
+end;
+
+procedure TMenue.MenuePosition(Radius:integer);
+var i : integer;
+    x,y : integer;
+    Radius_x,Radius_y : real;
+    Buttonbreite : integer;
+    Anzahl:integer;
+begin
+     ButtonBreite := (3*Radius)div 4;                       // Buttonbreite wird in Abhängigkeit der
      Image1.Width := ButtonBreite;                          // Bildschrimgröße bestimmt
      Image1.Height := ButtonBreite;
      Image2.Width := ButtonBreite;                          // provisorisch habe ich Images als Platzhalter
@@ -62,10 +87,9 @@ begin
      Image5.Width := ButtonBreite;
      Image5.Height := ButtonBreite;
                                                                       // im Folgenden werden die Menüpunkte im Kreis(Ellipse) angeordnet:
-     ScreenMitte := Point(Screen.Width div 2,Screen.Height div 2);    // Mitte des Screen wird ermittelt
-     Anzahl := 5;                                                     // Anzahl der Menüobjekte
-     Radius_x := Screen.Width div 3;                                  // Radius in x-Richtung
-     Radius_y := Screen.Height div 3;                                 // Radius in y-Richtung
+     Radius_x := Radius*(Screen.Width / Screen.Height);               // Radius in x-Richtung
+     Radius_y := Radius;                                              // Radius in y-Richtung
+     Anzahl := 5;
      for i := 1 to Anzahl do
      begin
           x := Kreisposition_x(i,Anzahl,ScreenMitte,Radius_x);        // x- und y-Koordinate für das i-te Objekt wird ermittelt
@@ -96,7 +120,7 @@ begin
 end;
 
 function TMenue.Kreisposition_x(Objektnummer:integer;Objektanzahl:integer;Zentrum:TPoint;
-         Radius:integer) : integer;                            // Parameterübergabe
+         Radius:real) : integer;                            // Parameterübergabe
 var
    RadWinkel  : real;
    x          : integer;
@@ -107,7 +131,7 @@ begin
 end;
 
 function TMenue.Kreisposition_y(Objektnummer:integer;Objektanzahl:integer;Zentrum:TPoint;
-         Radius:integer) : integer;                            // Parameterübergabe
+         Radius:real) : integer;                            // Parameterübergabe
 var
    RadWinkel  : real;
    y          : integer;
@@ -117,24 +141,20 @@ begin
      result := y;
 end;
 
-procedure TMenue.FormCreate(Sender: TObject);
-begin
-     Themenfarbe1 := RGB(244,164,96);         //Themenfarben können sich durchs ganze
-     Themenfarbe2 := RGB(205,133,63);         //Programm ziehen... (sind noch nicht beschlossen)
-     self.DoubleBuffered := true;
-end;
+
+
 
 
 procedure TMenue.FormMouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
 var dif:integer;
 begin
-     if Y < 10 then                              // Wenn sich die Maus im oberen Bildschirmbereich
+     if Y < 20 then                              // Wenn sich die Maus im oberen Bildschirmbereich
      begin
           Cursor := crHandpoint;                 // befindet, bekommt sie ein Handsymbol und
           Canvas.Brush.Color := Themenfarbe2;
           Canvas.Pen.Color   := Themenfarbe2;    // mit Canvas wird der obere Bildschirmbereich
-          Canvas.Rectangle(0,0,ClientWidth,10);  // in der 2. Themenfarbe gefärbt.
+          Canvas.Rectangle(0,0,ClientWidth,20);  // in der 2. Themenfarbe gefärbt.
      end else
      begin                                       // andererseits wird,
           if Cursor = crHandpoint then           // nur wenn es nicht schon der Fall ist,
@@ -191,6 +211,5 @@ begin
           end;
      end;
 end;
-
 
 end.

@@ -4114,4 +4114,10 @@ object Menue: TMenue
       845FFBC0F74CECEEBF1C85D3F7FFD9}
     Stretch = True
   end
+  object MenueEffekt: TTimer
+    Interval = 1
+    OnTimer = MenueEffektTimer
+    Left = 888
+    Top = 64
+  end
 end

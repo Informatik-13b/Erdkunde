@@ -1,6 +1,6 @@
 object Menue: TMenue
-  Left = 429
-  Top = 134
+  Left = 527
+  Top = 194
   Align = alClient
   BorderStyle = bsNone
   ClientHeight = 536
@@ -20,8 +20,8 @@ object Menue: TMenue
   PixelsPerInch = 96
   TextHeight = 13
   object Image1: TImage
-    Left = 24
-    Top = 16
+    Left = -24
+    Top = -32
     Width = 300
     Height = 300
     Picture.Data = {
@@ -4654,8 +4654,8 @@ object Menue: TMenue
     Stretch = True
   end
   object Image2: TImage
-    Left = 24
-    Top = 16
+    Left = 192
+    Top = -16
     Width = 300
     Height = 300
     Picture.Data = {
@@ -9473,8 +9473,8 @@ object Menue: TMenue
     Stretch = True
   end
   object Image3: TImage
-    Left = 24
-    Top = 16
+    Left = 200
+    Top = -16
     Width = 300
     Height = 300
     Picture.Data = {
@@ -14912,8 +14912,8 @@ object Menue: TMenue
     Stretch = True
   end
   object Image4: TImage
-    Left = 24
-    Top = 16
+    Left = 80
+    Top = 40
     Width = 297
     Height = 297
     Picture.Data = {
@@ -18430,7 +18430,7 @@ object Menue: TMenue
   end
   object Image5: TImage
     Left = 24
-    Top = 16
+    Top = 136
     Width = 297
     Height = 297
     Picture.Data = {
@@ -22947,8 +22947,8 @@ object Menue: TMenue
     Stretch = True
   end
   object Image6: TImage
-    Left = 24
-    Top = 16
+    Left = 16
+    Top = 48
     Width = 297
     Height = 297
     Picture.Data = {
@@ -27163,8 +27163,8 @@ object Menue: TMenue
     Stretch = True
   end
   object Image7: TImage
-    Left = 24
-    Top = 16
+    Left = 32
+    Top = 48
     Width = 297
     Height = 297
     Picture.Data = {
@@ -31434,6 +31434,13 @@ object Menue: TMenue
       4500145145001451450014514500145145001451450014514500145145001451
       4500145145001451450014514500145145001451450014514500145145007FFF
       D9}
+    Stretch = True
+  end
+  object ImageScreen: TImage
+    Left = 576
+    Top = 272
+    Width = 105
+    Height = 105
     Stretch = True
   end
   object MenueEffekt: TTimer

@@ -16,6 +16,7 @@ type
     Image5: TImage;
     Image6: TImage;
     Image7: TImage;
+    ImageScreen: TImage;
     procedure FormPaint(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -30,6 +31,7 @@ type
     function Kreisposition_y(Objektnummer:integer;Objektanzahl:integer;
              Zentrum:TPoint;Radius:real): integer;
     procedure MenueEffektTimer(Sender: TObject);
+    procedure Startansicht();
   private
     { Private-Deklarationen }
   public
@@ -50,24 +52,50 @@ implementation
 procedure TMenue.FormPaint(Sender: TObject);
 begin
      Menue.Color := Themenfarbe1;
+     Menue.Startansicht;
 end;
 
 procedure TMenue.FormCreate(Sender: TObject);
 begin
      Themenfarbe1 := RGB(244,164,96);         //Themenfarben können sich durchs ganze
      Themenfarbe2 := RGB(205,133,63);         //Programm ziehen... (sind noch nicht beschlossen)
-     self.DoubleBuffered := true;
-
+     Self.DoubleBuffered := true;
      ScreenMitte := Point(Screen.Width div 2,Screen.Height div 2);    // Mitte des Screen wird ermittelt
 end;
 
+procedure TMenue.Startansicht();
+ var Startscreen: TBitmap;
+     i: Integer;
+  begin
+    ImageScreen.Left := 0;
+    ImageScreen.Top := 0;
+    ImageScreen.Width := Menue.Width;
+    ImageScreen.Height := Menue.Height;
+    Startscreen := TBitmap.Create;
+     Try
+        Startscreen.LoadFromFile('C:\Users\Steffen\Documents\GitHub\Erdkunde\Testbild.bmp');
+        ImageScreen.Picture.Bitmap.Assign(Startscreen);
+      Finally
+         Startscreen.Free;
+      end;
+      ImageScreen.Visible := False;
+      //Sleep(1000);
+   {  For i := 1 to 500 do begin
+     
+       If i = 500 then
+       begin
+          MenueEffekt.Enabled := True;
+          ImageScreen.Visible := False;
+      end;
+      end;   }
+  end;
 
 
 procedure TMenue.MenueEffektTimer(Sender: TObject);
 begin
-     inc(MenuePos,3);                 // Timer lässt das Menue aus der Bildschirmmitte erscheinen
+     Inc(MenuePos,3);                 // Timer lässt das Menue aus der Bildschirmmitte erscheinen
      MenuePosition(MenuePos);
-     if MenuePos >= Screen.Height div 3 then MenueEffekt.Enabled := false;
+     If MenuePos >= Screen.Height div 3 then MenueEffekt.Enabled := False;
 end;
 
 procedure TMenue.MenuePosition(Radius:integer);

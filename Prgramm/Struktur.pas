@@ -12,8 +12,10 @@ type
     Image2: TImage;
     Image3: TImage;
     Image4: TImage;
-    Image5: TImage;
     MenueEffekt: TTimer;
+    Image5: TImage;
+    Image6: TImage;
+    Image7: TImage;
     procedure FormPaint(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -86,10 +88,14 @@ begin
      Image4.Height := ButtonBreite;                         // Programmentwicklung noch ergeben.
      Image5.Width := ButtonBreite;
      Image5.Height := ButtonBreite;
+     Image6.Width := ButtonBreite;
+     Image6.Height := ButtonBreite;
+     Image7.Width := ButtonBreite;
+     Image7.Height := ButtonBreite;
                                                                       // im Folgenden werden die Menüpunkte im Kreis(Ellipse) angeordnet:
      Radius_x := Radius*(Screen.Width / Screen.Height);               // Radius in x-Richtung
      Radius_y := Radius;                                              // Radius in y-Richtung
-     Anzahl := 5;
+     Anzahl := 7;
      for i := 1 to Anzahl do
      begin
           x := Kreisposition_x(i,Anzahl,ScreenMitte,Radius_x);        // x- und y-Koordinate für das i-te Objekt wird ermittelt
@@ -114,6 +120,14 @@ begin
           5: begin
                   Image5.Left := x - ButtonBreite div 2;
                   Image5.Top  := y - ButtonBreite div 2;
+             end;
+          6: begin
+                  Image6.Left := x - ButtonBreite div 2;
+                  Image6.Top  := y - ButtonBreite div 2;
+             end;
+          7: begin
+                  Image7.Left := x - ButtonBreite div 2;
+                  Image7.Top  := y - ButtonBreite div 2;
              end;
           end;
      end;

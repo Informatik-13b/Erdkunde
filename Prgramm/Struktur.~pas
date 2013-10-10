@@ -78,7 +78,6 @@ procedure TMenue.Startansicht();
       Finally
          Startscreen.Free;
       end;
-      Sleep(1000);
       ImageScreen.Visible := False;
       //Sleep(1000);
    {  For i := 1 to 500 do begin

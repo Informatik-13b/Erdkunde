@@ -27,15 +27,24 @@ object Menue: TMenue
     Stretch = True
   end
   object MenueEffekt: TTimer
+    Enabled = False
     Interval = 1
     OnTimer = MenueEffektTimer
     Left = 888
     Top = 64
   end
   object Zoomen: TTimer
+    Enabled = False
     Interval = 1
     OnTimer = ZoomenTimer
     Left = 848
     Top = 64
+  end
+  object TimerStartscreen: TTimer
+    Enabled = False
+    Interval = 40
+    OnTimer = TimerStartscreenTimer
+    Left = 848
+    Top = 112
   end
 end

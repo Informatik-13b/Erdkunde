@@ -11,6 +11,7 @@ type
     MenueEffekt: TTimer;
     ImageScreen: TImage;
     Zoomen: TTimer;
+    TimerStartscreen: TTimer;
     procedure FormPaint(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -25,8 +26,8 @@ type
     function Kreisposition_y(Objektnummer:integer;Objektanzahl:integer;
              Zentrum:TPoint;Radius:real): integer;
     procedure MenueEffektTimer(Sender: TObject);
-    procedure Startansicht();
     procedure ZoomenTimer(Sender: TObject);
+    procedure TimerStartscreenTimer(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -39,7 +40,7 @@ var
   Themenfarbe2: TColor;
   MenuePos:integer = 1;
   ScreenMitte:TPoint;
-
+  ScreenZaehler: Integer;
   MenueObjekt : array[1..10] of TImageBUtton;
 
 implementation
@@ -49,15 +50,16 @@ implementation
 procedure TMenue.FormPaint(Sender: TObject);
 begin
      Menue.Color := Themenfarbe1;
-     Menue.Startansicht;
+
 end;
 
 procedure TMenue.FormCreate(Sender: TObject);
 var i : integer;
-begin
+    Startscreen: TBitmap;
+  begin
      Themenfarbe1 := RGB(244,164,96);         //Themenfarben können sich durchs ganze
      Themenfarbe2 := RGB(205,133,63);         //Programm ziehen... (sind noch nicht beschlossen)
-     Self.DoubleBuffered := true;
+     Self.DoubleBuffered := True;
      ScreenMitte := Point(Screen.Width div 2,Screen.Height div 2);    // Mitte des Screen wird ermittelt
 
      for i := 1 to 5 do
@@ -72,33 +74,10 @@ begin
      MenueObjekt[3].BildLaden('Bilder/Profil-Menüpunkt.gif');
      MenueObjekt[4].BildLaden('Bilder/Spiel-Menüpunkt.gif');
      MenueObjekt[5].BildLaden('Bilder/Titel.gif');
-end;
 
-procedure TMenue.Startansicht();
- var Startscreen: TBitmap;
-     i: Integer;
-  begin
-    ImageScreen.Left := 0;
-    ImageScreen.Top := 0;
-    ImageScreen.Width := Menue.Width;
-    ImageScreen.Height := Menue.Height;
-    Startscreen := TBitmap.Create;
-     Try
-        Startscreen.LoadFromFile('Testbild.bmp');
-        ImageScreen.Picture.Bitmap.Assign(Startscreen);
-      Finally
-         Startscreen.Free;
-      end;
-      ImageScreen.Visible := False;
-      //Sleep(1000);
-   {  For i := 1 to 500 do begin
-     
-       If i = 500 then
-       begin
-          MenueEffekt.Enabled := True;
-          ImageScreen.Visible := False;
-      end;
-      end;   }
+     ImageScreen.BringToFront;     //bringt das Startbild in den Vordergrung
+     ScreenZaehler := 0;           // Zählervariable für den Timer auf Null setzen
+     TimerStartscreen.Enabled := True;     //startet den Timer für den Startscreen
   end;
 
 
@@ -212,23 +191,6 @@ begin
           If MenueObjekt[i].Zoom = true          // Sicherheitsverkleinern: Wenn die Maus wieder auf der Form ist
           then MenueObjekt[i].Zoom := false;     // und das Menüobjekt noch nicht am Verkleinrn ist.
      end;
-
-     // Nur eine Idee. Wollte ausprobieren ob das auch ohne Komponenten geht. Erfolglos!
-
-     {if  (Y > Image1.Top)                    // Wenn der Mauszeiger sich in dem Feld des Bildes befindet
-     and (X > Image1.Left)
-     and (Y < Image1.Top + Image1.Height)
-     and (X < Image1.Left + Image1.Width) then
-     begin
-          Cursor := crHelp;                   // dann soll sich der Zeiger ändern
-     end else
-     begin                                    // In diesem Fall crHelp weil das Programm mit dem Handpointer
-          if Cursor = crHelp then             // und mit dem damit verbundenen Befehl vorher nicht klar kam.
-          begin
-               Cursor := crDefault;
-               refresh;
-          end;
-     end;}
 end;
 
 
@@ -271,5 +233,46 @@ begin
 end;
 
 
+
+procedure TMenue.TimerStartscreenTimer(Sender: TObject);
+ var Startscreen: TBitmap;
+     i,j: Integer;
+  begin
+    Inc(ScreenZaehler);
+    If ScreenZaehler = 1 then
+      begin
+         ImageScreen.Left := 0;
+         ImageScreen.Top := 0;
+         ImageScreen.Width := Menue.Width;
+         ImageScreen.Height := Menue.Height;  //Startbild erscheint auf dem ganzen Schirm
+      end;
+    Startscreen := TBitmap.Create;       //Startscreen wird als TBitmap erzeugt
+     Try
+       Startscreen.LoadFromFile('Testbild.bmp');       //Variable Startscreen wird gefüllt
+       ImageScreen.Picture.Bitmap.Assign(Startscreen); //Startscreen wird angezeigt
+     Finally
+       Startscreen.Free;        //verbindung wird getrennt
+   { If (ScreenZaehler > 100) and (ScreenZaehler < 102) then
+      begin
+         For i:= 0 to ImageScreen.Width - 1 do
+          For j:= 0 to ImageScreen.Height - 1 do
+            begin
+              // ImageScreen.Canvas.pixels [i,j] := clLime;
+            end;}
+    If ScreenZaehler >= 100 then
+      begin
+         MenueEffekt.Enabled := True;      //Timer für das Menü wird aktiviert
+         Zoomen.Enabled := True;          //Timer für das Zoomen wird aktiviert
+         ImageScreen.Visible := False;    //Startbildschirm wird ausgebeldet
+         TimerStartscreen.Enabled := False;
+         For i := 1 to 5 do
+           begin
+              MenueObjekt[i].BringToFront;    //Startimages werden in den Vordergrund gebracht
+           end;
+      end;
+
+  end;
+  end;
+   
 
 end.

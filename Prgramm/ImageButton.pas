@@ -69,8 +69,7 @@ procedure TImageButton.MouseMove(Shift:TShiftState;X,Y:integer);
 var k:integer;
 begin
      inherited MouseMove(Shift,X,Y);
-
-
+     
      if (Pixelfarbe(X+Left,Y+Top) = Themenfarbe1) and     // wenn die Farbe des Pixels unter der Maus
         (Height > k) then Zoom := false;                  // der Themenfarbe entspricht -> Verkleinerungs-Modus
 

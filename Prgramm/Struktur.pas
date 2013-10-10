@@ -211,6 +211,24 @@ begin
      end;
 
      if Menue.Top > (Screen.Height div 6) * 5 then close;  // Sicherheitsschließen
+
+
+     // Nur eine Idee. Wollte ausprobieren ob das auch ohne Komponenten geht. Erfolglos!
+
+     {if  (Y > Image1.Top)                    // Wenn der Mauszeiger sich in dem Feld des Bildes befindet
+     and (X > Image1.Left)
+     and (Y < Image1.Top + Image1.Height)
+     and (X < Image1.Left + Image1.Width) then
+     begin
+          Cursor := crHelp;                   // dann soll sich der Zeiger ändern
+     end else
+     begin                                    // In diesem Fall crHelp weil das Programm mit dem Handpointer
+          if Cursor = crHelp then             // und mit dem damit verbundenen Befehl vorher nicht klar kam.
+          begin
+               Cursor := crDefault;
+               refresh;
+          end;
+     end;}
 end;
 
 

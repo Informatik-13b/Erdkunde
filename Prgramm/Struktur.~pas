@@ -13,10 +13,8 @@ type
     Image3: TImage;
     Image4: TImage;
     MenueEffekt: TTimer;
-    Image5: TImage;
-    Image6: TImage;
-    Image7: TImage;
     ImageScreen: TImage;
+    Image5: TImage;
     procedure FormPaint(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -73,7 +71,7 @@ procedure TMenue.Startansicht();
     ImageScreen.Height := Menue.Height;
     Startscreen := TBitmap.Create;
      Try
-        Startscreen.LoadFromFile('C:\Users\Steffen\Documents\GitHub\Erdkunde\Testbild.bmp');
+        Startscreen.LoadFromFile('Testbild.bmp');
         ImageScreen.Picture.Bitmap.Assign(Startscreen);
       Finally
          Startscreen.Free;
@@ -114,16 +112,16 @@ begin
      Image3.Height := ButtonBreite;                         // Form steht auch nicht fest...
      Image4.Width := ButtonBreite;                          // Das Alles wird sich alles im Laufe der
      Image4.Height := ButtonBreite;                         // Programmentwicklung noch ergeben.
-     Image5.Width := ButtonBreite;
-     Image5.Height := ButtonBreite;
-     Image6.Width := ButtonBreite;
+     Image5.Width := ButtonBreite + 100;
+     Image5.Height := ButtonBreite + 100;
+     {Image6.Width := ButtonBreite;
      Image6.Height := ButtonBreite;
      Image7.Width := ButtonBreite;
-     Image7.Height := ButtonBreite;
+     Image7.Height := ButtonBreite;  }
                                                                       // im Folgenden werden die Menüpunkte im Kreis(Ellipse) angeordnet:
      Radius_x := Radius*(Screen.Width / Screen.Height);               // Radius in x-Richtung
      Radius_y := Radius;                                              // Radius in y-Richtung
-     Anzahl := 7;
+     Anzahl := 5;
      for i := 1 to Anzahl do
      begin
           x := Kreisposition_x(i,Anzahl,ScreenMitte,Radius_x);        // x- und y-Koordinate für das i-te Objekt wird ermittelt
@@ -146,17 +144,17 @@ begin
                   Image4.Top  := y - ButtonBreite div 2;
              end;
           5: begin
-                  Image5.Left := x - ButtonBreite div 2;
-                  Image5.Top  := y - ButtonBreite div 2;
+                  Image5.Left := x - ButtonBreite div 2 - 50;
+                  Image5.Top  := y - ButtonBreite div 2 ;
              end;
-          6: begin
+         { 6: begin
                   Image6.Left := x - ButtonBreite div 2;
                   Image6.Top  := y - ButtonBreite div 2;
              end;
           7: begin
                   Image7.Left := x - ButtonBreite div 2;
                   Image7.Top  := y - ButtonBreite div 2;
-             end;
+             end;}
           end;
      end;
 end;

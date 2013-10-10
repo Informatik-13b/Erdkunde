@@ -4,17 +4,13 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, Math, jpeg;
+  StdCtrls, ExtCtrls, Math, jpeg, ImageButton;
 
 type
   TMenue = class(TForm)
-    Image1: TImage;
-    Image2: TImage;
-    Image3: TImage;
-    Image4: TImage;
     MenueEffekt: TTimer;
     ImageScreen: TImage;
-    Image5: TImage;
+    Zoomen: TTimer;
     procedure FormPaint(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -30,6 +26,7 @@ type
              Zentrum:TPoint;Radius:real): integer;
     procedure MenueEffektTimer(Sender: TObject);
     procedure Startansicht();
+    procedure ZoomenTimer(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -43,6 +40,8 @@ var
   MenuePos:integer = 1;
   ScreenMitte:TPoint;
 
+  MenueObjekt : array[1..10] of TImageBUtton;
+
 implementation
 
 {$R *.DFM}
@@ -54,11 +53,25 @@ begin
 end;
 
 procedure TMenue.FormCreate(Sender: TObject);
+var i : integer;
 begin
      Themenfarbe1 := RGB(244,164,96);         //Themenfarben können sich durchs ganze
      Themenfarbe2 := RGB(205,133,63);         //Programm ziehen... (sind noch nicht beschlossen)
      Self.DoubleBuffered := true;
      ScreenMitte := Point(Screen.Width div 2,Screen.Height div 2);    // Mitte des Screen wird ermittelt
+
+     for i := 1 to 5 do
+     begin                                                            // Die Menüobjekte werden vom Typ
+          MenueObjekt[i]:= TImageButton.Create(self);                 // ImageButton erstellt
+          MenueObjekt[i].Parent := self;
+          MenueObjekt[i].Themenfarbe1 := Themenfarbe1;                // und es wird ihnen die aktuellen Themenfarbe
+          MenueObjekt[i].Themenfarbe2 := Themenfarbe2;                // übermittelt.
+     end;
+     MenueObjekt[1].BildLaden('Bilder/Karten-Menüpunkt.gif');         // Jedes Menüobjekt lädt sein bestimmtes Bild
+     MenueObjekt[2].BildLaden('Bilder/Lexikon-Menüpunkt.gif');        // im gif-Format
+     MenueObjekt[3].BildLaden('Bilder/Profil-Menüpunkt.gif');
+     MenueObjekt[4].BildLaden('Bilder/Spiel-Menüpunkt.gif');
+     MenueObjekt[5].BildLaden('Bilder/Titel.gif');
 end;
 
 procedure TMenue.Startansicht();
@@ -103,21 +116,12 @@ var i : integer;
     Buttonbreite : integer;
     Anzahl:integer;
 begin
-     ButtonBreite := (3*Radius)div 4;                       // Buttonbreite wird in Abhängigkeit der
-     Image1.Width := ButtonBreite;                          // Bildschrimgröße bestimmt
-     Image1.Height := ButtonBreite;
-     Image2.Width := ButtonBreite;                          // provisorisch habe ich Images als Platzhalter
-     Image2.Height := ButtonBreite;                         // für die späteren Butten genommen...
-     Image3.Width := ButtonBreite;                          // sie könnten Bilder enthälten, Zeichen, nur Text
-     Image3.Height := ButtonBreite;                         // Form steht auch nicht fest...
-     Image4.Width := ButtonBreite;                          // Das Alles wird sich alles im Laufe der
-     Image4.Height := ButtonBreite;                         // Programmentwicklung noch ergeben.
-     Image5.Width := ButtonBreite + 100;
-     Image5.Height := ButtonBreite + 100;
-     {Image6.Width := ButtonBreite;
-     Image6.Height := ButtonBreite;
-     Image7.Width := ButtonBreite;
-     Image7.Height := ButtonBreite;  }
+     ButtonBreite := (3*Radius)div 4;                       // Buttonbreite wird in Abhängigkeit der Bildschrimgröße bestimmt
+     for i := 1 to 5 do
+     begin
+          MenueObjekt[i].Width := ButtonBreite;
+          MenueObjekt[i].Height:= ButtonBreite;
+     end;
                                                                       // im Folgenden werden die Menüpunkte im Kreis(Ellipse) angeordnet:
      Radius_x := Radius*(Screen.Width / Screen.Height);               // Radius in x-Richtung
      Radius_y := Radius;                                              // Radius in y-Richtung
@@ -126,36 +130,9 @@ begin
      begin
           x := Kreisposition_x(i,Anzahl,ScreenMitte,Radius_x);        // x- und y-Koordinate für das i-te Objekt wird ermittelt
           y := Kreisposition_y(i,Anzahl,ScreenMitte,Radius_y);        // dabei werden oben bestimmte Parameter übergeben
-          case i of
-          1: begin
-                  Image1.Left := x - ButtonBreite div 2;              // den Menüobjekten werden ihre Koordinaten zugeordnet
-                  Image1.Top  := y - ButtonBreite div 2;
-             end;
-          2: begin
-                  Image2.Left := x - ButtonBreite div 2;
-                  Image2.Top  := y - ButtonBreite div 2;
-             end;
-          3: begin
-                  Image3.Left := x - ButtonBreite div 2;
-                  Image3.Top  := y - ButtonBreite div 2;
-             end;
-          4: begin
-                  Image4.Left := x - ButtonBreite div 2;
-                  Image4.Top  := y - ButtonBreite div 2;
-             end;
-          5: begin
-                  Image5.Left := x - ButtonBreite div 2 - 50;
-                  Image5.Top  := y - ButtonBreite div 2 ;
-             end;
-         { 6: begin
-                  Image6.Left := x - ButtonBreite div 2;
-                  Image6.Top  := y - ButtonBreite div 2;
-             end;
-          7: begin
-                  Image7.Left := x - ButtonBreite div 2;
-                  Image7.Top  := y - ButtonBreite div 2;
-             end;}
-          end;
+
+          MenueObjekt[i].Left := x - ButtonBreite div 2;              // jeder Komponente wird ihre Position übergeben.
+          MenueObjekt[i].Top  := y - ButtonBreite div 2;
      end;
 end;
 
@@ -181,13 +158,31 @@ begin
      result := y;
 end;
 
-
+procedure TMenue.ZoomenTimer(Sender: TObject);       // Ein permanenter Timer...
+var i,k,l :integer;
+begin
+     k := round(3*((Screen.Height / 3)) / 4);        // (normale Größe)
+     l := round(15*((Screen.Height / 3)) / 16);      // (zoom Größe)
+     for i := 1 to 4 do  // 1-4: Titel wird nicht gezoomt!!!
+     begin
+          if (MenueObjekt[i].Zoom = true) and         // prüft ob, ein Menüobjekt im Zoom-Modus ist
+             (MenueObjekt[i].Height < l) then         // und kleiner als die Zoom-End-Größe ist
+          begin
+               MenueObjekt[i].Vergroessern;           // und lässt sie sich vergrößern,
+          end;
+          if (MenueObjekt[i].Zoom = false) and        // oder wenn es nicht der Fall ist und das Menüobjekt
+             (MenueObjekt[i].Height > k) then         // auch nicht seine normale Größe besitzt
+          begin
+               MenueObjekt[i].Verkleinern;            // schrumpft das Objekt wieder.
+          end;
+     end;
+end;
 
 
 
 procedure TMenue.FormMouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
-var dif:integer;
+var dif,i:integer;
 begin
      if Y < 20 then                              // Wenn sich die Maus im oberen Bildschirmbereich
      begin
@@ -206,11 +201,34 @@ begin
 
      if Menue.Align = alNone then             // Wenn das Menü-Fenster im verschiebbaren Modus ist,
      begin
-          dif := Mouse.CursorPos.y -Y;        
+          dif := Mouse.CursorPos.y -Y;
           Menue.Top := Y+dif;                 // verschiebt sich das Fenster mit der Maus in y-Richtung.
      end;
 
      if Menue.Top > (Screen.Height div 6) * 5 then close;  // Sicherheitsschließen
+
+     for i := 1 to 4 do
+     begin
+          If MenueObjekt[i].Zoom = true          // Sicherheitsverkleinern: Wenn die Maus wieder auf der Form ist
+          then MenueObjekt[i].Zoom := false;     // und das Menüobjekt noch nicht am Verkleinrn ist.
+     end;
+
+     // Nur eine Idee. Wollte ausprobieren ob das auch ohne Komponenten geht. Erfolglos!
+
+     {if  (Y > Image1.Top)                    // Wenn der Mauszeiger sich in dem Feld des Bildes befindet
+     and (X > Image1.Left)
+     and (Y < Image1.Top + Image1.Height)
+     and (X < Image1.Left + Image1.Width) then
+     begin
+          Cursor := crHelp;                   // dann soll sich der Zeiger ändern
+     end else
+     begin                                    // In diesem Fall crHelp weil das Programm mit dem Handpointer
+          if Cursor = crHelp then             // und mit dem damit verbundenen Befehl vorher nicht klar kam.
+          begin
+               Cursor := crDefault;
+               refresh;
+          end;
+     end;}
 end;
 
 
@@ -232,7 +250,7 @@ var i: byte;
 begin
      if (Button = mbleft) and (Cursor = crHandpoint) then// linke Taste wird gelöst:
      begin
-          if Menue.Top > Screen.Height div 2 then        // Wenn das Fenster bis unter die Hälfte 
+          if Menue.Top > Screen.Height div 2 then        // Wenn das Fenster bis unter die Hälfte
           begin                                          // der Bildschirmhöhe gezogen wurde,
                for i := Y to Screen.Height - 100 do      // wird das Menü bis zum Verschwinden
                begin
@@ -251,5 +269,7 @@ begin
           end;
      end;
 end;
+
+
 
 end.

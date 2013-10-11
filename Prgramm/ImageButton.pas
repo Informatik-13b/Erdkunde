@@ -71,11 +71,16 @@ begin
      inherited MouseMove(Shift,X,Y);
      
      if (Pixelfarbe(X+Left,Y+Top) = Themenfarbe1) and     // wenn die Farbe des Pixels unter der Maus
-        (Height > k) then Zoom := false;                  // der Themenfarbe entspricht -> Verkleinerungs-Modus
-
-     if (Pixelfarbe(X+Left,Y+Top) <> Themenfarbe1)        // wenn die Farbe des Pixels unter der Maus NICHT
-     then Zoom := true;                                   // der Themenfarbe entspricht -> Zoom-Modus
-     
+        (Height > k) then
+     begin
+          Zoom := false;                                  // der Themenfarbe entspricht -> Verkleinerungs-Modus
+          Cursor := crDefault;
+     end;
+     if (Pixelfarbe(X+Left,Y+Top) <> Themenfarbe1) then   // wenn die Farbe des Pixels unter der Maus NICHT
+     begin
+          Zoom := true;                                   // der Themenfarbe entspricht -> Zoom-Modus
+          Cursor := crHandpoint;
+     end;
 end;
 
 procedure TImageButton.Vergroessern;

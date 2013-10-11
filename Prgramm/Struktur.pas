@@ -96,22 +96,32 @@ var i : integer;
     Anzahl:integer;
 begin
      ButtonBreite := (3*Radius)div 4;                       // Buttonbreite wird in Abhängigkeit der Bildschrimgröße bestimmt
-     for i := 1 to 5 do
+     for i := 1 to 4 do
      begin
           MenueObjekt[i].Width := ButtonBreite;
           MenueObjekt[i].Height:= ButtonBreite;
      end;
+
+     MenueObjekt[5].Width := (ButtonBreite*5) div 2;
+     MenueObjekt[5].Height:= ButtonBreite;
                                                                       // im Folgenden werden die Menüpunkte im Kreis(Ellipse) angeordnet:
      Radius_x := Radius*(Screen.Width / Screen.Height);               // Radius in x-Richtung
      Radius_y := Radius;                                              // Radius in y-Richtung
      Anzahl := 5;
-     for i := 1 to Anzahl do
+     for i := 1 to 5 do
      begin
           x := Kreisposition_x(i,Anzahl,ScreenMitte,Radius_x);        // x- und y-Koordinate für das i-te Objekt wird ermittelt
           y := Kreisposition_y(i,Anzahl,ScreenMitte,Radius_y);        // dabei werden oben bestimmte Parameter übergeben
 
-          MenueObjekt[i].Left := x - ButtonBreite div 2;              // jeder Komponente wird ihre Position übergeben.
-          MenueObjekt[i].Top  := y - ButtonBreite div 2;
+          if i <> 5 then
+          begin
+               MenueObjekt[i].Left := x - ButtonBreite div 2;         // jeder Komponente wird ihre Position übergeben.
+               MenueObjekt[i].Top  := y - ButtonBreite div 2;
+          end else
+          begin
+               MenueObjekt[i].Left := x - ((ButtonBreite*5) div 2) div 2;         // jeder Komponente wird ihre Position übergeben.
+               MenueObjekt[i].Top  := y - ButtonBreite div 2;
+          end;
      end;
 end;
 
@@ -141,7 +151,7 @@ procedure TMenue.ZoomenTimer(Sender: TObject);       // Ein permanenter Timer...
 var i,k,l :integer;
 begin
      k := round(3*((Screen.Height / 3)) / 4);        // (normale Größe)
-     l := round(15*((Screen.Height / 3)) / 16);      // (zoom Größe)
+     l := round(15*((Screen.Height / 3)) / 18);      // (zoom Größe)
      for i := 1 to 4 do  // 1-4: Titel wird nicht gezoomt!!!
      begin
           if (MenueObjekt[i].Zoom = true) and         // prüft ob, ein Menüobjekt im Zoom-Modus ist
@@ -171,11 +181,8 @@ begin
           Canvas.Rectangle(0,0,ClientWidth,20);  // in der 2. Themenfarbe gefärbt.
      end else
      begin                                       // andererseits wird,
-          if Cursor = crHandpoint then           // nur wenn es nicht schon der Fall ist,
-          begin
-               Cursor := crDefault;              // der Maus der Normale Zeiger zugeordnet
-               refresh;                          // und der andersfarbige Bereich wieder gelöscht.
-          end;
+          Cursor := crDefault;              // der Maus der Normale Zeiger zugeordnet
+          refresh;                          // und der andersfarbige Bereich wieder gelöscht.
      end;
 
      if Menue.Align = alNone then             // Wenn das Menü-Fenster im verschiebbaren Modus ist,

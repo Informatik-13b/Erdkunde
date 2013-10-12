@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, Math, jpeg, ImageButton;
+  StdCtrls, ExtCtrls, Math, jpeg, ImageButton, ShapeSchliessen;
 
 type
   TMenue = class(TForm)
@@ -41,7 +41,8 @@ var
   MenuePos:integer = 1;
   ScreenMitte:TPoint;
   ScreenZaehler: Integer;
-  MenueObjekt : array[1..10] of TImageBUtton;
+  MenueObjekt : array[1..10] of TImageButton;
+  SchliessenShape : TShapeSchliessen;
 
 implementation
 
@@ -74,11 +75,18 @@ var i : integer;
      MenueObjekt[3].BildLaden('Bilder/Profil-Menüpunkt.gif');
      MenueObjekt[4].BildLaden('Bilder/Spiel-Menüpunkt.gif');
      MenueObjekt[5].BildLaden('Bilder/Titel.gif');
+     MenueObjekt[5].Titel := true;
+     
+     SchliessenShape := TShapeSchliessen.Create(self);
+     SchliessenShape.Parent := self;
+     SchliessenShape.Themenfarbe1 := Themenfarbe1;
+     SchliessenShape.Themenfarbe2 := Themenfarbe2;
+     SchliessenShape.Fenster := Menue;
 
      ImageScreen.BringToFront;     //bringt das Startbild in den Vordergrung
      ScreenZaehler := 0;           // Zählervariable für den Timer auf Null setzen
      TimerStartscreen.Enabled := True;     //startet den Timer für den Startscreen
-  end;
+end;
 
 
 procedure TMenue.MenueEffektTimer(Sender: TObject);
@@ -96,22 +104,32 @@ var i : integer;
     Anzahl:integer;
 begin
      ButtonBreite := (3*Radius)div 4;                       // Buttonbreite wird in Abhängigkeit der Bildschrimgröße bestimmt
-     for i := 1 to 5 do
+     for i := 1 to 4 do
      begin
           MenueObjekt[i].Width := ButtonBreite;
           MenueObjekt[i].Height:= ButtonBreite;
      end;
+
+     MenueObjekt[5].Width := (ButtonBreite*5) div 2;
+     MenueObjekt[5].Height:= ButtonBreite;
                                                                       // im Folgenden werden die Menüpunkte im Kreis(Ellipse) angeordnet:
      Radius_x := Radius*(Screen.Width / Screen.Height);               // Radius in x-Richtung
      Radius_y := Radius;                                              // Radius in y-Richtung
      Anzahl := 5;
-     for i := 1 to Anzahl do
+     for i := 1 to 5 do
      begin
           x := Kreisposition_x(i,Anzahl,ScreenMitte,Radius_x);        // x- und y-Koordinate für das i-te Objekt wird ermittelt
           y := Kreisposition_y(i,Anzahl,ScreenMitte,Radius_y);        // dabei werden oben bestimmte Parameter übergeben
 
-          MenueObjekt[i].Left := x - ButtonBreite div 2;              // jeder Komponente wird ihre Position übergeben.
-          MenueObjekt[i].Top  := y - ButtonBreite div 2;
+          if i <> 5 then
+          begin
+               MenueObjekt[i].Left := x - ButtonBreite div 2;         // jeder Komponente wird ihre Position übergeben.
+               MenueObjekt[i].Top  := y - ButtonBreite div 2;
+          end else
+          begin
+               MenueObjekt[i].Left := x - ((ButtonBreite*5) div 2) div 2;         // jeder Komponente wird ihre Position übergeben.
+               MenueObjekt[i].Top  := y - ButtonBreite div 2;
+          end;
      end;
 end;
 
@@ -141,7 +159,7 @@ procedure TMenue.ZoomenTimer(Sender: TObject);       // Ein permanenter Timer...
 var i,k,l :integer;
 begin
      k := round(3*((Screen.Height / 3)) / 4);        // (normale Größe)
-     l := round(15*((Screen.Height / 3)) / 16);      // (zoom Größe)
+     l := round(15*((Screen.Height / 3)) / 18);      // (zoom Größe)
      for i := 1 to 4 do  // 1-4: Titel wird nicht gezoomt!!!
      begin
           if (MenueObjekt[i].Zoom = true) and         // prüft ob, ein Menüobjekt im Zoom-Modus ist
@@ -161,30 +179,13 @@ end;
 
 procedure TMenue.FormMouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
-var dif,i:integer;
+var i : byte;
 begin
-     if Y < 20 then                              // Wenn sich die Maus im oberen Bildschirmbereich
+     if SchliessenShape.inaktiv = false then
      begin
-          Cursor := crHandpoint;                 // befindet, bekommt sie ein Handsymbol und
-          Canvas.Brush.Color := Themenfarbe2;
-          Canvas.Pen.Color   := Themenfarbe2;    // mit Canvas wird der obere Bildschirmbereich
-          Canvas.Rectangle(0,0,ClientWidth,20);  // in der 2. Themenfarbe gefärbt.
-     end else
-     begin                                       // andererseits wird,
-          if Cursor = crHandpoint then           // nur wenn es nicht schon der Fall ist,
-          begin
-               Cursor := crDefault;              // der Maus der Normale Zeiger zugeordnet
-               refresh;                          // und der andersfarbige Bereich wieder gelöscht.
-          end;
+          SchliessenShape.inaktiv := true;
+          SchliessenShape.Repaint;
      end;
-
-     if Menue.Align = alNone then             // Wenn das Menü-Fenster im verschiebbaren Modus ist,
-     begin
-          dif := Mouse.CursorPos.y -Y;
-          Menue.Top := Y+dif;                 // verschiebt sich das Fenster mit der Maus in y-Richtung.
-     end;
-
-     if Menue.Top > (Screen.Height div 6) * 5 then close;  // Sicherheitsschließen
 
      for i := 1 to 4 do
      begin

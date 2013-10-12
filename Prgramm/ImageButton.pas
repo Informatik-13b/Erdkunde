@@ -13,6 +13,7 @@ type
     FThemenfarbe1:TColor;
     FThemenfarbe2:TColor;
     FZoom:boolean;
+    FTitel:boolean;
   protected
     { Protected-Deklarationen }
     procedure MouseMove(Shift: TShiftState; X,
@@ -31,6 +32,7 @@ type
     property Themenfarbe1:Tcolor read FThemenfarbe1 write FThemenfarbe1 default clWhite;
     property Themenfarbe2:Tcolor read FThemenfarbe2 write FThemenfarbe2 default clWhite;
     property Zoom : boolean read FZoom write FZoom default false;
+    property Titel : boolean read FTitel write FTitel default false;
   end;
 
 
@@ -38,7 +40,8 @@ procedure Register;
 
 implementation
 
-var ScreenMitte:TPoint;
+var
+ScreenMitte:TPoint;
 
 
 constructor TImageButton.Create(AOwner:TComponent);
@@ -70,8 +73,7 @@ var k:integer;
 begin
      inherited MouseMove(Shift,X,Y);
      
-     if (Pixelfarbe(X+Left,Y+Top) = Themenfarbe1) and     // wenn die Farbe des Pixels unter der Maus
-        (Height > k) then
+     if (Pixelfarbe(X+Left,Y+Top) = Themenfarbe1) then    // wenn die Farbe des Pixels unter der Maus
      begin
           Zoom := false;                                  // der Themenfarbe entspricht -> Verkleinerungs-Modus
           Cursor := crDefault;
@@ -79,7 +81,7 @@ begin
      if (Pixelfarbe(X+Left,Y+Top) <> Themenfarbe1) then   // wenn die Farbe des Pixels unter der Maus NICHT
      begin
           Zoom := true;                                   // der Themenfarbe entspricht -> Zoom-Modus
-          Cursor := crHandpoint;
+          if Titel = false then Cursor := crHandpoint;
      end;
 end;
 

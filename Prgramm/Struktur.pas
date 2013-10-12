@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, Math, jpeg, ImageButton;
+  StdCtrls, ExtCtrls, Math, jpeg, ImageButton, ShapeSchliessen;
 
 type
   TMenue = class(TForm)
@@ -16,10 +16,6 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
-    procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure FormMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
     procedure MenuePosition(Radius:integer);
     function Kreisposition_x(Objektnummer:integer;Objektanzahl:integer;
              Zentrum:TPoint;Radius:real): integer;
@@ -41,7 +37,8 @@ var
   MenuePos:integer = 1;
   ScreenMitte:TPoint;
   ScreenZaehler: Integer;
-  MenueObjekt : array[1..10] of TImageBUtton;
+  MenueObjekt : array[1..10] of TImageButton;
+  SchliessenShape : TShapeSchliessen;
 
 implementation
 
@@ -74,11 +71,19 @@ var i : integer;
      MenueObjekt[3].BildLaden('Bilder/Profil-Menüpunkt.gif');
      MenueObjekt[4].BildLaden('Bilder/Spiel-Menüpunkt.gif');
      MenueObjekt[5].BildLaden('Bilder/Titel.gif');
+     MenueObjekt[5].Titel := true;
+     
+     SchliessenShape := TShapeSchliessen.Create(self);    // Erstellen des Schließen-Komponente
+     SchliessenShape.Parent := self;
+     SchliessenShape.Themenfarbe1 := Themenfarbe1;        // die Themenfarben werden übergeben
+     SchliessenShape.Themenfarbe2 := Themenfarbe2;
+     SchliessenShape.Fenster := Menue;           // Wichtig! Das Fenster wird übergeben, damit die Komponente weiß
+                                                 // welches Fenster geschlossen werden soll.
 
      ImageScreen.BringToFront;     //bringt das Startbild in den Vordergrung
      ScreenZaehler := 0;           // Zählervariable für den Timer auf Null setzen
      TimerStartscreen.Enabled := True;     //startet den Timer für den Startscreen
-  end;
+end;
 
 
 procedure TMenue.MenueEffektTimer(Sender: TObject);
@@ -171,27 +176,13 @@ end;
 
 procedure TMenue.FormMouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
-var dif,i:integer;
+var i : byte;
 begin
-     if Y < 20 then                              // Wenn sich die Maus im oberen Bildschirmbereich
-     begin
-          Cursor := crHandpoint;                 // befindet, bekommt sie ein Handsymbol und
-          Canvas.Brush.Color := Themenfarbe2;
-          Canvas.Pen.Color   := Themenfarbe2;    // mit Canvas wird der obere Bildschirmbereich
-          Canvas.Rectangle(0,0,ClientWidth,20);  // in der 2. Themenfarbe gefärbt.
-     end else
-     begin                                       // andererseits wird,
-          Cursor := crDefault;              // der Maus der Normale Zeiger zugeordnet
-          refresh;                          // und der andersfarbige Bereich wieder gelöscht.
+     if SchliessenShape.inaktiv = false then    // Wenn das Shape zum Schließen noch
+     begin                                      // aktiv ist,
+          SchliessenShape.inaktiv := true;      // wird sein Status auf inaktiv gesetzt
+          SchliessenShape.Repaint;              // und es zeichnet sich neu.
      end;
-
-     if Menue.Align = alNone then             // Wenn das Menü-Fenster im verschiebbaren Modus ist,
-     begin
-          dif := Mouse.CursorPos.y -Y;
-          Menue.Top := Y+dif;                 // verschiebt sich das Fenster mit der Maus in y-Richtung.
-     end;
-
-     if Menue.Top > (Screen.Height div 6) * 5 then close;  // Sicherheitsschließen
 
      for i := 1 to 4 do
      begin
@@ -199,46 +190,6 @@ begin
           then MenueObjekt[i].Zoom := false;     // und das Menüobjekt noch nicht am Verkleinrn ist.
      end;
 end;
-
-
-procedure TMenue.FormMouseDown(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
-begin
-     if Button = mbleft then                 // Wenn die linke Maustaste gedrückt wird
-     begin
-          if Cursor = crHandpoint then       // und sich die Maus im oberen Bildschirmberech befindet (s.o.),
-          begin                              // wird aus dem Vollbild "Normalbild" (ist aber nicht sichtbar,
-               Menue.Align := alNone;        // da dich Höhe und Breite des Fenstern NICHT ändert!
-          end;                               // Dies muss aber geschehen, damit man das Fenster im
-     end;                                    // nächsten Schritt verschieben kann.
-end;
-
-procedure TMenue.FormMouseUp(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
-var i: byte;
-begin
-     if (Button = mbleft) and (Cursor = crHandpoint) then// linke Taste wird gelöst:
-     begin
-          if Menue.Top > Screen.Height div 2 then        // Wenn das Fenster bis unter die Hälfte
-          begin                                          // der Bildschirmhöhe gezogen wurde,
-               for i := Y to Screen.Height - 100 do      // wird das Menü bis zum Verschwinden
-               begin
-                    Menue.Top := Menue.Top + i;          // weiter nach unten verschoben
-                    sleep(10);                           // (nicht sofort, sondern "langsam")
-               end;
-               close;                                    // und schließlich geschlossen.
-          end else                                       // Wird das Fenster nicht genügend weit
-          begin                                          // herunter gezogen,
-               {for i := Mouse.CursorPos.y downto 0 do
-               begin
-                    Menue.Top := i;                      // gelangt das Fenster wieder "langsam" in
-                    //sleep(1);                            // die Ausgangsposition und zum Schluss wieder
-               end;  }
-               Menue.Align := alClient;                  // in den unverschiebbaren Vollbildmodus
-          end;
-     end;
-end;
-
 
 
 procedure TMenue.TimerStartscreenTimer(Sender: TObject);

@@ -6,19 +6,17 @@ object Menue: TMenue
   ClientHeight = 536
   ClientWidth = 971
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
+  Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
-  Font.Name = 'MS Sans Serif'
+  Font.Name = 'Permanent Marker'
   Font.Style = []
   OldCreateOrder = False
   OnCreate = FormCreate
-  OnMouseDown = FormMouseDown
   OnMouseMove = FormMouseMove
-  OnMouseUp = FormMouseUp
   OnPaint = FormPaint
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object ImageScreen: TImage
     Left = 528
     Top = 128

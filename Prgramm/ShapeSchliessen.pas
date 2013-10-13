@@ -50,7 +50,9 @@ begin
      Width := Screen.Width+1;              // des Bildschirm erstellt.
      Height := Screen.Height div 30;
 
-     Cursor := crHandpoint
+     Cursor := crHandpoint;
+
+     Pen.Style := psClear;
 end;
 
 procedure TShapeSchliessen.Paint;
@@ -59,7 +61,7 @@ var Textposition:integer;
 begin
      inherited Paint;
 
-     if inaktiv then
+     if inaktiv = true then
      begin
           Brush.Style := bsClear;       // im inaktiven Modus
           Pen.Style := psClear;         // macht sich das Shape unsichtbar

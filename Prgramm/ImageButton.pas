@@ -14,11 +14,13 @@ type
     FThemenfarbe2:TColor;
     FZoom:boolean;
     FTitel:boolean;
+    FButton:byte;
   protected
     { Protected-Deklarationen }
     procedure MouseMove(Shift: TShiftState; X,
       Y: Integer); override;
     function Pixelfarbe(const x,y: integer): TColor;
+    procedure Click; Override;
   public
     { Public-Deklarationen }
     constructor Create(AOwner:TComponent);override;
@@ -33,12 +35,15 @@ type
     property Themenfarbe2:Tcolor read FThemenfarbe2 write FThemenfarbe2 default clWhite;
     property Zoom : boolean read FZoom write FZoom default false;
     property Titel : boolean read FTitel write FTitel default false;
+    property Button : byte read FButton write FButton default 0;
   end;
 
 
 procedure Register;
 
 implementation
+
+uses Struktur;
 
 var
 ScreenMitte:TPoint;
@@ -69,7 +74,6 @@ end;
 
 
 procedure TImageButton.MouseMove(Shift:TShiftState;X,Y:integer);
-var k:integer;
 begin
      inherited MouseMove(Shift,X,Y);
      
@@ -123,6 +127,14 @@ begin
    c.handle:= GetWindowDC(GetDesktopWindow);               // an der Stelle x,y zurück
    result:=getpixel(c.handle,x,y);
    c.free;
+end;
+
+
+procedure TImageButton.Click;
+begin
+     inherited Click;
+
+     Menue.FensterOeffnen(Button);
 end;
 
 

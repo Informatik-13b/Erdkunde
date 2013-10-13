@@ -28,12 +28,15 @@ type
     { Private-Deklarationen }
   public
     { Public-Deklarationen }
+    Themenfarbe1: TColor;
+    Themenfarbe2: TColor;
+    procedure FensterOeffnen(Button:integer);
   end;
+
+
 
 var
   Menue: TMenue;
-  Themenfarbe1: TColor;
-  Themenfarbe2: TColor;
   MenuePos:integer = 1;
   ScreenMitte:TPoint;
   ScreenZaehler: Integer;
@@ -41,6 +44,8 @@ var
   SchliessenShape : TShapeSchliessen;
 
 implementation
+
+uses Karte;
 
 {$R *.DFM}
 
@@ -65,6 +70,7 @@ var i : integer;
           MenueObjekt[i].Parent := self;
           MenueObjekt[i].Themenfarbe1 := Themenfarbe1;                // und es wird ihnen die aktuellen Themenfarbe
           MenueObjekt[i].Themenfarbe2 := Themenfarbe2;                // übermittelt.
+          MenueObjekt[i].Button := i;
      end;
      MenueObjekt[1].BildLaden('Bilder/Karten-Menüpunkt.gif');         // Jedes Menüobjekt lädt sein bestimmtes Bild
      MenueObjekt[2].BildLaden('Bilder/Lexikon-Menüpunkt.gif');        // im gif-Format
@@ -72,7 +78,7 @@ var i : integer;
      MenueObjekt[4].BildLaden('Bilder/Spiel-Menüpunkt.gif');
      MenueObjekt[5].BildLaden('Bilder/Titel.gif');
      MenueObjekt[5].Titel := true;
-     
+
      SchliessenShape := TShapeSchliessen.Create(self);    // Erstellen des Schließen-Komponente
      SchliessenShape.Parent := self;
      SchliessenShape.Themenfarbe1 := Themenfarbe1;        // die Themenfarben werden übergeben
@@ -230,7 +236,15 @@ procedure TMenue.TimerStartscreenTimer(Sender: TObject);
       end;
 
   end;
-  end;
-   
+end;
+
+procedure TMenue.FensterOeffnen(Button:integer);
+begin
+     //if Fenster = Orte_Finden then Application.CreateForm(TOrte_Finden, Fenster);
+     case Button of
+     4: Orte_Finden.ShowModal;
+     end;
+end;
+
 
 end.

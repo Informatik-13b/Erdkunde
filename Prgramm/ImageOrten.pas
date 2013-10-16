@@ -35,18 +35,19 @@ var i,k:integer;
 begin
      inherited Create(AOwner);
 
-     Left := 100;
-     Top := 50;
-     Height := 809;
-     Width := 633;
+     Height := (Screen.Height*9) div 10;
+     Width := (Height*19) div 26;
+     Top := Screen.Height div 20;
+     Left := (Screen.Width div 2) - (Width div 2);
      Cursor := crCross;
-     Picture.LoadFromFile('Bilder/Deutschland.bmp');
+     Stretch := true;
+     Picture.LoadFromFile('Bilder/DKarte mit Städte.bmp');
 
-     SetLength(KoSy,633,809);
+     SetLength(KoSy,1900,2600);
      for i := Low(KoSy) to High(KoSy) do
         for k := Low(KoSy[i]) to High(KoSy[i]) do
            KoSy[i,k] := false;
-     KoSy[283,168] := true;
+     KoSy[888,524] := true;
 
      for i := Low(KoSy) to High(KoSy) do
         for k := Low(KoSy[i]) to High(KoSy[i]) do
@@ -55,8 +56,6 @@ begin
                 Ort := Point(i,k);
                 break;
            end;
-     Canvas.Brush.Style := bsClear;
-     Canvas.Ellipse(Ort.x-10,Ort.y-10,Ort.x+10,Ort.y+10);
 
      Canvas.MoveTo(Ort.x,Ort.y);
 end;
@@ -66,8 +65,14 @@ procedure TImageOrten.MouseUp(Button: TMouseButton;
 var
 Entfernung:real;
 dif_x, dif_y : integer;
+dif_hoch:real;
 begin
-     Canvas.Pen.Width := 3;
+     dif_hoch := (2600 / Height);
+
+     X := round(dif_hoch * X);
+     Y := round(dif_hoch * Y);
+
+     Canvas.Pen.Width := 8;
      Canvas.Pen.Color := clRed;
      Canvas.LineTo(X,Y);
 
@@ -76,9 +81,12 @@ begin
 
      Entfernung := sqrt( (dif_x * dif_x) + (dif_y * dif_y));
 
-     Entfernung := Entfernung * ( 922 / 809 );
+     Entfernung := Entfernung * ( 613 / 1791 );
 
-     Canvas.TextOut(x,Y,FloatToStr(Entfernung));
+     Canvas.Font.Size := 60;
+     Canvas.Font.Name := 'Arial';
+     Canvas.Brush.Style := bsClear;
+     Canvas.TextOut(x,Y,FloatToStr(Round(Entfernung))+' km');
 end;
 
 procedure Register;

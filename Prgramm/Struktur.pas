@@ -223,7 +223,7 @@ procedure TMenue.TimerStartscreenTimer(Sender: TObject);
             begin
               // ImageScreen.Canvas.pixels [i,j] := clLime;
             end;}
-    If ScreenZaehler >= 100 then
+    If ScreenZaehler >= 5 then
       begin
          MenueEffekt.Enabled := True;      //Timer für das Menü wird aktiviert
          Zoomen.Enabled := True;          //Timer für das Zoomen wird aktiviert

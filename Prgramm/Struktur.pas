@@ -244,9 +244,11 @@ begin
      case Button of
      4: begin
              Application.CreateForm(TOrte_Finden, Orte_Finden);
-             Orte_Finden.ShowModal;
+             Orte_Finden.BringToFront;
+             Orte_Finden.ShowModal
         end;
      end;
+     //self.
 end;
 
 

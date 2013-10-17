@@ -7,9 +7,18 @@ uses
   ExtCtrls, Math;
 
 type
+  TOrte = record
+     Index : integer;
+     Ortsname : string[20];
+     Schwierigkeit : string[10];
+     KoSy_x, KoSy_y : integer;
+  end;
   TImageOrten = class(TImage)
   private
     { Private-Deklarationen }
+    aktueller_record : integer;
+    ROrte : TOrte;
+    Orte_Datei : file of TOrte;
   protected
     { Protected-Deklarationen }
     procedure MouseUp(Button: TMouseButton;
@@ -17,6 +26,7 @@ type
   public
     { Public-Deklarationen }
     constructor Create(AOwner:TComponent); override;
+    function SatzLadenAnzeigen(index:integer) : string;
   published
     { Published-Deklarationen }
   end;
@@ -47,17 +57,38 @@ begin
      for i := Low(KoSy) to High(KoSy) do
         for k := Low(KoSy[i]) to High(KoSy[i]) do
            KoSy[i,k] := false;
-     KoSy[888,524] := true;
+end;
 
-     for i := Low(KoSy) to High(KoSy) do
-        for k := Low(KoSy[i]) to High(KoSy[i]) do
-           if KoSy[i,k] = true then
-           begin
-                Ort := Point(i,k);
-                break;
-           end;
+function TImageOrten.SatzLadenAnzeigen(index:integer): string;
+var i,k:integer;
+begin
+     AssignFile(Orte_Datei,'Ortskoordinaten/Orte_KoSy.dat');
+     aktueller_record := index-1;
+     if FileExists('Ortskoordinaten/Orte_KoSy.dat') then
+     begin
+          Reset(Orte_Datei);
+     end else exit;
 
-     Canvas.MoveTo(Ort.x,Ort.y);
+     Seek(Orte_Datei,aktueller_record);
+     if FileSize(Orte_Datei) > 0 then
+     begin
+          Read(Orte_Datei,ROrte);
+          with ROrte do
+          begin
+               KoSy[KoSy_x,KoSy_y] := true;
+
+               for i := Low(KoSy) to High(KoSy) do
+                  for k := Low(KoSy[i]) to High(KoSy[i]) do
+                     if KoSy[i,k] = true then
+                     begin
+                          Ort := Point(i,k);
+                          break;
+                     end;
+               Canvas.MoveTo(Ort.x,Ort.y);
+               result := Ortsname + ', ' + Schwierigkeit;
+          end;
+     end;
+     CloseFile(Orte_Datei);
 end;
 
 procedure TImageOrten.MouseUp(Button: TMouseButton;

@@ -1,6 +1,6 @@
 object Menue: TMenue
-  Left = 167
-  Top = 207
+  Left = 193
+  Top = 124
   Align = alClient
   BorderStyle = bsNone
   ClientHeight = 536
@@ -18,8 +18,8 @@ object Menue: TMenue
   PixelsPerInch = 96
   TextHeight = 15
   object ImageScreen: TImage
-    Left = 528
-    Top = 128
+    Left = 664
+    Top = 32
     Width = 105
     Height = 105
     Stretch = True

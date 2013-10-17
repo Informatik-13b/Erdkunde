@@ -17,4 +17,17 @@ object Orte_Finden: TOrte_Finden
   OnMouseMove = FormMouseMove
   PixelsPerInch = 96
   TextHeight = 13
+  object Label1: TLabel
+    Left = 16
+    Top = 16
+    Width = 84
+    Height = 27
+    Caption = 'Label1'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -27
+    Font.Name = 'MS Gothic'
+    Font.Style = []
+    ParentFont = False
+  end
 end

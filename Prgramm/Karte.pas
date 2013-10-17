@@ -4,10 +4,11 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  ImageOrten, ShapeSchliessen, OleCtrls, SHDocVw;
+  ImageOrten, ShapeSchliessen, OleCtrls, SHDocVw, StdCtrls;
 
 type
   TOrte_Finden = class(TForm)
+    Label1: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
@@ -39,6 +40,8 @@ begin
 
      SuchKarte := TImageOrten.Create(self);
      SuchKarte.Parent := self;
+     randomize;
+     Label1.Caption := SuchKarte.SatzLadenAnzeigen(random(75)+1);
 
      SchliessenShape := TShapeSchliessen.Create(self);    // Erstellen des Schlieﬂen-Komponente
      SchliessenShape.Parent := self;
@@ -57,5 +60,6 @@ begin
           SchliessenShape.Repaint;              // und es zeichnet sich neu.
      end;
 end;
+
 
 end.

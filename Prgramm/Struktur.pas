@@ -240,9 +240,12 @@ end;
 
 procedure TMenue.FensterOeffnen(Button:integer);
 begin
-     //if Fenster = Orte_Finden then Application.CreateForm(TOrte_Finden, Fenster);
+     
      case Button of
-     4: Orte_Finden.ShowModal;
+     4: begin
+             Application.CreateForm(TOrte_Finden, Orte_Finden);
+             Orte_Finden.ShowModal;
+        end;
      end;
 end;
 

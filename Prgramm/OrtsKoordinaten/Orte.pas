@@ -10,7 +10,7 @@ type
   TOrte = record
      Index : integer;
      Ortsname : string[20];
-     Schwierigkeit : integer;
+     Schwierigkeit : string[10];
      KoSy_x, KoSy_y : integer;
   end;
   TForm1 = class(TForm)
@@ -77,7 +77,7 @@ begin
           begin
                EdtIndex.Text  := IntToStr(Index);
                EdtOrt.Text    := Ortsname;
-               EdtSchwierigkeit.Text := IntToStr(Schwierigkeit);
+               EdtSchwierigkeit.Text := Schwierigkeit;
                EdtKoSy_x.Text := IntToStr(KoSy_x);
                EdtKoSy_y.Text := IntToStr(KoSy_y);
           end;
@@ -96,7 +96,7 @@ begin
      begin
           Index    := StrToInt(EdtIndex.Text);
           Ortsname := EdtOrt.Text;
-          Schwierigkeit := StrToInt(EdtSchwierigkeit.Text);
+          Schwierigkeit := EdtSchwierigkeit.Text;
           KoSy_x   := StrToInt(EdtKoSy_x.Text);
           KoSy_y   := StrToInt(EdtKoSy_y.Text);
      end;

@@ -11,6 +11,5 @@ uses
 begin
   Application.Initialize;
   Application.CreateForm(TMenue, Menue);
-  Application.CreateForm(TOrte_Finden, Orte_Finden);
   Application.Run;
 end.

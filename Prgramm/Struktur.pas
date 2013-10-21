@@ -71,6 +71,7 @@ var i : integer;
           MenueObjekt[i].Themenfarbe1 := Themenfarbe1;                // und es wird ihnen die aktuellen Themenfarbe
           MenueObjekt[i].Themenfarbe2 := Themenfarbe2;                // übermittelt.
           MenueObjekt[i].Button := i;
+          MenueObjekt[i].Enabled := false;
      end;
      MenueObjekt[1].BildLaden('Bilder/Karten-Menüpunkt.gif');         // Jedes Menüobjekt lädt sein bestimmtes Bild
      MenueObjekt[2].BildLaden('Bilder/Lexikon-Menüpunkt.gif');        // im gif-Format
@@ -96,7 +97,14 @@ procedure TMenue.MenueEffektTimer(Sender: TObject);
 begin
      Inc(MenuePos,3);                 // Timer lässt das Menue aus der Bildschirmmitte erscheinen
      MenuePosition(MenuePos);
-     If MenuePos >= Screen.Height div 3 then MenueEffekt.Enabled := False;
+     If MenuePos >= Screen.Height div 3 then
+     begin
+          MenueEffekt.Enabled := False;
+          MenueObjekt[1].Enabled := true;
+          MenueObjekt[2].Enabled := true;
+          MenueObjekt[3].Enabled := true;
+          MenueObjekt[4].Enabled := true;
+     end;
 end;
 
 procedure TMenue.MenuePosition(Radius:integer);
@@ -248,7 +256,6 @@ begin
              Orte_Finden.ShowModal
         end;
      end;
-     //self.
 end;
 
 

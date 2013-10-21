@@ -30,4 +30,13 @@ object Orte_Finden: TOrte_Finden
     Font.Style = []
     ParentFont = False
   end
+  object BtnNeu: TButton
+    Left = 16
+    Top = 64
+    Width = 75
+    Height = 25
+    Caption = 'Neu'
+    TabOrder = 0
+    OnClick = BtnNeuClick
+  end
 end

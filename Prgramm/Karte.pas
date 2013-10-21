@@ -9,9 +9,11 @@ uses
 type
   TOrte_Finden = class(TForm)
     Label1: TLabel;
+    BtnNeu: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
+    procedure BtnNeuClick(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -33,6 +35,8 @@ uses Struktur;
 
 procedure TOrte_Finden.FormCreate(Sender: TObject);
 begin
+     self.DoubleBuffered := true;
+
      Themenfarbe1 := Menue.Themenfarbe1;
      Themenfarbe2 := Menue.Themenfarbe2;
 
@@ -61,5 +65,13 @@ begin
      end;
 end;
 
+
+procedure TOrte_Finden.BtnNeuClick(Sender: TObject);
+begin
+
+     SuchKarte.Picture := nil;
+     SuchKarte.Picture.LoadFromFile('Bilder/DKarte mit Städte.bmp');
+     Label1.Caption := SuchKarte.SatzLadenAnzeigen(random(75)+1);
+end;
 
 end.

@@ -41,7 +41,6 @@ KoSy: array of array of boolean;
 Ort:TPoint;
 
 constructor TImageOrten.Create(AOwner:TComponent);
-var i,k:integer;
 begin
      inherited Create(AOwner);
 
@@ -52,16 +51,16 @@ begin
      Cursor := crCross;
      Stretch := true;
      Picture.LoadFromFile('Bilder/DKarte mit Städte.bmp');
-
-     SetLength(KoSy,1900,2600);
-     for i := Low(KoSy) to High(KoSy) do
-        for k := Low(KoSy[i]) to High(KoSy[i]) do
-           KoSy[i,k] := false;
 end;
 
 function TImageOrten.SatzLadenAnzeigen(index:integer): string;
 var i,k:integer;
 begin
+     SetLength(KoSy,1900,2600);
+     for i := Low(KoSy) to High(KoSy) do
+        for k := Low(KoSy[i]) to High(KoSy[i]) do
+           KoSy[i,k] := false;
+
      AssignFile(Orte_Datei,'Ortskoordinaten/Orte_KoSy.dat');
      aktueller_record := index-1;
      if FileExists('Ortskoordinaten/Orte_KoSy.dat') then

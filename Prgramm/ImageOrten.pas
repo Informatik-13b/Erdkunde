@@ -23,6 +23,8 @@ type
     { Protected-Deklarationen }
     procedure MouseUp(Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer); override;
+      procedure TextOutAngle(const Canvas: TCanvas; X, Y: Integer;
+                             const AText: string; AAngle: Integer);
   public
     { Public-Deklarationen }
     constructor Create(AOwner:TComponent); override;
@@ -94,15 +96,17 @@ procedure TImageOrten.MouseUp(Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
 var
 Entfernung:real;
-dif_x, dif_y : integer;
+dif_x, dif_y : real;
 dif_hoch:real;
+Winkel : real;
+Text_x,Text_y : real;
 begin
      dif_hoch := (2600 / Height);
 
      X := round(dif_hoch * X);
      Y := round(dif_hoch * Y);
 
-     Canvas.Pen.Width := 8;
+     Canvas.Pen.Width := 10;
      Canvas.Pen.Color := clRed;
      Canvas.LineTo(X,Y);
 
@@ -116,7 +120,49 @@ begin
      Canvas.Font.Size := 60;
      Canvas.Font.Name := 'Arial';
      Canvas.Brush.Style := bsClear;
-     Canvas.TextOut(x,Y,FloatToStr(Round(Entfernung))+' km');
+
+     if dif_x = 0 then dif_x := 1;
+
+     Winkel:= 10 * RadToDeg(ArcTan( dif_y / dif_x ));
+                                                {1.Quadrant}
+     if x < 0 then Winkel:=180+Winkel else
+     begin	                                {2. bzw. 3.Quadrant}
+          if y < 0 then Winkel:=360+Winkel;	{4.Quadrant}
+     end;
+
+     Text_x := X-(dif_x / 2)-(Canvas.TextWidth(FloatToStr(Round(Entfernung))+' km') / 2);
+     Text_y := Y-(dif_y / 2)-(Canvas.TextHeight(FloatToStr(Round(Entfernung))+' km'));
+
+     TextOutAngle(self.Canvas,
+                  round(Text_x),round(Text_y),
+                  FloatToStr(Round(Entfernung))+' km',
+                  3600 - round(Winkel));
+end;
+
+procedure TImageOrten.TextOutAngle(const Canvas: TCanvas; X, Y: Integer;
+                                  const AText: string; AAngle: Integer);
+var
+   hCurFont: HFONT;
+   LogFont: TLogFont;
+begin
+   with Canvas do
+   begin
+     hCurFont := Font.Handle;
+     try
+       GetObject(Font.Handle, SizeOf(LogFont), @LogFont);
+       LogFont.lfEscapement := AAngle;
+       LogFont.lfOrientation := AAngle;
+   
+       Font.Handle := CreateFontIndirect(LogFont);
+       try
+         TextOut(X, Y, AText);
+       finally
+         DeleteObject(Font.Handle);        
+       end;
+     finally
+       Font.Handle := hCurFont;
+     end;
+   end;
 end;
 
 procedure Register;

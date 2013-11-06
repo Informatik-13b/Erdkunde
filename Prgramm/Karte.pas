@@ -68,9 +68,8 @@ end;
 
 procedure TOrte_Finden.BtnNeuClick(Sender: TObject);
 begin
-
      SuchKarte.Picture := nil;
-     SuchKarte.Picture.LoadFromFile('Bilder/DKarte mit Städte.bmp');
+     SuchKarte.Picture.LoadFromFile('Bilder/DKarte ohne Städte.bmp');
      Label1.Caption := SuchKarte.SatzLadenAnzeigen(random(75)+1);
 end;
 

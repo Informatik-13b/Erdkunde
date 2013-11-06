@@ -18,8 +18,8 @@ object Orte_Finden: TOrte_Finden
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
-    Left = 16
-    Top = 16
+    Left = 24
+    Top = 40
     Width = 84
     Height = 27
     Caption = 'Label1'
@@ -31,8 +31,8 @@ object Orte_Finden: TOrte_Finden
     ParentFont = False
   end
   object BtnNeu: TButton
-    Left = 16
-    Top = 64
+    Left = 24
+    Top = 72
     Width = 75
     Height = 25
     Caption = 'Neu'

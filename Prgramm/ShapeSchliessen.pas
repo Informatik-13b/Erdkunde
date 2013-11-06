@@ -60,19 +60,28 @@ var Textposition:integer;
     Text:string;
 begin
      inherited Paint;
-
+     Text := 'zum Schlieﬂen, Fenster nach unter ziehen';
      if inaktiv = true then
      begin
-          Brush.Style := bsClear;       // im inaktiven Modus
-          Pen.Style := psClear;         // macht sich das Shape unsichtbar
+          Brush.Style := bsClear;       // im inaktiven Modus macht sich das Shape unsichtbar
+
+     with Canvas do
+     begin
+          Font.Color := Themenfarbe2;                 // und einen Hilfs-Text
+          Brush.Style := bsClear;                     // in die Mitte des Shapes
+          Font.Charset := Ansi_Charset;
+          Font.Name := 'permanent marker';
+          Font.Size := (3*Height)div 5 ;
+          Textposition := TextWidth(Text) div 2;
+          TextOut((Screen.Width div 2)-Textposition,-5,Text);
+     end;
      end else
      begin
-          Brush.Style := bsSolid;        
+          Brush.Style := bsSolid;
           Brush.Color := Themenfarbe2;   // im aktiven Modus bekommt es die Themenfarbe 2
 
      with Canvas do
      begin
-          Text := 'zum Schlieﬂen, Fenster nach unter ziehen';
           Font.Color := Themenfarbe1;                 // und einen Hilfs-Text
           Brush.Style := bsClear;                     // in die Mitte des Shapes
           Font.Charset := Ansi_Charset;

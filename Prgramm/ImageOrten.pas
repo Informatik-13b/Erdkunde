@@ -46,13 +46,13 @@ constructor TImageOrten.Create(AOwner:TComponent);
 begin
      inherited Create(AOwner);
 
-     Height := (Screen.Height*9) div 10;
+     Height := (Screen.Height*14) div 15;
      Width := (Height*19) div 26;
-     Top := Screen.Height div 20;
-     Left := (Screen.Width div 2) - (Width div 2);
+     Top := Screen.Height div 30;
+     Left := Screen.Width - Width - Top; //(Screen.Width div 3) - (Width div 2);
      Cursor := crCross;
      Stretch := true;
-     Picture.LoadFromFile('Bilder/DKarte mit Städte.bmp');
+     Picture.LoadFromFile('Bilder/DKarte ohne Städte.bmp');
 end;
 
 function TImageOrten.SatzLadenAnzeigen(index:integer): string;
@@ -106,7 +106,7 @@ begin
      X := round(dif_hoch * X);
      Y := round(dif_hoch * Y);
 
-     Canvas.Pen.Width := 10;
+     Canvas.Pen.Width := 8;
      Canvas.Pen.Color := clRed;
      Canvas.LineTo(X,Y);
 
@@ -137,6 +137,14 @@ begin
                   round(Text_x),round(Text_y),
                   FloatToStr(Round(Entfernung))+' km',
                   3600 - round(Winkel));
+
+     Canvas.Pen.Width := 6;
+     Canvas.Pen.Color := clGreen;
+     Canvas.Ellipse(Ort.x-29,Ort.y-29,Ort.x+29,Ort.y+29);
+     Canvas.Pen.Color := clYellow;
+     Canvas.Ellipse(Ort.x-146,Ort.y-146,Ort.x+146,Ort.y+146);
+     Canvas.Pen.Color := clRed;
+     Canvas.Ellipse(Ort.x-292,Ort.y-292,Ort.x+292,Ort.y+292);
 end;
 
 procedure TImageOrten.TextOutAngle(const Canvas: TCanvas; X, Y: Integer;

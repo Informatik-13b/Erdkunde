@@ -17,16 +17,17 @@ type
   private
     { Private-Deklarationen }
     aktueller_record : integer;
-    ROrte : TOrte;
     Orte_Datei : file of TOrte;
   protected
     { Protected-Deklarationen }
     procedure MouseUp(Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer); override;
-      procedure TextOutAngle(const Canvas: TCanvas; X, Y: Integer;
-                             const AText: string; AAngle: Integer);
   public
     { Public-Deklarationen }
+    ROrte : TOrte;
+    geklickt:boolean;
+    Punkte : integer;
+    Entfernung : integer;
     constructor Create(AOwner:TComponent); override;
     function SatzLadenAnzeigen(index:integer) : string;
   published
@@ -37,8 +38,9 @@ procedure Register;
 
 implementation
 
-var
+uses karte;
 
+var
 KoSy: array of array of boolean;
 Ort:TPoint;
 
@@ -52,6 +54,7 @@ begin
      Left := Screen.Width - Width - Top; //(Screen.Width div 3) - (Width div 2);
      Cursor := crCross;
      Stretch := true;
+     geklickt := false;
      Picture.LoadFromFile('Bilder/DKarte ohne Städte.bmp');
 end;
 
@@ -86,7 +89,7 @@ begin
                           break;
                      end;
                Canvas.MoveTo(Ort.x,Ort.y);
-               result := Ortsname + ', ' + Schwierigkeit;
+               result := Ortsname;
           end;
      end;
      CloseFile(Orte_Datei);
@@ -95,12 +98,14 @@ end;
 procedure TImageOrten.MouseUp(Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
 var
-Entfernung:real;
 dif_x, dif_y : real;
 dif_hoch:real;
-Winkel : real;
-Text_x,Text_y : real;
+a,b : integer;
+EntfernungTemp:real;
 begin
+     if geklickt = false then
+     begin
+
      dif_hoch := (2600 / Height);
 
      X := round(dif_hoch * X);
@@ -113,64 +118,30 @@ begin
      dif_x := X - Ort.x;
      dif_y := Y - Ort.y;
 
-     Entfernung := sqrt( (dif_x * dif_x) + (dif_y * dif_y));
+     EntfernungTemp := sqrt( (dif_x * dif_x) + (dif_y * dif_y));
 
-     Entfernung := Entfernung * ( 613 / 1791 );
+     Entfernung := round(EntfernungTemp * ( 613 / 1791 ));
+     if Entfernung < 100 then b := 2 else b := 1;
+     if Entfernung < 50  then b := 3;
+     if Entfernung < 5   then b := 4;
 
-     Canvas.Font.Size := 60;
-     Canvas.Font.Name := 'Arial';
+
+     if ROrte.Schwierigkeit = 'schwer' then a := 3;
+     if ROrte.Schwierigkeit = 'mittel' then a := 2;
+     if ROrte.Schwierigkeit = 'leicht' then a := 1;
+     Punkte := round(a*b*(100/Entfernung));  //
+
      Canvas.Brush.Style := bsClear;
-
-     if dif_x = 0 then dif_x := 1;
-
-     Winkel:= 10 * RadToDeg(ArcTan( dif_y / dif_x ));
-                                                {1.Quadrant}
-     if x < 0 then Winkel:=180+Winkel else
-     begin	                                {2. bzw. 3.Quadrant}
-          if y < 0 then Winkel:=360+Winkel;	{4.Quadrant}
-     end;
-
-     Text_x := X-(dif_x / 2)-(Canvas.TextWidth(FloatToStr(Round(Entfernung))+' km') / 2);
-     Text_y := Y-(dif_y / 2)-(Canvas.TextHeight(FloatToStr(Round(Entfernung))+' km'));
-
-     TextOutAngle(self.Canvas,
-                  round(Text_x),round(Text_y),
-                  FloatToStr(Round(Entfernung))+' km',
-                  3600 - round(Winkel));
-
      Canvas.Pen.Width := 6;
      Canvas.Pen.Color := clGreen;
-     Canvas.Ellipse(Ort.x-29,Ort.y-29,Ort.x+29,Ort.y+29);
+     Canvas.Ellipse(Ort.x-29,Ort.y-29,Ort.x+29,Ort.y+29);   // 10 km Radius
      Canvas.Pen.Color := clYellow;
-     Canvas.Ellipse(Ort.x-146,Ort.y-146,Ort.x+146,Ort.y+146);
+     Canvas.Ellipse(Ort.x-146,Ort.y-146,Ort.x+146,Ort.y+146); // 50 km Radius
      Canvas.Pen.Color := clRed;
-     Canvas.Ellipse(Ort.x-292,Ort.y-292,Ort.x+292,Ort.y+292);
-end;
+     Canvas.Ellipse(Ort.x-292,Ort.y-292,Ort.x+292,Ort.y+292); // 100 km Radius
 
-procedure TImageOrten.TextOutAngle(const Canvas: TCanvas; X, Y: Integer;
-                                  const AText: string; AAngle: Integer);
-var
-   hCurFont: HFONT;
-   LogFont: TLogFont;
-begin
-   with Canvas do
-   begin
-     hCurFont := Font.Handle;
-     try
-       GetObject(Font.Handle, SizeOf(LogFont), @LogFont);
-       LogFont.lfEscapement := AAngle;
-       LogFont.lfOrientation := AAngle;
-   
-       Font.Handle := CreateFontIndirect(LogFont);
-       try
-         TextOut(X, Y, AText);
-       finally
-         DeleteObject(Font.Handle);        
-       end;
-     finally
-       Font.Handle := hCurFont;
+     geklickt := true;
      end;
-   end;
 end;
 
 procedure Register;

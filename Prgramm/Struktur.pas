@@ -40,7 +40,7 @@ var
   MenuePos:integer = 1;
   ScreenMitte:TPoint;
   ScreenZaehler: Integer;
-  MenueObjekt : array[1..10] of TImageButton;
+  MenueObjekt : array[1..6] of TImageButton;
   SchliessenShape : TShapeSchliessen;
 
 implementation
@@ -171,7 +171,7 @@ var i,k,l :integer;
 begin
      k := round(3*((Screen.Height / 3)) / 4);        // (normale Größe)
      l := round(15*((Screen.Height / 3)) / 18);      // (zoom Größe)
-     for i := 1 to 4 do  // 1-4: Titel wird nicht gezoomt!!!
+     for i := 1 to 4 do                       // 1-4: Titel wird nicht gezoomt!!!
      begin
           if (MenueObjekt[i].Zoom = true) and         // prüft ob, ein Menüobjekt im Zoom-Modus ist
              (MenueObjekt[i].Height < l) then         // und kleiner als die Zoom-End-Größe ist

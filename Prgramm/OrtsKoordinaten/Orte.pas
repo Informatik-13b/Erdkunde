@@ -9,7 +9,7 @@ uses
 type
   TOrte = record
      Index : integer;
-     Ortsname : string[20];
+     Ortsname : string[30];
      Schwierigkeit : string[10];
      KoSy_x, KoSy_y : integer;
   end;

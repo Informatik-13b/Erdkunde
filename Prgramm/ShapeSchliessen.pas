@@ -70,10 +70,10 @@ begin
           Font.Color := Themenfarbe2;                 // und einen Hilfs-Text
           Brush.Style := bsClear;                     // in die Mitte des Shapes
           Font.Charset := Ansi_Charset;
-          Font.Name := 'permanent marker';
+          Font.Name := 'Comic Sans MS';
           Font.Size := (3*Height)div 5 ;
           Textposition := TextWidth(Text) div 2;
-          TextOut((Screen.Width div 2)-Textposition,-5,Text);
+          TextOut((Screen.Width div 2)-Textposition,0,Text);
      end;
      end else
      begin
@@ -85,10 +85,10 @@ begin
           Font.Color := Themenfarbe1;                 // und einen Hilfs-Text
           Brush.Style := bsClear;                     // in die Mitte des Shapes
           Font.Charset := Ansi_Charset;
-          Font.Name := 'permanent marker';
+          Font.Name := 'Comic Sans MS';
           Font.Size := (3*Height)div 5 ;
           Textposition := TextWidth(Text) div 2;
-          TextOut((Screen.Width div 2)-Textposition,-5,Text);
+          TextOut((Screen.Width div 2)-Textposition,0,Text);
      end;
      end;
 end;

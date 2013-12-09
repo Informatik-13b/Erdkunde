@@ -1,6 +1,6 @@
 object Menue: TMenue
-  Left = 193
-  Top = 124
+  Left = 205
+  Top = 160
   Align = alClient
   BorderStyle = bsNone
   ClientHeight = 536

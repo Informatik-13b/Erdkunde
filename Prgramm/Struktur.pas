@@ -9,9 +9,7 @@ uses
 type
   TMenue = class(TForm)
     MenueEffekt: TTimer;
-    ImageScreen: TImage;
     Zoomen: TTimer;
-    TimerStartscreen: TTimer;
     procedure FormPaint(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -23,7 +21,6 @@ type
              Zentrum:TPoint;Radius:real): integer;
     procedure MenueEffektTimer(Sender: TObject);
     procedure ZoomenTimer(Sender: TObject);
-    procedure TimerStartscreenTimer(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -45,14 +42,13 @@ var
 
 implementation
 
-uses Karte;
+uses Karte,Lexikon;
 
 {$R *.DFM}
 
 procedure TMenue.FormPaint(Sender: TObject);
 begin
      Menue.Color := Themenfarbe1;
-
 end;
 
 procedure TMenue.FormCreate(Sender: TObject);
@@ -86,10 +82,6 @@ var i : integer;
      SchliessenShape.Themenfarbe2 := Themenfarbe2;
      SchliessenShape.Fenster := Menue;           // Wichtig! Das Fenster wird übergeben, damit die Komponente weiß
                                                  // welches Fenster geschlossen werden soll.
-
-     ImageScreen.BringToFront;     //bringt das Startbild in den Vordergrung
-     ScreenZaehler := 0;           // Zählervariable für den Timer auf Null setzen
-     TimerStartscreen.Enabled := True;     //startet den Timer für den Startscreen
 end;
 
 
@@ -206,50 +198,14 @@ begin
 end;
 
 
-procedure TMenue.TimerStartscreenTimer(Sender: TObject);
- var Startscreen: TBitmap;
-     i,j: Integer;
-  begin
-    Inc(ScreenZaehler);
-    If ScreenZaehler = 1 then
-      begin
-         ImageScreen.Left := 0;
-         ImageScreen.Top := 0;
-         ImageScreen.Width := Menue.Width;
-         ImageScreen.Height := Menue.Height;  //Startbild erscheint auf dem ganzen Schirm
-      end;
-    Startscreen := TBitmap.Create;       //Startscreen wird als TBitmap erzeugt
-     Try
-       Startscreen.LoadFromFile('Testbild.bmp');       //Variable Startscreen wird gefüllt
-       ImageScreen.Picture.Bitmap.Assign(Startscreen); //Startscreen wird angezeigt
-     Finally
-       Startscreen.Free;        //verbindung wird getrennt
-   { If (ScreenZaehler > 100) and (ScreenZaehler < 102) then
-      begin
-         For i:= 0 to ImageScreen.Width - 1 do
-          For j:= 0 to ImageScreen.Height - 1 do
-            begin
-              // ImageScreen.Canvas.pixels [i,j] := clLime;
-            end;}
-    If ScreenZaehler >= 5 then
-      begin
-         MenueEffekt.Enabled := True;      //Timer für das Menü wird aktiviert
-         Zoomen.Enabled := True;          //Timer für das Zoomen wird aktiviert
-         ImageScreen.Visible := False;    //Startbildschirm wird ausgebeldet
-         TimerStartscreen.Enabled := False;
-         For i := 1 to 5 do
-           begin
-              MenueObjekt[i].BringToFront;    //Startimages werden in den Vordergrund gebracht
-           end;
-      end;
-
-  end;
-end;
-
 procedure TMenue.FensterOeffnen(Button:integer);
 begin
-     
      case Button of
+     2: begin
+             Application.CreateForm(TFLexikon, FLexikon);
+             FLexikon.BringToFront;
+             FLexikon.ShowModal
+        end;
      4: begin
              Application.CreateForm(TOrte_Finden, Orte_Finden);
              Orte_Finden.BringToFront;
@@ -257,6 +213,7 @@ begin
         end;
      end;
 end;
+
 
 
 end.

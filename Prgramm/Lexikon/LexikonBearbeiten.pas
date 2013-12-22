@@ -21,7 +21,6 @@ type
     BtnSpeichern: TButton;
     REdtText: TRichEdit;
     REdtKopie: TRichEdit;
-    Btn: TButton;
     procedure FormCreate(Sender: TObject);
     procedure BtnErsetzenClick(Sender: TObject);
     procedure BtnNeuClick(Sender: TObject);
@@ -31,11 +30,11 @@ type
     procedure BtnZurueckClick(Sender: TObject);
     procedure BtnSpeichernClick(Sender: TObject);
     procedure speichern;
-    function Datensaetze:integer;
     procedure Verschluesseln;
     procedure Entschluesseln;
     procedure ErzeugeGa;
     procedure addition(x:integer);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private-Deklarationen }
   public
@@ -56,7 +55,7 @@ var
   Schluessel: String;
 
 Const
-  ka = ',-./0123456789:;?ABCDEFGHIJKLMNOPQRSTUVWXYZÖÜÄ`abcdefghijklmnopqrstuvwxyzüöäß';
+  ka = ',-./0123456789:;Ô?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz';
 
 implementation
 
@@ -65,51 +64,39 @@ implementation
 procedure TForm1.FormCreate(Sender: TObject);
 begin
      REdtKopie.Lines.LoadfromFile('Lexikon.txt');
-     Menge := Datensaetze;
 
-     Schluessel := 'arne';
-     //Verschluesseln;
-     //Entschluesseln;
-
-     Laden(2);
+     Schluessel := 'abcd';
+     Entschluesseln;
+     
+     Menge := StrToInt(REdtKopie.Lines[0]);
      Label4.Caption := IntToStr(Menge);
-end;
-
-function TForm1.Datensaetze:integer;
-var i, Datensatz:integer;
-temp:string;
-begin
-     i := 0;
-     Datensatz := -1;
-     repeat
-           inc(i);
-           temp := REdtKopie.Lines[i];
-           if length(temp) < 4 then inc(Datensatz);
-     until temp = '';
-     result := Datensatz;
+     Laden(Menge);
 end;
 
 procedure TForm1.Laden(Datensatz:integer);
 var Linie,j:integer;
 temp:string;
 begin
+
      EdtIndex.Text := IntToStr(Datensatz);
      temp := '';
      Linie := 1;
-     j := -1;
      repeat
            temp := REdtKopie.Lines[Linie];
            inc(Linie);
      until temp = IntToStr(Datensatz);
      EdtStichwort.Text := REdtKopie.Lines[Linie];
 
+     inc(Linie);
+     temp := REdtKopie.Lines[Linie];
+     j := 0;
      repeat
-          inc(Linie);
-          inc(j);
-          temp := REdtKopie.Lines[Linie];
-          REdtText.Lines.add(temp);
+           if j = 0 then REdtText.Lines[j] := temp
+              else REdtText.Lines.add(temp);
+           inc(Linie);
+           temp := REdtKopie.Lines[Linie];
+           inc(j);
      until (temp = IntToStr(Datensatz+1)) or (temp = '');
-     REdtText.Lines[j] := '';
 end;
 
 
@@ -120,13 +107,13 @@ end;
 
 
 procedure TForm1.schreiben(Datensatz:integer);
-var temp:string;
+var temp,temp2:string;
 Linie,Linie2,i,dif:integer;
 begin
      if Datensatz < Menge then
      begin
 
-     Linie := 1;
+     Linie := 0;
      repeat
            temp := REdtKopie.Lines[Linie];
            inc(Linie);
@@ -145,15 +132,23 @@ begin
            inc(Linie);
      until temp = '';
      REdtKopie.Lines[Linie-1] := IntToStr(Menge);
+     EdtIndex.Text := IntToStr(Menge);
      REdtKopie.Lines[Linie] := EdtStichwort.Text;
      inc(Linie);
 
-     for i := 1 to REdtText.Lines.Capacity do
-     begin
-           if i > dif-3 then REdtKopie.Lines.add(REdtText.Lines[i-1])
-           else REdtKopie.Lines[Linie+i] := REdtText.Lines[i];
-     end;
-     EdtIndex.Text := IntToStr(Menge);
+     i := 0;
+     temp := REdtKopie.Lines[Linie];
+     temp2 := REdtText.Lines[i];
+     repeat
+          if temp <> '' then
+             if temp2 <> '' then REdtKopie.Lines[Linie] := temp2
+             else REdtKopie.Lines.Delete(Linie)
+          else REdtKopie.Lines.Add(temp2);
+          inc(i);
+          inc(Linie);
+          temp := REdtKopie.Lines[Linie];
+          temp2 := REdtText.Lines[i];
+     until (temp = '') and (temp2 = '');
 
      end else
      begin
@@ -168,16 +163,23 @@ begin
            temp := REdtKopie.Lines[Linie2];
            inc(Linie2);
      until temp = '';
-     dif := Linie2-Linie+1;
 
      REdtKopie.Lines[Linie] := EdtStichwort.Text;
      inc(Linie);
 
-     for i := 1 to REdtText.Lines.Capacity do
-     begin
-           if i > dif-3 then REdtKopie.Lines.add(REdtText.Lines[i-1])
-           else REdtKopie.Lines[Linie+i] := REdtText.Lines[i];
-     end;
+     i := 0;
+     temp := REdtKopie.Lines[Linie];
+     temp2 := REdtText.Lines[i];
+     repeat
+          if temp <> '' then
+             if temp2 <> '' then REdtKopie.Lines[Linie] := temp2
+             else REdtKopie.Lines.Delete(Linie)
+          else REdtKopie.Lines.Add(temp2);
+          inc(i);
+          inc(Linie);
+          temp := REdtKopie.Lines[Linie];
+          temp2 := REdtText.Lines[i];
+     until (temp = '') and (temp2 = '');
      end;
 end;
 
@@ -222,13 +224,20 @@ begin
 end;
 
 procedure TForm1.speichern;
+var temp:string;
+i:integer;
 begin
      REdtKopie.Lines[0] := IntToStr(Menge);
      REdtKopie.Lines.add(IntToStr(Menge));
      REdtKopie.Lines.add(EdtStichwort.Text);
-     REdtKopie.Lines.add(REdtText.Lines[1-1]);
-     REdtKopie.Lines.add(REdtText.Lines[2-1]);
-     REdtKopie.Lines.add(REdtText.Lines[3-1]);
+
+     i := 0;
+     temp := REdtText.Lines[i];
+     repeat
+           REdtKopie.Lines.add(temp);
+           inc(i);
+           temp := REdtText.Lines[i];
+     until temp = '';
 
      BtnErsetzen.Enabled := true;
      BtnWeiter.Enabled := true;
@@ -303,5 +312,11 @@ procedure TForm1.addition (x: integer);
   end;
 
 
+
+procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+     Verschluesseln;
+     REdtKopie.Lines.SaveToFile('Lexikon.txt');
+end;
 
 end.

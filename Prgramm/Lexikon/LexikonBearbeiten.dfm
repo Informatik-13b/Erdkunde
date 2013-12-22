@@ -11,6 +11,7 @@ object Form1: TForm1
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
@@ -125,13 +126,5 @@ object Form1: TForm1
     ScrollBars = ssBoth
     TabOrder = 8
     WordWrap = False
-  end
-  object Btn: TButton
-    Left = 16
-    Top = 128
-    Width = 75
-    Height = 25
-    Caption = 'Btn'
-    TabOrder = 9
   end
 end

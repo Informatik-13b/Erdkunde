@@ -1,10 +1,10 @@
 object Menue: TMenue
-  Left = 205
-  Top = 160
+  Left = 206
+  Top = 161
   Align = alClient
   BorderStyle = bsNone
-  ClientHeight = 536
-  ClientWidth = 884
+  ClientHeight = 557
+  ClientWidth = 1018
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -17,32 +17,16 @@ object Menue: TMenue
   OnPaint = FormPaint
   PixelsPerInch = 96
   TextHeight = 15
-  object ImageScreen: TImage
-    Left = 664
-    Top = 32
-    Width = 105
-    Height = 105
-    Stretch = True
-  end
   object MenueEffekt: TTimer
-    Enabled = False
     Interval = 1
     OnTimer = MenueEffektTimer
     Left = 888
     Top = 64
   end
   object Zoomen: TTimer
-    Enabled = False
     Interval = 1
     OnTimer = ZoomenTimer
     Left = 848
     Top = 64
-  end
-  object TimerStartscreen: TTimer
-    Enabled = False
-    Interval = 40
-    OnTimer = TimerStartscreenTimer
-    Left = 848
-    Top = 112
   end
 end

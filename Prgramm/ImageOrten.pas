@@ -55,7 +55,7 @@ begin
      Cursor := crCross;
      Stretch := true;
      geklickt := false;
-     Picture.LoadFromFile('Bilder/DKarte ohne Städte.bmp');
+     Picture.Bitmap.LoadFromFile('DKarteOhneStaedte.bmp');
 end;
 
 function TImageOrten.SatzLadenAnzeigen(index:integer): string;

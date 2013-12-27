@@ -20,6 +20,9 @@ type
     procedure DateiLadenEntschluesseln;
     procedure ErzeugeGa;
     procedure addition(x:integer);
+    procedure StichwoerterAuflisten;
+    procedure AbsaetzeLaden(Stichwort:string);
+    procedure LBStichwoerterClick(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -94,6 +97,7 @@ begin
      LBStichwoerter.Color := Themenfarbe1;
 
      DateiLadenEntschluesseln;
+     StichwoerterAuflisten;
 end;
 
 procedure TFLexikon.DateiLadenEntschluesseln;
@@ -148,6 +152,23 @@ begin
             + copy (ga, 1, p2-1);
 end;
 
+procedure TFLexikon.StichwoerterAuflisten;
+var i,Linie: integer;
+tmp:string;
+begin
+     Linie := 0;
+     for i := 1 to StrToInt(REdtDatei.Lines[0]) do
+     begin
+          repeat
+                inc(Linie);
+                tmp := REdtDatei.Lines[Linie];
+          until tmp = IntToStr(i);
+          inc(Linie);
+          tmp := REdtDatei.Lines[Linie];
+          LbStichwoerter.Items.Add(tmp);
+     end;
+end;
+
 procedure TFLexikon.FormMouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
 begin
@@ -159,5 +180,32 @@ begin
 end;
 
 
+
+procedure TFLexikon.LBStichwoerterClick(Sender: TObject);
+var Stichwort:string;
+begin
+     Stichwort := LbStichwoerter.Items.Strings[LbStichwoerter.ItemIndex];
+     AbsaetzeLaden(Stichwort);
+end;
+
+procedure TFLexikon.AbsaetzeLaden(Stichwort:string);
+var tmp:string;
+Linie:integer;
+begin
+     LblText.Caption := '';
+     Linie := 0;
+     repeat
+           inc(Linie);
+           tmp := REdtDatei.Lines[Linie];
+     until tmp = Stichwort;
+
+     repeat
+           inc(Linie);
+           tmp := REdtDatei.Lines[Linie];
+           if length(tmp) > 4 then
+             if LblText.Caption = '' then LblText.Caption := tmp
+                       else LblText.Caption := LblText.Caption + #13 + tmp;
+     until length(tmp) < 4;
+end;
 
 end.

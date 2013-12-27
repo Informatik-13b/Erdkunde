@@ -1,11 +1,11 @@
 object FLexikon: TFLexikon
-  Left = 192
+  Left = 193
   Top = 225
   Align = alClient
   BorderStyle = bsNone
   Caption = 'FLexikon'
   ClientHeight = 525
-  ClientWidth = 1072
+  ClientWidth = 1071
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -54,6 +54,7 @@ object FLexikon: TFLexikon
     Top = 56
     Width = 68
     Height = 26
+    AutoSize = False
     Caption = 'LblText'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -61,6 +62,7 @@ object FLexikon: TFLexikon
     Font.Name = 'Comic Sans MS'
     Font.Style = []
     ParentFont = False
+    WordWrap = True
   end
   object LBStichwoerter: TListBox
     Left = 312
@@ -68,9 +70,17 @@ object FLexikon: TFLexikon
     Width = 121
     Height = 97
     Ctl3D = False
-    ItemHeight = 13
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -20
+    Font.Name = 'Comic Sans MS'
+    Font.Style = []
+    ItemHeight = 28
     ParentCtl3D = False
+    ParentFont = False
+    Sorted = True
     TabOrder = 0
+    OnClick = LBStichwoerterClick
   end
   object REdtDatei: TRichEdit
     Left = 712
@@ -80,5 +90,6 @@ object FLexikon: TFLexikon
     Lines.Strings = (
       'REdtDatei')
     TabOrder = 1
+    Visible = False
   end
 end

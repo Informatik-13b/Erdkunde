@@ -53,7 +53,6 @@ end;
 
 procedure TMenue.FormCreate(Sender: TObject);
 var i : integer;
-    Startscreen: TBitmap;
   begin
      Themenfarbe1 := RGB(244,164,96);         //Themenfarben können sich durchs ganze
      Themenfarbe2 := RGB(205,133,63);         //Programm ziehen... (sind noch nicht beschlossen)

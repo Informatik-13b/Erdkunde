@@ -11,9 +11,9 @@ type
     Maskottchen: TLabel;
     ShpHintergrund1: TShape;
     ShpHintergrund2: TShape;
-    LblText: TLabel;
     LBStichwoerter: TListBox;
     REdtDatei: TRichEdit;
+    MText: TRichEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
@@ -55,7 +55,7 @@ uses Struktur;
 procedure TFLexikon.FormCreate(Sender: TObject);
 var Rand:integer;
 begin
-     Themenfarbe1 := Menue.Themenfarbe1;
+     Themenfarbe1 := Menue.Themenfarbe1;                   //Übergabe der Themenfarbe
      Themenfarbe2 := Menue.Themenfarbe2;
 
      FLexikon.Color := Themenfarbe1;
@@ -69,11 +69,11 @@ begin
                                                  // welches Fenster geschlossen werden soll.
      Rand := Screen.Height div 30;
      Maskottchen.Top := 17*Rand;
-     Maskottchen.Left := 2*Rand;
-     Maskottchen.Width := Screen.Width - 5*Rand - ((Screen.Height*133)div 195);
-     Maskottchen.Height := 11*Rand;
-
-     ShpHintergrund1.Left := Rand;
+     Maskottchen.Left := 2*Rand;                                                    // Platzvergabe der Objekte in Abhängigkeit der Auflösung
+     Maskottchen.Width := Screen.Width - 5*Rand - ((Screen.Height*133)div 195);     //   |
+     Maskottchen.Height := 11*Rand;                                                 //   |
+                                                                                    //   |
+     ShpHintergrund1.Left := Rand;                                                  //   V
      ShpHintergrund1.Top  := Rand;
      ShpHintergrund1.Width := Screen.Width - 3*Rand - ((Screen.Height*133)div 195);
      ShpHintergrund1.Height:= Screen.Height - 2*Rand;
@@ -85,18 +85,19 @@ begin
      ShpHintergrund2.Height:= Screen.Height - 2*Rand;
      ShpHintergrund2.Brush.Color := Themenfarbe2;
 
-     LblText.Left := ShpHintergrund2.Left + Rand;
-     LblText.Top  := 2*Rand;
-     LblText.Width := ShpHintergrund2.Width - 2*Rand;
-     LblText.Height := ShpHintergrund2.Height - 2*Rand;
+     MText.Left := ShpHintergrund2.Left + Rand;
+     MText.Top  := 2*Rand;
+     MText.Width := ShpHintergrund2.Width - 2*Rand;
+     MText.Height := ShpHintergrund2.Height - 2*Rand;
+     MText.Color := Themenfarbe1;
 
      LBStichwoerter.Left := 2*Rand;
      LBStichwoerter.Top := 2*Rand;
      LBStichwoerter.Width := ShpHintergrund1.Width - 2*Rand;
      LBStichwoerter.Height := ShpHintergrund1.Height - Maskottchen.Height - 3* Rand;
      LBStichwoerter.Color := Themenfarbe1;
-
-     DateiLadenEntschluesseln;
+                                                                                       // Lexikondatei wird geladen und entschlüsselt
+     DateiLadenEntschluesseln;                                                         // die Sitchwörter werden gelistet
      StichwoerterAuflisten;
 end;
 
@@ -104,9 +105,9 @@ procedure TFLexikon.DateiLadenEntschluesseln;
 
 var i : integer;
 begin
-     REdtDatei.Lines.LoadFromFile('Lexikon/Lexikon.txt');
-
-     Schluessel := 'abcd';
+     REdtDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Lexikon/Lexikon.txt');   // Ins UNSICHTBARE REditDatei wird die Lixikondatei geladen
+                                                                                           //
+     Schluessel := 'abcd';                                                                 // entschlüsselt
 
      gt := REdtDatei.Text;
      lenT := length(gt);
@@ -120,7 +121,7 @@ begin
           if p <> 0 then kt := kt + copy(ka,p,1)
           else kt := kt + c;;
      end;
-     REdtDatei.Text := kt;
+     REdtDatei.Text := kt;                                                               // und wieder ins UNSICHTBARE REdtDate geschrieben
 end;
 
 procedure TFLexikon.ErzeugeGa;
@@ -157,15 +158,15 @@ var i,Linie: integer;
 tmp:string;
 begin
      Linie := 0;
-     for i := 1 to StrToInt(REdtDatei.Lines[0]) do
-     begin
+     for i := 1 to StrToInt(REdtDatei.Lines[0]) do       // in der ersten Linie des REdtDatei ist die 
+     begin                                               // Menge der vorandenen Stichwörter hinterlegt
           repeat
                 inc(Linie);
-                tmp := REdtDatei.Lines[Linie];
-          until tmp = IntToStr(i);
-          inc(Linie);
-          tmp := REdtDatei.Lines[Linie];
-          LbStichwoerter.Items.Add(tmp);
+                tmp := REdtDatei.Lines[Linie];          // die Linien werden ausgelesen
+          until tmp = IntToStr(i);                      // bis ein neuer Datensatz auftaucht .
+          inc(Linie);                                   // In der nächsten Linie/Zeile
+          tmp := REdtDatei.Lines[Linie];                // befindet sich das Stichwort und
+          LbStichwoerter.Items.Add(tmp);                // es wird dem LBStichwoerter Objekt hinzugefügt
      end;
 end;
 
@@ -181,31 +182,34 @@ end;
 
 
 
-procedure TFLexikon.LBStichwoerterClick(Sender: TObject);
-var Stichwort:string;
+procedure TFLexikon.LBStichwoerterClick(Sender: TObject);                 // LbStichwoerter ist ein RichEdit, dessen Eigenschaft "sorted" auf true gesetzt wurde,
+var Stichwort:string;                                                     // das heißt, dass keine eigene procedure zum sortieren der Stichwörter geschrieben werden muss
 begin
-     Stichwort := LbStichwoerter.Items.Strings[LbStichwoerter.ItemIndex];
-     AbsaetzeLaden(Stichwort);
+     Stichwort := LbStichwoerter.Items.Strings[LbStichwoerter.ItemIndex]; // Das angeklickte Stichwort wird ermittelt
+     AbsaetzeLaden(Stichwort);                                            // und die dazugehörigen Absätze werden geladen
 end;
 
 procedure TFLexikon.AbsaetzeLaden(Stichwort:string);
 var tmp:string;
 Linie:integer;
-begin
-     LblText.Caption := '';
+begin                                                                     // MText wird geleert
+     MText.Clear;
      Linie := 0;
      repeat
-           inc(Linie);
+           inc(Linie);                                                    // Das Stichwort wird in der UNSICHTBAREN Liste gesucht
            tmp := REdtDatei.Lines[Linie];
      until tmp = Stichwort;
 
-     repeat
-           inc(Linie);
+     repeat                                                               // danach werden die folgenden Zeilen / Linien
+           inc(Linie);                                                    // ausgelsen und in MText übertragen
            tmp := REdtDatei.Lines[Linie];
            if length(tmp) > 4 then
-             if LblText.Caption = '' then LblText.Caption := tmp
-                       else LblText.Caption := LblText.Caption + #13 + tmp;
-     until length(tmp) < 4;
+             if MText.Lines[0] = '' then MText.Lines.Add(tmp)
+               else begin
+                         MText.Lines.Add('');
+                         MText.Lines.Add(tmp);
+               end;
+     until length(tmp) < 4;                                               // bis ein neuer Datensatz erreicht wird
 end;
 
 end.

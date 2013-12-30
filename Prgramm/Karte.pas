@@ -50,16 +50,21 @@ var Stadt:integer;
 begin
      self.DoubleBuffered := true;
 
-     Themenfarbe1 := Menue.Themenfarbe1;
+     Themenfarbe1 := Menue.Themenfarbe1;             // Themenfarbe wird aus dem Menü-Formular gelesen
      Themenfarbe2 := Menue.Themenfarbe2;
 
      Orte_Finden.Color := Themenfarbe1;
 
-     SuchKarte := TImageOrten.Create(self);
+     SuchKarte := TImageOrten.Create(self);          // Die Suchkarte wird erzeugt
      SuchKarte.Parent := self;
+
+     SuchKarte.Picture.Bitmap.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder/DKarte Ohne Städte.bmp'); // Die Deutschlandkarte wird geladen
+
      randomize;
      Stadt := random(75)+1;
-     LblStadt.Caption := SuchKarte.SatzLadenAnzeigen(Stadt);
+     LblStadt.Caption := SuchKarte.SatzLadenAnzeigen(Stadt);   // ein zufälliger Datensatz wird geladen
+
+
 
      SchliessenShape := TShapeSchliessen.Create(self);    // Erstellen der Schließen-Komponente
      SchliessenShape.Parent := self;
@@ -68,9 +73,9 @@ begin
      SchliessenShape.Fenster := Orte_Finden;           // Wichtig! Das Fenster wird übergeben, damit die Komponente weiß
                                                        // welches Fenster geschlossen werden soll.
 
-     Rand := Screen.Height div 30;
+     Rand := Screen.Height div 30;                    // Rand ist eine bestimme Länge in Abhängigkeit der Fensterhöhe
 
-     ShpHintergrund1.Left := Rand;
+     ShpHintergrund1.Left := Rand;                                                   // Objekte werden platziert
      ShpHintergrund1.Top  := Rand;
      ShpHintergrund1.Width := Screen.Width - 3*Rand - ((Screen.Height*133)div 195);
      ShpHintergrund1.Height:= Screen.Height - 2*Rand;
@@ -117,10 +122,10 @@ end;
 procedure TOrte_Finden.BtnNeuClick(Sender: TObject);
 var index:integer;
 begin
-     SuchKarte.Picture := nil;
-     SuchKarte.Picture.LoadFromFile('Bilder/DKarte ohne Städte.bmp');
+     SuchKarte.Picture := nil;                                                                              // Die Suchkarte wird geleert und
+     SuchKarte.Picture.Bitmap.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder/DKarte Ohne Städte.bmp'); // neu geladen
      SuchKarte.geklickt := false;
-     index := random(75)+1;
+     index := random(75)+1;                                                             // ein neuer zufälliger Datensatz wird geladen
      LblStadt.Caption := SuchKarte.SatzLadenAnzeigen(index);
      LblStadt.Left := (ShpHintergrund1.Width div 2 + Rand)-(LblStadt.Width div 2);
      LblSchwierigkeit.Caption := SuchKarte.ROrte.Schwierigkeit;
@@ -140,10 +145,10 @@ end;
 
 procedure TOrte_Finden.pruefenTimerTimer(Sender: TObject);
 begin
-     if SuchKarte.geklickt = true then
+     if SuchKarte.geklickt = true then                                 // Wenn geklickt wurde,
      begin
-          LblPunkte.Caption := IntToStr(SuchKarte.Punkte);
-          LblEntfernung.Caption := IntToStr(SuchKarte.Entfernung) + ' km';
+          LblPunkte.Caption := IntToStr(SuchKarte.Punkte);                     // werden die berechneten Punkte 
+          LblEntfernung.Caption := IntToStr(SuchKarte.Entfernung) + ' km';     // und die Entfernung in km  aus der Suchkarte gelesen
           LblPunkte.Left := (ShpHintergrund1.Width div 2 + Rand)-(LblPunkte.Width div 2);
           LblEntfernung.Left := (ShpHintergrund1.Width div 2 + Rand)-(LblEntfernung.Width div 2);
           pruefenTimer.Enabled := false;

@@ -133,7 +133,7 @@ end;
 procedure TImageButton.Click;
 begin
      inherited Click;
-
+                                                        // Fenster öffnen über das Menüfenster
      Menue.FensterOeffnen(Button);
 end;
 

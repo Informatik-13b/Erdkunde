@@ -68,11 +68,11 @@ var i : integer;
           MenueObjekt[i].Button := i;
           MenueObjekt[i].Enabled := false;
      end;
-     MenueObjekt[1].BildLaden('Bilder/Karten-Menüpunkt.gif');         // Jedes Menüobjekt lädt sein bestimmtes Bild
-     MenueObjekt[2].BildLaden('Bilder/Lexikon-Menüpunkt.gif');        // im gif-Format
-     MenueObjekt[3].BildLaden('Bilder/Profil-Menüpunkt.gif');
-     MenueObjekt[4].BildLaden('Bilder/Spiel-Menüpunkt.gif');
-     MenueObjekt[5].BildLaden('Bilder/Titel.gif');
+     MenueObjekt[1].BildLaden(ExtractFilePath(ParamStr(0)) + 'Bilder/Karten-Menüpunkt.gif');         // Jedes Menüobjekt lädt sein bestimmtes Bild
+     MenueObjekt[2].BildLaden(ExtractFilePath(ParamStr(0)) + 'Bilder/Lexikon-Menüpunkt.gif');        // im gif-Format
+     MenueObjekt[3].BildLaden(ExtractFilePath(ParamStr(0)) + 'Bilder/Profil-Menüpunkt.gif');
+     MenueObjekt[4].BildLaden(ExtractFilePath(ParamStr(0)) + 'Bilder/Spiel-Menüpunkt.gif');
+     MenueObjekt[5].BildLaden(ExtractFilePath(ParamStr(0)) + 'Bilder/Titel.gif');
      MenueObjekt[5].Titel := true;
 
      SchliessenShape := TShapeSchliessen.Create(self);    // Erstellen des Schließen-Komponente
@@ -197,7 +197,7 @@ begin
 end;
 
 
-procedure TMenue.FensterOeffnen(Button:integer);
+procedure TMenue.FensterOeffnen(Button:integer);               // Fenster öffnen
 begin
      case Button of
      2: begin

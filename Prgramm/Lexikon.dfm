@@ -1,6 +1,8 @@
 object FLexikon: TFLexikon
   Left = 193
   Top = 225
+  VertScrollBar.Smooth = True
+  VertScrollBar.Size = 10
   Align = alClient
   BorderStyle = bsNone
   Caption = 'FLexikon'
@@ -49,26 +51,12 @@ object FLexikon: TFLexikon
     ParentFont = False
     OnMouseMove = FormMouseMove
   end
-  object LblText: TLabel
-    Left = 264
-    Top = 56
-    Width = 68
-    Height = 26
-    AutoSize = False
-    Caption = 'LblText'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -19
-    Font.Name = 'Comic Sans MS'
-    Font.Style = []
-    ParentFont = False
-    WordWrap = True
-  end
   object LBStichwoerter: TListBox
     Left = 312
     Top = 200
     Width = 121
     Height = 97
+    TabStop = False
     Ctl3D = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -87,9 +75,35 @@ object FLexikon: TFLexikon
     Top = 136
     Width = 185
     Height = 89
+    TabStop = False
     Lines.Strings = (
       'REdtDatei')
     TabOrder = 1
     Visible = False
+    WordWrap = False
+  end
+  object MText: TRichEdit
+    Left = 296
+    Top = 24
+    Width = 185
+    Height = 89
+    TabStop = False
+    BorderStyle = bsNone
+    BorderWidth = 5
+    Ctl3D = False
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -20
+    Font.Name = 'Comic Sans MS'
+    Font.Style = []
+    Lines.Strings = (
+      'MText')
+    ParentCtl3D = False
+    ParentFont = False
+    PlainText = True
+    ReadOnly = True
+    ScrollBars = ssVertical
+    TabOrder = 2
+    WantReturns = False
   end
 end

@@ -9,7 +9,7 @@ uses
 type
   TOrte = record
      Index : integer;
-     Ortsname : string[30];
+     Ortsname : string[20];
      Schwierigkeit : string[10];
      KoSy_x, KoSy_y : integer;
   end;
@@ -56,12 +56,12 @@ implementation
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-     AssignFile(Orte_Datei,'Orte_KoSy.dat');
+     AssignFile(Orte_Datei,'Orte_KoSy.dat');      // Datei wird geöffnet
      aktueller_record := 1;
      if FileExists('Orte_KoSy.dat') then
      begin
           Reset(Orte_Datei);
-          SatzLadenAnzeigen;
+          SatzLadenAnzeigen;                       // erster Datensatz wird geladen
      end
      else Rewrite(Orte_Datei);
      Label5.Caption := IntToStr(aktueller_record);
@@ -72,10 +72,10 @@ begin
      Seek(Orte_Datei,aktueller_record-1);
      if FileSize(Orte_Datei) > 0 then
      begin
-          Read(Orte_Datei,ROrte);
+          Read(Orte_Datei,ROrte);                      // Der Datensatz wird in den Record geladen
           with ROrte do
           begin
-               EdtIndex.Text  := IntToStr(Index);
+               EdtIndex.Text  := IntToStr(Index);      // und in den Edits ausgegeben
                EdtOrt.Text    := Ortsname;
                EdtSchwierigkeit.Text := Schwierigkeit;
                EdtKoSy_x.Text := IntToStr(KoSy_x);
@@ -90,7 +90,7 @@ begin
      SatzSpeichern;
 end;
 
-procedure TForm1.SatzSpeichern;
+procedure TForm1.SatzSpeichern;                       // Speichern...
 begin
      with ROrte do
      begin

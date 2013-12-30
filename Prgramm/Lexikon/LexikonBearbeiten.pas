@@ -63,14 +63,14 @@ implementation
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-     REdtKopie.Lines.LoadfromFile('Lexikon.txt');
+     REdtKopie.Lines.LoadfromFile('Lexikon.txt');  // Lexikondatei wird ins REdtKopie geladen
 
      Schluessel := 'abcd';
-     Entschluesseln;
+     Entschluesseln;                                // und entschlüsselt.
      
-     Menge := StrToInt(REdtKopie.Lines[0]);
+     Menge := StrToInt(REdtKopie.Lines[0]);         // in der ersten Linie is die menge der Datensätze hintelegt
      Label4.Caption := IntToStr(Menge);
-     Laden(Menge);
+     Laden(Menge);                                 // der letzte Datensatz wird geladen
 end;
 
 procedure TForm1.Laden(Datensatz:integer);
@@ -82,16 +82,16 @@ begin
      temp := '';
      Linie := 1;
      repeat
-           temp := REdtKopie.Lines[Linie];
+           temp := REdtKopie.Lines[Linie];         //Die Linien werden ausgelesen
            inc(Linie);
-     until temp = IntToStr(Datensatz);
-     EdtStichwort.Text := REdtKopie.Lines[Linie];
+     until temp = IntToStr(Datensatz);              // bis der richtige Datensatz gefunden wurde
+     EdtStichwort.Text := REdtKopie.Lines[Linie];   // das Stichwort wird aus der nächsten Zeile gelesen
 
      inc(Linie);
      temp := REdtKopie.Lines[Linie];
      j := 0;
      repeat
-           if j = 0 then REdtText.Lines[j] := temp
+           if j = 0 then REdtText.Lines[j] := temp   // Die Absätze werden gelesen
               else REdtText.Lines.add(temp);
            inc(Linie);
            temp := REdtKopie.Lines[Linie];
@@ -110,7 +110,7 @@ procedure TForm1.schreiben(Datensatz:integer);
 var temp,temp2:string;
 Linie,Linie2,i,dif:integer;
 begin
-     if Datensatz < Menge then
+     if Datensatz < Menge then               // Wenn der zuschreibende Datensatz nicht der letzte ist,
      begin
 
      Linie := 0;
@@ -126,11 +126,11 @@ begin
 
      dif := Linie2-Linie+1;
      repeat
-           temp := REdtKopie.Lines[Linie+dif-1];
+           temp := REdtKopie.Lines[Linie+dif-1];                                        // wird er von den folgenden überschrieben
            if (length(temp) > 3) then REdtKopie.Lines[Linie] := temp
            else  if temp <> '' then REdtKopie.Lines[Linie] := IntToStr(StrToInt(temp)-1);
            inc(Linie);
-     until temp = '';
+     until temp = '';                                                                  // und neu hinten ran gesetzt.
      REdtKopie.Lines[Linie-1] := IntToStr(Menge);
      EdtIndex.Text := IntToStr(Menge);
      REdtKopie.Lines[Linie] := EdtStichwort.Text;
@@ -150,7 +150,7 @@ begin
           temp2 := REdtText.Lines[i];
      until (temp = '') and (temp2 = '');
 
-     end else
+     end else                                                   // wenn es der letzte Datensatz ist,
      begin
 
      Linie := 1;
@@ -172,7 +172,7 @@ begin
      temp2 := REdtText.Lines[i];
      repeat
           if temp <> '' then
-             if temp2 <> '' then REdtKopie.Lines[Linie] := temp2
+             if temp2 <> '' then REdtKopie.Lines[Linie] := temp2      // wird der letzte einfach überschrieben
              else REdtKopie.Lines.Delete(Linie)
           else REdtKopie.Lines.Add(temp2);
           inc(i);
@@ -206,9 +206,9 @@ end;
 procedure TForm1.BtnNeuClick(Sender: TObject);
 begin
      inc(Menge);
-     EdtIndex.Text := IntToStr(Menge);
+     EdtIndex.Text := IntToStr(Menge);                 // die Menge wird um einen erhöht und
      EdtStichwort.Text := '';
-     REdtText.Lines.Clear;
+     REdtText.Lines.Clear;                             // die Edtit werden geleert.
 
      BtnErsetzen.Enabled := false;
      BtnWeiter.Enabled := false;
@@ -232,7 +232,7 @@ begin
      REdtKopie.Lines.add(EdtStichwort.Text);
 
      i := 0;
-     temp := REdtText.Lines[i];
+     temp := REdtText.Lines[i];                   // ein neuer Datensatz wird ans ende der Liste geschrieben
      repeat
            REdtKopie.Lines.add(temp);
            inc(i);
@@ -315,8 +315,8 @@ procedure TForm1.addition (x: integer);
 
 procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-     Verschluesseln;
-     REdtKopie.Lines.SaveToFile('Lexikon.txt');
+     Verschluesseln;                             // Das RichEdit REdtKopie wird verschlüsslt und
+     REdtKopie.Lines.SaveToFile('Lexikon.txt');  // so in die Datei gespeichert.
 end;
 
 end.

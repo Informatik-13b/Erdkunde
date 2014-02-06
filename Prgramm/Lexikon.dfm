@@ -1,13 +1,13 @@
 object FLexikon: TFLexikon
-  Left = 193
-  Top = 225
+  Left = 229
+  Top = 139
   VertScrollBar.Smooth = True
   VertScrollBar.Size = 10
   Align = alClient
   BorderStyle = bsNone
   Caption = 'FLexikon'
   ClientHeight = 525
-  ClientWidth = 1071
+  ClientWidth = 1008
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -57,6 +57,7 @@ object FLexikon: TFLexikon
     Width = 121
     Height = 97
     TabStop = False
+    Columns = 3
     Ctl3D = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText

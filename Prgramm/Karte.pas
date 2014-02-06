@@ -38,6 +38,7 @@ var
   SchliessenShape:TShapeSchliessen;
   SuchKarte:TImageOrten;
   Rand:integer;
+  index:integer = 1;
 
 implementation
 
@@ -60,9 +61,7 @@ begin
 
      SuchKarte.Picture.Bitmap.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder/DKarte Ohne Städte.bmp'); // Die Deutschlandkarte wird geladen
 
-     randomize;
-     Stadt := random(75)+1;
-     LblStadt.Caption := SuchKarte.SatzLadenAnzeigen(Stadt);   // ein zufälliger Datensatz wird geladen
+     LblStadt.Caption := SuchKarte.SatzLadenAnzeigen(1);   // ein zufälliger Datensatz wird geladen
 
 
 
@@ -120,12 +119,11 @@ end;
 
 
 procedure TOrte_Finden.BtnNeuClick(Sender: TObject);
-var index:integer;
 begin
      SuchKarte.Picture := nil;                                                                              // Die Suchkarte wird geleert und
      SuchKarte.Picture.Bitmap.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder/DKarte Ohne Städte.bmp'); // neu geladen
      SuchKarte.geklickt := false;
-     index := random(75)+1;                                                             // ein neuer zufälliger Datensatz wird geladen
+     if index = 77 then index := 1 else inc(index);                                                             // ein neuer zufälliger Datensatz wird geladen
      LblStadt.Caption := SuchKarte.SatzLadenAnzeigen(index);
      LblStadt.Left := (ShpHintergrund1.Width div 2 + Rand)-(LblStadt.Width div 2);
      LblSchwierigkeit.Caption := SuchKarte.ROrte.Schwierigkeit;

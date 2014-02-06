@@ -1,6 +1,6 @@
 object Orte_Finden: TOrte_Finden
-  Left = 298
-  Top = 223
+  Left = 350
+  Top = 56
   Align = alClient
   BorderStyle = bsNone
   Caption = 'Orte_Finden'

@@ -42,7 +42,7 @@ var
 
 implementation
 
-uses Karte,Lexikon;
+uses Karte,Lexikon,Atlas;
 
 {$R *.DFM}
 
@@ -200,15 +200,20 @@ end;
 procedure TMenue.FensterOeffnen(Button:integer);               // Fenster öffnen
 begin
      case Button of
+     1: begin
+             Application.CreateForm(TKarten, Karten);
+             Karten.BringToFront;
+             Karten.ShowModal;
+        end;
      2: begin
              Application.CreateForm(TFLexikon, FLexikon);
              FLexikon.BringToFront;
-             FLexikon.ShowModal
+             FLexikon.ShowModal;
         end;
      4: begin
              Application.CreateForm(TOrte_Finden, Orte_Finden);
              Orte_Finden.BringToFront;
-             Orte_Finden.ShowModal
+             Orte_Finden.ShowModal;
         end;
      end;
 end;

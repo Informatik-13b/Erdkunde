@@ -70,12 +70,12 @@ begin
      Rand := Screen.Height div 30;
      Maskottchen.Top := 17*Rand;
      Maskottchen.Left := 2*Rand;                                                    // Platzvergabe der Objekte in Abhängigkeit der Auflösung
-     Maskottchen.Width := Screen.Width - 5*Rand - ((Screen.Height*133)div 195);     //   |
+     Maskottchen.Width := Screen.Width - 8*Rand - ((Screen.Height*133)div 195);     //   |
      Maskottchen.Height := 11*Rand;                                                 //   |
                                                                                     //   |
      ShpHintergrund1.Left := Rand;                                                  //   V
      ShpHintergrund1.Top  := Rand;
-     ShpHintergrund1.Width := Screen.Width - 3*Rand - ((Screen.Height*133)div 195);
+     ShpHintergrund1.Width := Screen.Width - 6*Rand - ((Screen.Height*133)div 195);
      ShpHintergrund1.Height:= Screen.Height - 2*Rand;
      ShpHintergrund1.Brush.Color := Themenfarbe2;
 

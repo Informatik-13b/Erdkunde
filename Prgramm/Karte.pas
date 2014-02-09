@@ -47,7 +47,7 @@ uses Struktur;
 {$R *.DFM}
 
 procedure TOrte_Finden.FormCreate(Sender: TObject);
-var Stadt:integer;
+//var Stadt:integer;
 begin
      self.DoubleBuffered := true;
 

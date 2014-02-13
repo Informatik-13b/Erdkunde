@@ -31,14 +31,18 @@ type
     RgGeschlecht: TRadioGroup;
     EdtIP: TEdit;
     CSRegistrierung: TClientSocket;
-    MIndex: TMemo;
+    MDatei: TMemo;
     Registrierungstimer: TTimer;
     EdtRPasswort: TEdit;
     StLoescheRP: TStaticText;
     ImgSichtbarRP: TImage;
     LblZurueck: TLabel;
     ShpZurueck: TShape;
-    ZurueckTimer: TTimer;
+    ZurueckRTimer: TTimer;
+    ZurueckATimer: TTimer;
+    ShpAnmeldung: TShape;
+    EdtBenutzernameR: TEdit;
+    STLoescheRB: TStaticText;
     procedure FormPaint(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -119,10 +123,32 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure LblZurueckMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure ZurueckTimerTimer(Sender: TObject);
+    procedure ZurueckRTimerTimer(Sender: TObject);
+    procedure ZurueckATimerTimer(Sender: TObject);
+    procedure LblAnmeldenMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure GBAnmeldungMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure LbLNeuMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure LblZurueckMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure GBRegistrierungMouseMove(Sender: TObject; Shift: TShiftState;
+      X, Y: Integer);
+    procedure LblBestaetigenMouseMove(Sender: TObject; Shift: TShiftState;
+      X, Y: Integer);
+    procedure STLoescheRBMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure STLoescheRBMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure STLoescheRBClick(Sender: TObject);
+    procedure EdtBenutzernameRClick(Sender: TObject);
+    procedure EdtBenutzernameRChange(Sender: TObject);
+    function Verschluesseln(Text:string) :string;
+    procedure ErzeugeGa;
+    procedure addition(x:integer);
   private
     { Private-Deklarationen }
-     
   public
     { Public-Deklarationen }
     Themenfarbe1: TColor;
@@ -131,7 +157,7 @@ type
     procedure FensterOeffnen(Button:integer);
   end;
 
-
+Const ka = ',-./0123456789:;Ô?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz';
 
 var
   Menue: TMenue;
@@ -141,7 +167,15 @@ var
   MenueObjekt : array[1..6] of TImageButton;
   SchliessenShape : TShapeSchliessen;
 
-  Geschlecht: String;
+  ga, ga2: string;
+  lenA : integer;
+  kt, gt : string;
+  lenT, p : integer;
+  c : char;
+  schl: string;
+  LenSchl: integer;
+  Schluessel: String;
+  temp:string;
 
 implementation
 
@@ -157,8 +191,11 @@ end;
 procedure TMenue.FormCreate(Sender: TObject);
 var i : integer;
 begin
-     GBAnmeldung.Top := -GBAnmeldung.Height;
+     GBAnmeldung.Top := -320;
      GBAnmeldung.Left := Screen.Width div 2 - GBAnmeldung.Width div 2;
+     ShpAnmeldung.Top := -340;
+     ShpAnmeldung.Left := GBAnmeldung.Left - 20;
+     
 
      GBRegistrierung.Top := -GBRegistrierung.Height;
      GBRegistrierung.Left := Screen.Width div 2 - GBRegistrierung.Width div 2;
@@ -304,6 +341,37 @@ begin
           If MenueObjekt[i].Zoom = true          // Sicherheitsverkleinern: Wenn die Maus wieder auf der Form ist
           then MenueObjekt[i].Zoom := false;     // und das Menüobjekt noch nicht am Verkleinrn ist.
      end;
+
+     if ShpAnmelden.Brush.Color = clBlack then
+     begin
+          LblAnmelden.Font.Color := clBlack;
+          ShpAnmelden.Brush.Color := clWhite;
+          ShpAnmelden.Left := ShpAnmelden.Left + 10;
+          ShpAnmelden.Width := ShpAnmelden.Width - 20;
+     end;
+
+     if ShpNeu.Brush.Color = clBlack then
+     begin
+          LblNeu.Font.Color := clBlack;
+          ShpNeu.Brush.Color := clWhite;
+          ShpNeu.Left := ShpNeu.Left + 10;
+          ShpNeu.Width := ShpNeu.Width - 20;
+     end;
+
+     if ShpZurueck.Brush.Color = clBlack then
+     begin
+          LblZurueck.Font.Color := clBlack;
+          ShpZurueck.Brush.Color := clWhite;
+          ShpZurueck.Left := ShpZurueck.Left + 10;
+          ShpZurueck.Width := ShpZurueck.Width - 20;
+     end;
+     if ShpBestaetigen.Brush.Color = clBlack then
+     begin
+          LblBestaetigen.Font.Color := clBlack;
+          ShpBestaetigen.Brush.Color := clWhite;
+          ShpBestaetigen.Left := ShpBestaetigen.Left + 10;
+          ShpBestaetigen.Width := ShpBestaetigen.Width - 20;
+     end;
 end;
 
 
@@ -345,6 +413,7 @@ begin
     if GBAnmeldung.Top < Screen.Height div 2 - GBAnmeldung.Height div 2 then
     begin
          GBAnmeldung.Top := GBAnmeldung.Top + 30;
+         ShpAnmeldung.Top := ShpAnmeldung.Top + 30;
     end else Anmeldungstimer.Enabled := false;
 end;
 
@@ -375,12 +444,12 @@ end;
 
 procedure TMenue.EdtPasswortClick(Sender: TObject);
 begin
-     EdtPasswort.SelStart := 0;
+     if EdtPasswort.Font.Color = clGray then EdtPasswort.SelStart := 0;
 end;
 
 procedure TMenue.EdtBenutzernameClick(Sender: TObject);
 begin
-     EdtBenutzername.SelStart := 0;
+     if EdtBenutzername.Font.Color = clGray then EdtBenutzername.SelStart := 0;
 end;
 
 procedure TMenue.EdtPasswortChange(Sender: TObject);
@@ -646,9 +715,25 @@ end;
 
 procedure TMenue.LblAnmeldenMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
+var Benutzername,Passwort : string;
 begin
      LblAnmelden.Top := LblAnmelden.Top - 2;
      ShpAnmelden.Top := ShpAnmelden.Top - 2;
+
+     Benutzername := EdtBenutzername.Text;
+     Passwort := EdtPasswort.Text;
+
+     if FileExists(ExtractFilePath(ParamStr(0)) + '/Dateien/' + Verschluesseln(Benutzername) + '.txt') then
+     begin
+          MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + '/Dateien/' + Benutzername + '.txt');
+          if Verschluesseln(Passwort) = MDatei.Lines[3] then
+             ZurueckATimer.Enabled := true else
+             Showmessage('Falsches Passwort');
+     end else
+     begin
+          Showmessage('Falscher Benutzername');
+          exit;
+     end;
 end;
 
 procedure TMenue.STLoeschePMouseDown(Sender: TObject; Button: TMouseButton;
@@ -720,7 +805,8 @@ end;
 
 procedure TMenue.LblBestaetigenMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-var Adresse, Vorname, Nachname{,Passwort}: String;
+var Adresse, Benutzername, Vorname,
+    Nachname, Geschlecht, Passwort: String;
 begin
      LblBestaetigen.Top := LblBestaetigen.Top - 2;
      ShpBestaetigen.Top := ShpBestaetigen.Top - 2;
@@ -740,9 +826,9 @@ begin
           EdtRPasswort.Font.Color := clRed;
           exit;
      end;
-     if (EdtIP.Font.Color = clGray) then
+     if (EdtBenutzernameR.Font.Color = clGray) then
      begin
-          EdtIP.Font.Color := clRed;
+          EdtBenutzernameR.Font.Color := clRed;
           exit;
      end;
      if RgGeschlecht.ItemIndex = -1 then
@@ -752,14 +838,29 @@ begin
      end;
 
      case RgGeschlecht.ItemIndex of
-          0 : Geschlecht := 'M';
-          1 : Geschlecht := 'J';
+          0 : Geschlecht := 'Mädchen';
+          1 : Geschlecht := 'Junge';
      end;
 
      Adresse := EdtIP.Text;
+     Benutzername := EdtBenutzernameR.Text;
      Vorname := EdtVorname.Text;
      Nachname := EdtName.Text;
-     //Passwort := EdtRPasswort.Text;
+     Passwort := EdtRPasswort.Text;
+
+     MDatei.Lines.Clear;
+     MDatei.Lines.Add(Verschluesseln(Vorname));
+     MDatei.Lines.Add(Verschluesseln(Nachname));
+     MDatei.Lines.Add(Verschluesseln(Geschlecht));
+     MDatei.Lines.Add(Verschluesseln(Passwort));
+
+
+     MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + '/Dateien/' + Verschluesseln(Benutzername) + '.txt');
+
+
+     ZurueckRTimer.Enabled := true;
+
+    { //Passwort := EdtRPasswort.Text;
      Try
       With CSRegistrierung do
        begin
@@ -773,7 +874,7 @@ begin
        end;
      Except
        showmessage('Fehler bei der Verbindung');
-      end;  
+      end; }
 
 end;
 
@@ -793,9 +894,9 @@ end;
 procedure TMenue.CSRegistrierungRead(Sender: TObject;
   Socket: TCustomWinSocket);
 begin
-     MIndex.Lines.Add (Socket.ReceiveText);
+     {MIndex.Lines.Add (Socket.ReceiveText);
      MIndex.Lines.SaveToFile('SchülerIndex.txt');
-     CSRegistrierung.Active := False;
+     CSRegistrierung.Active := False; }
 end;
 
 procedure TMenue.LblZurueckMouseDown(Sender: TObject; Button: TMouseButton;
@@ -811,16 +912,238 @@ begin
      LblZurueck.Top := LblZurueck.Top - 2;
      ShpZurueck.Top := ShpZurueck.Top - 2;
 
-     ZurueckTimer.Enabled := true;
+     ZurueckRTimer.Enabled := true;
 end;
 
-procedure TMenue.ZurueckTimerTimer(Sender: TObject);
+procedure TMenue.ZurueckRTimerTimer(Sender: TObject);
 begin
      if GBRegistrierung.Top > -GBRegistrierung.Height then
      begin
           GBRegistrierung.Top := GBRegistrierung.Top - 30;
-     end else ZurueckTimer.Enabled := false;
+     end else ZurueckRTimer.Enabled := false;
 
 end;
+
+procedure TMenue.ZurueckATimerTimer(Sender: TObject);
+begin
+     if GBAnmeldung.Top > -GBAnmeldung.Height then
+     begin
+          GBAnmeldung.Top := GBAnmeldung.Top - 30;
+          ShpAnmeldung.Top := ShpAnmeldung.Top - 30;
+     end else
+     begin
+          ZurueckATimer.Enabled := false;
+          MenueObjekt[1].Enabled := true;
+          MenueObjekt[2].Enabled := true;
+          MenueObjekt[3].Enabled := true;
+          MenueObjekt[4].Enabled := true;
+
+          Zoomen.Enabled := true;
+     end;
+end;
+
+procedure TMenue.LblAnmeldenMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+begin
+     if ShpAnmelden.Brush.Color = clWhite then
+     begin
+          LblAnmelden.Font.Color := clWhite;
+          ShpAnmelden.Brush.Color := clBlack;
+          ShpAnmelden.Left := ShpAnmelden.Left - 10;
+          ShpAnmelden.Width := ShpAnmelden.Width + 20;
+     end;
+     if ShpNeu.Brush.Color = clBlack then
+     begin
+          LblNeu.Font.Color := clBlack;
+          ShpNeu.Brush.Color := clWhite;
+          ShpNeu.Left := ShpNeu.Left + 10;
+          ShpNeu.Width := ShpNeu.Width - 20;
+     end;
+end;
+
+procedure TMenue.GBAnmeldungMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+begin
+     if ShpAnmelden.Brush.Color = clBlack then
+     begin
+          LblAnmelden.Font.Color := clBlack;
+          ShpAnmelden.Brush.Color := clWhite;
+          ShpAnmelden.Left := ShpAnmelden.Left + 10;
+          ShpAnmelden.Width := ShpAnmelden.Width - 20;
+     end;
+
+     if ShpNeu.Brush.Color = clBlack then
+     begin
+          LblNeu.Font.Color := clBlack;
+          ShpNeu.Brush.Color := clWhite;
+          ShpNeu.Left := ShpNeu.Left + 10;
+          ShpNeu.Width := ShpNeu.Width - 20;
+     end;
+end;
+
+procedure TMenue.LbLNeuMouseMove(Sender: TObject; Shift: TShiftState; X,
+  Y: Integer);
+begin
+     if ShpNeu.Brush.Color = clWhite then
+     begin
+          LblNeu.Font.Color := clWhite;
+          ShpNeu.Brush.Color := clBlack;
+          ShpNeu.Left := ShpNeu.Left - 10;
+          ShpNeu.Width := ShpNeu.Width + 20;
+     end;
+     if ShpAnmelden.Brush.Color = clBlack then
+     begin
+          LblAnmelden.Font.Color := clBlack;
+          ShpAnmelden.Brush.Color := clWhite;
+          ShpAnmelden.Left := ShpAnmelden.Left + 10;
+          ShpAnmelden.Width := ShpAnmelden.Width - 20;
+     end;
+end;
+
+procedure TMenue.LblZurueckMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+begin
+     if ShpZurueck.Brush.Color = clWhite then
+     begin
+          LblZurueck.Font.Color := clWhite;
+          ShpZurueck.Brush.Color := clBlack;
+          ShpZurueck.Left := ShpZurueck.Left - 10;
+          ShpZurueck.Width := ShpZurueck.Width + 20;
+     end;
+end;
+
+procedure TMenue.GBRegistrierungMouseMove(Sender: TObject;
+  Shift: TShiftState; X, Y: Integer);
+begin
+     if ShpZurueck.Brush.Color = clBlack then
+     begin
+          LblZurueck.Font.Color := clBlack;
+          ShpZurueck.Brush.Color := clWhite;
+          ShpZurueck.Left := ShpZurueck.Left + 10;
+          ShpZurueck.Width := ShpZurueck.Width - 20;
+     end;
+     if ShpBestaetigen.Brush.Color = clBlack then
+     begin
+          LblBestaetigen.Font.Color := clBlack;
+          ShpBestaetigen.Brush.Color := clWhite;
+          ShpBestaetigen.Left := ShpBestaetigen.Left + 10;
+          ShpBestaetigen.Width := ShpBestaetigen.Width - 20;
+     end;
+end;
+
+procedure TMenue.LblBestaetigenMouseMove(Sender: TObject;
+  Shift: TShiftState; X, Y: Integer);
+begin
+     if ShpBestaetigen.Brush.Color = clWhite then
+     begin
+          LblBestaetigen.Font.Color := clWhite;
+          ShpBestaetigen.Brush.Color := clBlack;
+          ShpBestaetigen.Left := ShpBestaetigen.Left - 10;
+          ShpBestaetigen.Width := ShpBestaetigen.Width + 20;
+     end;
+end;
+
+
+procedure TMenue.STLoescheRBMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+     STLoescheRB.Top := STLoescheRB.Top + 2;
+end;
+
+procedure TMenue.STLoescheRBMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+     STLoescheRB.Top := STLoescheRB.Top - 2;
+end;
+
+procedure TMenue.STLoescheRBClick(Sender: TObject);
+begin
+     EdtBenutzernameR.Clear;
+end;
+
+procedure TMenue.EdtBenutzernameRClick(Sender: TObject);
+begin
+     if (EdtBenutzernameR.Font.Color = clGray) or (EdtBenutzernameR.Font.Color = clRed) then
+     begin
+          EdtBenutzernameR.SelStart := 0;
+          EdtBenutzernameR.Font.Color := clGray;
+     end;
+end;
+
+procedure TMenue.EdtBenutzernameRChange(Sender: TObject);
+begin
+     with EdtBenutzernameR do
+     begin
+
+     if Text = '' then
+     begin
+          Text := 'Benutzername';
+          Font.Color := clGray;
+     end;
+     if (Length(Text) = 13) and
+        (Font.Color = clGray) then
+     begin
+          Font.Color := clBlack;
+          Text := Text[1];
+          SelStart := 1;
+     end;
+     if (Font.Color = clGray) and
+        (Length(Text) < 12) then
+        Text := 'Benutzername';
+     end;
+end;
+
+
+////////////////Verschlüsselung\\\\\\\\\\\\
+
+function TMenue.Verschluesseln(Text:string):string;
+var i:integer;
+begin
+     schluessel := 'paiowuujen';
+
+     kt := Text;
+     lenT := length(kt);
+     gt := '';
+     for i := 1 to lenT do
+     begin
+          ErzeugeGa;
+          addition(i);
+          c := kt[i];
+          p := pos(c,ka);
+          if p <> 0 then gt := gt + copy (ga2,p,1)
+          else gt := gt + c;
+     end
+;
+     result := gt;
+end;
+
+procedure TMenue.ErzeugeGa;
+var Wert1, Wert2: integer;
+     i: integer;
+     schlZahl: integer;
+begin
+    ga := '';
+    schlZahl := ord(schluessel[1]);
+    lenA := length(ka);
+    For i := 1 to lenA do
+     begin
+        c := ka[i];
+        Wert1 := ord(c);
+        Wert2 := ((Wert1-44)*schlZahl mod 79)+44;
+        ga := ga + chr(Wert2);
+     end;
+end;
+
+procedure TMenue.addition (x: integer);
+ var c2: char;
+     p2, zaehler: integer;
+  begin
+     lenSchl := length (schluessel);
+     zaehler := x mod lenSchl +1;
+     c2 := schluessel[zaehler];
+     p2 := pos (c2, ga);
+     ga2 := copy (ga, p2, lenA -p2+1)
+            + copy (ga, 1, p2-1);
+  end;
 
 end.

@@ -720,13 +720,13 @@ begin
      LblAnmelden.Top := LblAnmelden.Top - 2;
      ShpAnmelden.Top := ShpAnmelden.Top - 2;
 
-     Benutzername := EdtBenutzername.Text;
-     Passwort := EdtPasswort.Text;
+     Benutzername := Verschluesseln(EdtBenutzername.Text);
+     Passwort := Verschluesseln(EdtPasswort.Text);
 
-     if FileExists(ExtractFilePath(ParamStr(0)) + '/Dateien/' + Verschluesseln(Benutzername) + '.txt') then
+     if FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\' + Benutzername + '.txt') then
      begin
-          MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + '/Dateien/' + Benutzername + '.txt');
-          if Verschluesseln(Passwort) = MDatei.Lines[3] then
+          MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + Benutzername + '.txt');
+          if Passwort = MDatei.Lines[3] then
              ZurueckATimer.Enabled := true else
              Showmessage('Falsches Passwort');
      end else
@@ -855,7 +855,7 @@ begin
      MDatei.Lines.Add(Verschluesseln(Passwort));
 
 
-     MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + '/Dateien/' + Verschluesseln(Benutzername) + '.txt');
+     MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + Verschluesseln(Benutzername) + '.txt');
 
 
      ZurueckRTimer.Enabled := true;

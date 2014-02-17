@@ -29,7 +29,6 @@ type
     STLoescheV: TStaticText;
     StLoescheN: TStaticText;
     RgGeschlecht: TRadioGroup;
-    EdtIP: TEdit;
     CSRegistrierung: TClientSocket;
     MDatei: TMemo;
     Registrierungstimer: TTimer;
@@ -43,6 +42,8 @@ type
     ShpAnmeldung: TShape;
     EdtBenutzernameR: TEdit;
     STLoescheRB: TStaticText;
+    RGStufe: TRadioGroup;
+    RGKlasse: TRadioGroup;
     procedure FormPaint(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -73,7 +74,6 @@ type
     procedure EdtVornameClick(Sender: TObject);
     procedure EdtNameClick(Sender: TObject);
     procedure EdtRPasswortClick(Sender: TObject);
-    procedure EdtIPClick(Sender: TObject);
     procedure EdtRPasswortChange(Sender: TObject);
     procedure ImgSichtbarRPMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -82,7 +82,6 @@ type
     procedure EdtVornameChange(Sender: TObject);
     procedure EdtNameChange(Sender: TObject);
     procedure STLoescheVClick(Sender: TObject);
-    procedure EdtIPChange(Sender: TObject);
     procedure StLoescheNClick(Sender: TObject);
     procedure StLoescheRPClick(Sender: TObject);
     procedure LbLNeuMouseDown(Sender: TObject; Button: TMouseButton;
@@ -147,6 +146,8 @@ type
     function Verschluesseln(Text:string) :string;
     procedure ErzeugeGa;
     procedure addition(x:integer);
+    procedure RGStufeClick(Sender: TObject);
+    procedure RGKlasseClick(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -545,14 +546,6 @@ begin
      end;
 end;
 
-procedure TMenue.EdtIPClick(Sender: TObject);
-begin
-     if (EdtIP.Font.Color = clGray) or (EdtIP.Font.Color = clRed) then
-     begin
-          EdtIP.SelStart := 0;
-          EdtIP.Font.Color := clGray;
-     end;
-end;
 
 procedure TMenue.EdtRPasswortChange(Sender: TObject);
 begin
@@ -655,29 +648,6 @@ begin
      EdtVorname.Clear;
 end;
 
-procedure TMenue.EdtIPChange(Sender: TObject);
-begin
-     with EdtIP do
-     begin
-
-     if Text = '' then
-     begin
-          Text := 'IP-Addresse';
-          Font.Color := clGray;
-     end;
-     if (Length(Text) = 12) and
-        (Font.Color = clGray) then
-     begin
-          Font.Color := clBlack;
-          Text := Text[1];
-          SelStart := 1;
-     end;
-     if (Font.Color = clGray) and
-        (Length(Text) < 11) then
-        Text := 'IP-Addresse';
-
-     end;
-end;
 
 procedure TMenue.StLoescheNClick(Sender: TObject);
 begin
@@ -716,6 +686,7 @@ end;
 procedure TMenue.LblAnmeldenMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 var Benutzername,Passwort : string;
+    index :integer;
 begin
      LblAnmelden.Top := LblAnmelden.Top - 2;
      ShpAnmelden.Top := ShpAnmelden.Top - 2;
@@ -723,10 +694,16 @@ begin
      Benutzername := Verschluesseln(EdtBenutzername.Text);
      Passwort := Verschluesseln(EdtPasswort.Text);
 
-     if FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\' + Benutzername + '.txt') then
+     if not FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\index.txt') then
+        exit;   // !!!
+
+     MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.txt');
+     index := MDatei.Lines.IndexOf(Benutzername);
+
+     if FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt') then
      begin
-          MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + Benutzername + '.txt');
-          if Passwort = MDatei.Lines[3] then
+          MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt');
+          if Passwort = MDatei.Lines[4] then
              ZurueckATimer.Enabled := true else
              Showmessage('Falsches Passwort');
      end else
@@ -805,8 +782,9 @@ end;
 
 procedure TMenue.LblBestaetigenMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-var Adresse, Benutzername, Vorname,
-    Nachname, Geschlecht, Passwort: String;
+var Benutzername, Vorname, Nachname,
+    Geschlecht, Passwort, Klasse: String;
+    index:integer;
 begin
      LblBestaetigen.Top := LblBestaetigen.Top - 2;
      ShpBestaetigen.Top := ShpBestaetigen.Top - 2;
@@ -836,26 +814,60 @@ begin
           RgGeschlecht.Font.Color := clRed;
           exit;
      end;
+     if RgStufe.ItemIndex = -1 then
+     begin
+          RgStufe.Font.Color := clRed;
+          exit;
+     end;
+     if RgKlasse.ItemIndex = -1 then
+     begin
+          RgKlasse.Font.Color := clRed;
+          exit;
+     end;
 
      case RgGeschlecht.ItemIndex of
           0 : Geschlecht := 'Mädchen';
           1 : Geschlecht := 'Junge';
      end;
+     case RgStufe.ItemIndex of
+          0 : Klasse := '5';
+          1 : Klasse := '6';
+          2 : Klasse := '7';
+     end;
+     case RGKlasse.ItemIndex of
+          0 : Klasse := Klasse + 'a';
+          1 : Klasse := Klasse + 'b';
+          2 : Klasse := Klasse + 'c';
+          3 : Klasse := Klasse + 'd';
+          4 : Klasse := Klasse + 'e';
+          5 : Klasse := Klasse + 'f';
+     end;
 
-     Adresse := EdtIP.Text;
      Benutzername := EdtBenutzernameR.Text;
      Vorname := EdtVorname.Text;
      Nachname := EdtName.Text;
      Passwort := EdtRPasswort.Text;
 
+     Mdatei.Clear;
+     if not FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\index.txt') then
+        MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.txt');
+
+     MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.txt');
+     MDatei.Lines.Add(Verschluesseln(Benutzername));
+     index := MDatei.Lines.IndexOf(Verschluesseln(Benutzername));
+     MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.txt');
+
+
      MDatei.Lines.Clear;
      MDatei.Lines.Add(Verschluesseln(Vorname));
      MDatei.Lines.Add(Verschluesseln(Nachname));
      MDatei.Lines.Add(Verschluesseln(Geschlecht));
+     MDatei.Lines.Add(Verschluesseln(Klasse));
      MDatei.Lines.Add(Verschluesseln(Passwort));
 
 
-     MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + Verschluesseln(Benutzername) + '.txt');
+
+     MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt');
 
 
      ZurueckRTimer.Enabled := true;
@@ -1145,5 +1157,15 @@ procedure TMenue.addition (x: integer);
      ga2 := copy (ga, p2, lenA -p2+1)
             + copy (ga, 1, p2-1);
   end;
+
+procedure TMenue.RGStufeClick(Sender: TObject);
+begin
+     RgStufe.Font.Color := clBlack;
+end;
+
+procedure TMenue.RGKlasseClick(Sender: TObject);
+begin
+     RgKlasse.Font.Color := clBlack;
+end;
 
 end.

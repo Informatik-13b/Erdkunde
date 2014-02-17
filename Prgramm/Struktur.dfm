@@ -1,6 +1,6 @@
 object Menue: TMenue
-  Left = 189
-  Top = 121
+  Left = 354
+  Top = 195
   Align = alClient
   BorderStyle = bsNone
   ClientHeight = 621
@@ -1423,15 +1423,17 @@ object Menue: TMenue
       Width = 345
       Height = 44
       AutoSelect = False
+      CharCase = ecUpperCase
       Color = clSilver
       Font.Charset = ANSI_CHARSET
       Font.Color = clGray
       Font.Height = -27
       Font.Name = 'Comic Sans MS'
       Font.Style = []
+      MaxLength = 20
       ParentFont = False
       TabOrder = 0
-      Text = 'Benutzername'
+      Text = 'BENUTZERNAME'
       OnChange = EdtBenutzernameChange
       OnClick = EdtBenutzernameClick
     end
@@ -1447,6 +1449,7 @@ object Menue: TMenue
       Font.Height = -27
       Font.Name = 'Comic Sans MS'
       Font.Style = []
+      MaxLength = 20
       ParentFont = False
       TabOrder = 1
       Text = 'Passwort'
@@ -2897,6 +2900,7 @@ object Menue: TMenue
       Font.Height = -20
       Font.Name = 'Comic Sans MS'
       Font.Style = []
+      MaxLength = 20
       ParentFont = False
       TabOrder = 1
       Text = 'Vorname'
@@ -2915,6 +2919,7 @@ object Menue: TMenue
       Font.Height = -20
       Font.Name = 'Comic Sans MS'
       Font.Style = []
+      MaxLength = 20
       ParentFont = False
       TabOrder = 2
       Text = 'Name'
@@ -2981,33 +2986,15 @@ object Menue: TMenue
       TabOrder = 4
       OnClick = RgGeschlechtClick
     end
-    object EdtIP: TEdit
-      Left = 336
-      Top = 104
-      Width = 225
-      Height = 34
-      TabStop = False
-      AutoSelect = False
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clGray
-      Font.Height = -20
-      Font.Name = 'Comic Sans MS'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 7
-      Text = 'IP-Addresse'
-      OnChange = EdtIPChange
-      OnClick = EdtIPClick
-    end
     object MDatei: TMemo
-      Left = 336
-      Top = 168
+      Left = 8
+      Top = 40
       Width = 225
-      Height = 137
+      Height = 41
       TabStop = False
       Lines.Strings = (
-        'MIndex')
-      TabOrder = 8
+        'MDatei')
+      TabOrder = 7
       Visible = False
     end
     object EdtRPasswort: TEdit
@@ -3022,6 +3009,7 @@ object Menue: TMenue
       Font.Height = -20
       Font.Name = 'Comic Sans MS'
       Font.Style = []
+      MaxLength = 20
       ParentFont = False
       TabOrder = 3
       Text = 'Passwort'
@@ -3042,7 +3030,7 @@ object Menue: TMenue
       Font.Name = 'Comic Sans MS'
       Font.Style = [fsBold]
       ParentFont = False
-      TabOrder = 9
+      TabOrder = 8
       OnClick = StLoescheRPClick
       OnMouseDown = StLoescheRPMouseDown
       OnMouseUp = StLoescheRPMouseUp
@@ -3053,15 +3041,17 @@ object Menue: TMenue
       Width = 265
       Height = 34
       AutoSelect = False
+      CharCase = ecUpperCase
       Color = clSilver
       Font.Charset = ANSI_CHARSET
       Font.Color = clGray
       Font.Height = -20
       Font.Name = 'Comic Sans MS'
       Font.Style = []
+      MaxLength = 20
       ParentFont = False
       TabOrder = 0
-      Text = 'Benutzername'
+      Text = 'BENUTZERNAME'
       OnChange = EdtBenutzernameRChange
       OnClick = EdtBenutzernameRClick
     end
@@ -3079,10 +3069,53 @@ object Menue: TMenue
       Font.Name = 'Comic Sans MS'
       Font.Style = [fsBold]
       ParentFont = False
-      TabOrder = 10
+      TabOrder = 9
       OnClick = STLoescheRBClick
       OnMouseDown = STLoescheRBMouseDown
       OnMouseUp = STLoescheRBMouseUp
+    end
+    object RGKlasse: TRadioGroup
+      Left = 336
+      Top = 120
+      Width = 225
+      Height = 73
+      Caption = '                                   '
+      Columns = 3
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Comic Sans MS'
+      Font.Style = []
+      Items.Strings = (
+        'a'
+        'b'
+        'c'
+        'd'
+        'e'
+        'f')
+      ParentFont = False
+      TabOrder = 11
+      OnClick = RGKlasseClick
+    end
+    object RGStufe: TRadioGroup
+      Left = 336
+      Top = 88
+      Width = 225
+      Height = 57
+      Caption = '              Klasse            '
+      Columns = 3
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Comic Sans MS'
+      Font.Style = []
+      Items.Strings = (
+        '5'
+        '6'
+        '7')
+      ParentFont = False
+      TabOrder = 10
+      OnClick = RGStufeClick
     end
   end
   object MenueEffekt: TTimer

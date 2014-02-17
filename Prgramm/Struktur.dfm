@@ -12,6 +12,7 @@ object Menue: TMenue
   Font.Name = 'Permanent Marker'
   Font.Style = []
   OldCreateOrder = False
+  OnClose = FormClose
   OnCreate = FormCreate
   OnMouseMove = FormMouseMove
   OnPaint = FormPaint
@@ -3144,7 +3145,7 @@ object Menue: TMenue
     Port = 0
     OnRead = CSRegistrierungRead
     OnError = CSRegistrierungError
-    Left = 960
+    Left = 976
     Top = 184
   end
   object Registrierungstimer: TTimer

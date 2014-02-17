@@ -148,6 +148,7 @@ type
     procedure addition(x:integer);
     procedure RGStufeClick(Sender: TObject);
     procedure RGKlasseClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private-Deklarationen }
   public
@@ -177,6 +178,8 @@ var
   LenSchl: integer;
   Schluessel: String;
   temp:string;
+
+  index :integer;
 
 implementation
 
@@ -686,7 +689,6 @@ end;
 procedure TMenue.LblAnmeldenMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 var Benutzername,Passwort : string;
-    index :integer;
 begin
      LblAnmelden.Top := LblAnmelden.Top - 2;
      ShpAnmelden.Top := ShpAnmelden.Top - 2;
@@ -704,7 +706,11 @@ begin
      begin
           MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt');
           if Passwort = MDatei.Lines[4] then
-             ZurueckATimer.Enabled := true else
+          begin
+               MDatei.Lines[5] := 'online';
+               MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt');
+               ZurueckATimer.Enabled := true;
+          end else
              Showmessage('Falsches Passwort');
      end else
      begin
@@ -712,6 +718,8 @@ begin
           exit;
      end;
 end;
+
+
 
 procedure TMenue.STLoeschePMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
@@ -1166,6 +1174,15 @@ end;
 procedure TMenue.RGKlasseClick(Sender: TObject);
 begin
      RgKlasse.Font.Color := clBlack;
+end;
+
+procedure TMenue.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+     if MDatei.Lines[5] = 'online' then
+     begin
+          MDatei.Lines[5] := 'offline';
+          MDAtei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt');
+     end;
 end;
 
 end.

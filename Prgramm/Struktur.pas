@@ -156,6 +156,7 @@ type
     Themenfarbe1: TColor;
     Themenfarbe2: TColor;
     angemeldet:boolean;
+    index :integer;
     procedure FensterOeffnen(Button:integer);
   end;
 
@@ -179,7 +180,6 @@ var
   Schluessel: String;
   temp:string;
 
-  index :integer;
 
 implementation
 
@@ -705,11 +705,12 @@ begin
      if FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt') then
      begin
           MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt');
-          if Passwort = MDatei.Lines[4] then
+          if Passwort = MDatei.Lines[0] then
           begin
                MDatei.Lines[5] := 'online';
                MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt');
                ZurueckATimer.Enabled := true;
+               angemeldet := true;
           end else
              Showmessage('Falsches Passwort');
      end else
@@ -867,13 +868,12 @@ begin
 
 
      MDatei.Lines.Clear;
-     MDatei.Lines.Add(Verschluesseln(Vorname));
-     MDatei.Lines.Add(Verschluesseln(Nachname));
-     MDatei.Lines.Add(Verschluesseln(Geschlecht));
-     MDatei.Lines.Add(Verschluesseln(Klasse));
-     MDatei.Lines.Add(Verschluesseln(Passwort));
-
-
+     MDatei.Lines.Add(Verschluesseln(Passwort));      //0
+     MDatei.Lines.Add(Verschluesseln(Benutzername));  //1
+     MDatei.Lines.Add(Verschluesseln(Vorname));       //2
+     MDatei.Lines.Add(Verschluesseln(Nachname));      //3
+     MDatei.Lines.Add(Verschluesseln(Geschlecht));    //4
+     MDatei.Lines.Add(Verschluesseln(Klasse));        //5
 
      MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt');
 
@@ -1178,10 +1178,11 @@ end;
 
 procedure TMenue.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-     if MDatei.Lines[5] = 'online' then
+     if angemeldet then
      begin
           MDatei.Lines[5] := 'offline';
           MDAtei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt');
+          angemeldet := false;
      end;
 end;
 

@@ -1,6 +1,6 @@
 object Orte_Finden: TOrte_Finden
-  Left = 350
-  Top = 56
+  Left = 205
+  Top = 167
   Align = alClient
   BorderStyle = bsNone
   Caption = 'Orte_Finden'
@@ -110,14 +110,38 @@ object Orte_Finden: TOrte_Finden
     ParentFont = False
     Transparent = True
   end
+  object Lblverbleibend: TLabel
+    Left = 112
+    Top = 112
+    Width = 76
+    Height = 16
+    Caption = 'Lblverbleibend'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Comic Sans MS'
+    Font.Style = [fsBold]
+    ParentFont = False
+    Transparent = True
+  end
   object BtnNeu: TButton
-    Left = 24
-    Top = 72
+    Left = 552
+    Top = 336
     Width = 75
     Height = 25
     Caption = 'Neu'
     TabOrder = 0
     OnClick = BtnNeuClick
+  end
+  object BtnWeiter: TButton
+    Left = 632
+    Top = 336
+    Width = 75
+    Height = 25
+    Caption = 'Weiter'
+    Enabled = False
+    TabOrder = 1
+    OnClick = BtnWeiterClick
   end
   object pruefenTimer: TTimer
     Interval = 1

@@ -54,7 +54,8 @@ begin
      Left := Screen.Width - Width - Top;
      Cursor := crCross;                            // Ein Zielkreuz wird als Cursor eingestellt.
      Stretch := true;
-     geklickt := false;
+     geklickt := true;
+     Punkte := 2000;
 end;
 
 function TImageOrten.SatzLadenAnzeigen(index:integer): string;
@@ -99,7 +100,7 @@ procedure TImageOrten.MouseUp(Button: TMouseButton;                             
 var
 dif_x, dif_y : real;
 dif_hoch:real;
-a,b : integer;
+a : integer;
 EntfernungTemp:real;
 begin
      if geklickt = false then
@@ -121,14 +122,11 @@ begin
 
      Entfernung := round(EntfernungTemp * ( 613 / 1791 ));        // Der Bildspezifische Maﬂstab wird in die Entfernung mit einbezogen
 
-     if Entfernung < 100 then b := 2 else b := 1;                 // Punktevergabe...
-     if Entfernung < 50  then b := 3;
-     if Entfernung < 5   then b := 4;
 
-     if ROrte.Schwierigkeit = 'schwer' then a := 3;               // In der Datei sind neben den Ortsnamen und den Koordinaten auch die schwierigkeiten hinterlegt
+     if ROrte.Schwierigkeit = 'schwer' then a := 1;               // In der Datei sind neben den Ortsnamen und den Koordinaten auch die schwierigkeiten hinterlegt
      if ROrte.Schwierigkeit = 'mittel' then a := 2;
-     if ROrte.Schwierigkeit = 'leicht' then a := 1;
-     Punkte := round(a*b*(100/Entfernung));  //
+     if ROrte.Schwierigkeit = 'leicht' then a := 3;
+     Punkte := Punkte - a*Entfernung;
 
      Canvas.Brush.Style := bsClear;
      Canvas.Pen.Width := 6;

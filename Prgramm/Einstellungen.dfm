@@ -1,6 +1,6 @@
 object Profil: TProfil
-  Left = 346
-  Top = 263
+  Left = 215
+  Top = 175
   Align = alClient
   BorderStyle = bsNone
   Caption = 'Profil'
@@ -47,5 +47,29 @@ object Profil: TProfil
     Height = 65
     Pen.Style = psClear
     OnMouseMove = FormMouseMove
+  end
+  object ListBoxAuswahl: TListBox
+    Left = 320
+    Top = 72
+    Width = 121
+    Height = 97
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -20
+    Font.Name = 'Comic Sans MS'
+    Font.Style = []
+    ItemHeight = 28
+    ParentFont = False
+    TabOrder = 0
+    OnClick = ListBoxAuswahlClick
+  end
+  object StringGridDaten: TStringGrid
+    Left = 496
+    Top = 64
+    Width = 489
+    Height = 249
+    DefaultColWidth = 80
+    DefaultRowHeight = 30
+    TabOrder = 1
   end
 end

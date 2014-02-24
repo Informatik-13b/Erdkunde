@@ -149,6 +149,8 @@ type
     procedure RGStufeClick(Sender: TObject);
     procedure RGKlasseClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure EdtPasswortKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private-Deklarationen }
   public
@@ -957,7 +959,7 @@ begin
           MenueObjekt[2].Enabled := true;
           MenueObjekt[3].Enabled := true;
           MenueObjekt[4].Enabled := true;
-
+          ShpAnmeldung.Visible := False;
           Zoomen.Enabled := true;
      end;
 end;
@@ -1185,5 +1187,39 @@ begin
           angemeldet := false;
      end;
 end;
+
+procedure TMenue.EdtPasswortKeyDown(Sender: TObject; var Key: Word;
+ Shift: TShiftState);
+ var Benutzername, Passwort: String;
+  begin
+     If (Key = VK_RETURN) then
+       begin
+          Benutzername := Verschluesseln(EdtBenutzername.Text);
+          Passwort := Verschluesseln(EdtPasswort.Text);
+
+          If not FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\index.txt') then
+           Exit;   // !!!
+
+     MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.txt');
+     Index := MDatei.Lines.IndexOf(Benutzername);
+
+     If FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt') then
+       begin
+          MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt');
+          if Passwort = MDatei.Lines[0] then
+          begin
+               MDatei.Lines[5] := 'online';
+               MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt');
+               ZurueckATimer.Enabled := true;
+               angemeldet := true;
+          end else
+             Showmessage('Falsches Passwort');
+       end else
+     begin
+          Showmessage('Falscher Benutzername');
+          exit;
+     end;
+       end;
+  end;
 
 end.

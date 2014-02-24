@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ShapeSchliessen, ExtCtrls;
+  StdCtrls, ShapeSchliessen, ExtCtrls, Grids;
 
 type
   TProfil = class(TForm)
@@ -12,10 +12,12 @@ type
     ShpHintergrund1: TShape;
     ShpHintergrund2: TShape;
     ListBoxAuswahl: TListBox;
+    StringGridDaten: TStringGrid;
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure ListBoxAuswahlClick(Sender: TObject);
+    procedure Menue_Verbindung();
   private
     { Private-Deklarationen }
   public
@@ -76,6 +78,17 @@ begin
          Height := ShpHintergrund1.Height - Maskottchen.Height - 3* Rand;
          Color := Themenfarbe1;
          Items.Add('Anmedlung Lehrerkonsole');
+         Items.Add('Benutzerdaten');
+      end;
+
+    With StringGridDaten do
+      begin
+         Left := ShpHintergrund2.Left + Rand;
+         Top  := 2*Rand;
+         Width := ShpHintergrund2.Width - 2*Rand;
+         Height := ShpHintergrund2.Height - 2*Rand;
+         Color := Themenfarbe1;
+
       end;
 end;
 
@@ -93,7 +106,13 @@ procedure TProfil.ListBoxAuswahlClick(Sender: TObject);
  var Auswahl: String;
   begin
      Auswahl := ListBoxAuswahl.Items.Strings[ListBoxAuswahl.ItemIndex];
-     showmessage(Auswahl);
+     If Auswahl = 'Anmeldung Lehrekonsole' then Menue_Verbindung;
+     //If Auswahl = 'Benutzerdaten' then 
+  end;
+
+procedure TProfil.Menue_Verbindung();
+  begin
+     //
   end;
 
 end.

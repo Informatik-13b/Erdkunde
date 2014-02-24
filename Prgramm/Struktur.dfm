@@ -1422,7 +1422,7 @@ object Menue: TMenue
       Left = 7
       Top = 75
       Width = 322
-      Height = 44
+      Height = 40
       AutoSelect = False
       CharCase = ecUpperCase
       Color = clSilver
@@ -1442,7 +1442,7 @@ object Menue: TMenue
       Left = 7
       Top = 127
       Width = 285
-      Height = 44
+      Height = 40
       AutoSelect = False
       Color = clSilver
       Font.Charset = ANSI_CHARSET
@@ -1456,6 +1456,7 @@ object Menue: TMenue
       Text = 'Passwort'
       OnChange = EdtPasswortChange
       OnClick = EdtPasswortClick
+      OnKeyDown = EdtPasswortKeyDown
       OnMouseMove = GBAnmeldungMouseMove
     end
     object StLoescheB: TStaticText
@@ -2893,7 +2894,7 @@ object Menue: TMenue
       Left = 7
       Top = 127
       Width = 248
-      Height = 34
+      Height = 32
       AutoSelect = False
       Color = clSilver
       Font.Charset = ANSI_CHARSET
@@ -2912,7 +2913,7 @@ object Menue: TMenue
       Left = 7
       Top = 164
       Width = 248
-      Height = 34
+      Height = 32
       AutoSelect = False
       Color = clSilver
       Font.Charset = ANSI_CHARSET
@@ -3002,7 +3003,7 @@ object Menue: TMenue
       Left = 7
       Top = 202
       Width = 210
-      Height = 34
+      Height = 32
       AutoSelect = False
       Color = clSilver
       Font.Charset = ANSI_CHARSET
@@ -3040,7 +3041,7 @@ object Menue: TMenue
       Left = 7
       Top = 90
       Width = 248
-      Height = 34
+      Height = 32
       AutoSelect = False
       CharCase = ecUpperCase
       Color = clSilver

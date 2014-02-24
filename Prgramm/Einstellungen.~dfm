@@ -63,4 +63,13 @@ object Profil: TProfil
     TabOrder = 0
     OnClick = ListBoxAuswahlClick
   end
+  object StringGridDaten: TStringGrid
+    Left = 496
+    Top = 64
+    Width = 489
+    Height = 249
+    DefaultColWidth = 80
+    DefaultRowHeight = 30
+    TabOrder = 1
+  end
 end

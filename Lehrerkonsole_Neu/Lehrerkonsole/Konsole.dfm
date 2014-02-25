@@ -257,6 +257,7 @@ object FormKonsole: TFormKonsole
       Caption = 'Schülerdaten'
       object Bearbeiten1: TMenuItem
         Caption = 'Schüler anlegen'
+        OnClick = Bearbeiten1Click
       end
       object SchlerLschen1: TMenuItem
         Caption = 'Schüler Löschen'

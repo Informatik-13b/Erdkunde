@@ -202,6 +202,8 @@ procedure TFormKlasseVerbinden.ServerSocketAnmeldungClientRead(
              EdtSchuelerNachname.Text := EdtSchuelerNachname.Text + x[i];
         end;   //Das 1.Zeichen muss gelöscht werden, da es sich um den Server-Index handelt
       If Nachricht[1] = '3' then Geschlecht := Nachricht[2];
+      EdtPos.Text := IntToStr (PositionGrid);
+      ServerSocketAnmeldung.Socket.Connections[0].SendText(EdtPos.Text);  //Sendet den Index
      Except showmessage('Fehler bei Datenempfang');
      end;
   end;
@@ -230,8 +232,6 @@ procedure TFormKlasseVerbinden.BtnBestaetigenClick(Sender: TObject);
      StringGridKlassenNAmen.Cells[3,PositionGrid] := Geschlecht;
      StringGridKlassenNamen.Cells[4,PositionGrid] := EdtKlassenName.Text;
      StringGridKlassenNamen.Cells[5,PositionGrid] := IntToStr(PositionGrid);
-     EdtPos.Text := IntToStr (PositionGrid);
-     ServerSocketAnmeldung.Socket.Connections[0].SendText(EdtPos.Text);  //Sendet den Index
      Sleep(150);
      ServerSocketAnmeldung.Close;
      ServerSocketAnmeldung.Active := False;

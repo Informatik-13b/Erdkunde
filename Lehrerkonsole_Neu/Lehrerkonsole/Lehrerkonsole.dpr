@@ -7,7 +7,8 @@ uses
   Konsole in 'Konsole.pas' {FormKonsole},
   Klasse_Anlegen in 'Klasse_Anlegen.pas' {FormKlasseAnlegen},
   KlasseVerbinden in 'KlasseVerbinden.pas' {FormKlasseVerbinden},
-  Klasse_Loschen in 'Klasse_Loschen.pas' {FormKlasseLoschen};
+  Klasse_Loschen in 'Klasse_Loschen.pas' {FormKlasseLoschen},
+  Schuler_Hinzufugen in 'Schuler_Hinzufugen.pas' {FormSchuler_Add};
 
 {$R *.RES}
 
@@ -19,5 +20,6 @@ begin
   Application.CreateForm(TFormKlasseAnlegen, FormKlasseAnlegen);
   Application.CreateForm(TFormKlasseVerbinden, FormKlasseVerbinden);
   Application.CreateForm(TFormKlasseLoschen, FormKlasseLoschen);
+  Application.CreateForm(TFormSchuler_Add, FormSchuler_Add);
   Application.Run;
 end.

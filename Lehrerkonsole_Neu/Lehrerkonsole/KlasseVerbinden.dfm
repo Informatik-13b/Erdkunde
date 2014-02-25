@@ -1,6 +1,6 @@
 object FormKlasseVerbinden: TFormKlasseVerbinden
-  Left = 468
-  Top = 188
+  Left = 454
+  Top = 230
   Width = 645
   Height = 558
   BorderIcons = [biSystemMenu, biMinimize]

@@ -54,6 +54,7 @@ type
     procedure StringGridUbersichtDblClick(Sender: TObject);
     procedure Klasselschen1Click(Sender: TObject);
     procedure Anleitungffnen1Click(Sender: TObject);
+    procedure Bearbeiten1Click(Sender: TObject);
 
   private
     { Private-Deklarationen }
@@ -67,10 +68,22 @@ var
   KlassenDatei: TStringList;
   ServerStatus: Boolean;
   Anzahl_Klassen: Integer;
+  ga, ga2: string;
+  lenA : integer;
+  lenT, p : integer;
+  c : char;
+  schl: string;
+  LenSchl: integer;
+  Schluessel: String;
+
+const
+  ka ='-./0123456789Ô?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_´abcdefghijklmnopqrstuvwxyz!';
+   //Das ',' musste entfernt werden, da es ansonsten Probleme mit der texdatei gegeben hätte!
+   //Es handelt sich hierbei um das Klaralphabet!
 
 implementation
 
-uses Anmeldefenster, Klasse_Anlegen, Klasse_Loschen;
+uses Anmeldefenster, Klasse_Anlegen, Klasse_Loschen, Schuler_Hinzufugen;
 
 {$R *.DFM}
 
@@ -87,7 +100,7 @@ procedure TFormKonsole.FormCreate(Sender: TObject);
       ServerSocketLehrer.Port := 8080;
       ComboBoxKlassenNamen.Sorted := True;  //Sortiert die Einträge in der CB
       ComboBoxKlassenNamen.Style := csDropDownList;
-      ShapeServerStatus.Brush.Color := clRed;
+      ShapeServerStatus.Brush.Color := clYellow;
       Anzahl_Online := 0;
       BtnBeenden.Caption := 'Beenden';
       BtnModus_Lehrer.Caption := 'Lehrer-Modus';
@@ -100,7 +113,8 @@ procedure TFormKonsole.FormCreate(Sender: TObject);
       BtnKlasseChange.Caption := 'Klasse ändern';
       ServerStatus := False;
       BtnModus_Lehrer.Enabled := False;
-      EdtSchuelerOnline.Brush.Color := clLime;
+      EdtSchuelerOnline.Brush.Color := clYellow;
+      Schluessel := 'aLH7wm5HfrU';  //sehr sicherer Schlüssel!!!
   end;
 
 procedure TFormKonsole.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -116,6 +130,7 @@ procedure TFormKonsole.FormClose(Sender: TObject; var Action: TCloseAction);
         LastClass_Liste.Free;    //Speichert die zuletz geladene Klasse!
        end;
      FormAnmeldung.Close();
+     FormSchuler_Add.Close();
   end;
 
 procedure TFormKonsole.Adminkontaktieren1Click(Sender: TObject);
@@ -353,5 +368,20 @@ procedure TFormKonsole.Anleitungffnen1Click(Sender: TObject);
      ShellExecute(Application.Handle, 'open', PChar
                  ('Transportordner\Anleitung_Lehrer.txt'), nil, nil, SW_NORMAL);
   end;       //öffnet die Hilfe Datei!!!
+
+procedure TFormKonsole.Bearbeiten1Click(Sender: TObject);
+  begin
+     With FormSchuler_Add do
+       begin
+          EdtName.Text := '...';
+          EdtVorname.Text := '...';
+          ShapeServerStatus.Brush.Color := clYellow;
+          BtnFreischalten.Enabled := True;
+          BtnAdd.Enabled := False;
+          KlassenNamen_Finden();
+          FormSchuler_Add.Visible := True;
+          FormSchuler_Add.BringToFront;
+       end;
+  end;
 
 end.

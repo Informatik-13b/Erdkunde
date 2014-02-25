@@ -1,11 +1,11 @@
 object Karten: TKarten
-  Left = 232
-  Top = 268
+  Left = 0
+  Top = 37
   Align = alClient
   BorderStyle = bsNone
   Caption = 'Karten'
   ClientHeight = 525
-  ClientWidth = 1008
+  ClientWidth = 784
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -75,7 +75,6 @@ object Karten: TKarten
     Top = 104
     Width = 121
     Height = 97
-    Columns = 2
     Ctl3D = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText

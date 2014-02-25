@@ -1,10 +1,10 @@
 object Menue: TMenue
-  Left = 294
-  Top = 182
+  Left = 210
+  Top = 154
   Align = alClient
   BorderStyle = bsNone
-  ClientHeight = 621
-  ClientWidth = 1075
+  ClientHeight = 674
+  ClientWidth = 1020
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -39,9 +39,9 @@ object Menue: TMenue
     TabOrder = 0
     OnMouseMove = GBAnmeldungMouseMove
     object ShpAnmelden: TShape
-      Left = 48
+      Left = 16
       Top = 200
-      Width = 193
+      Width = 177
       Height = 41
       Cursor = crHandPoint
       Shape = stRoundRect
@@ -50,9 +50,9 @@ object Menue: TMenue
       OnMouseUp = LblAnmeldenMouseUp
     end
     object ShpNeu: TShape
-      Left = 48
+      Left = 16
       Top = 248
-      Width = 193
+      Width = 177
       Height = 41
       Cursor = crHandPoint
       Shape = stRoundRect
@@ -61,7 +61,7 @@ object Menue: TMenue
       OnMouseUp = LbLNeuMouseUp
     end
     object LbLNeu: TLabel
-      Left = 57
+      Left = 17
       Top = 248
       Width = 171
       Height = 38
@@ -74,7 +74,7 @@ object Menue: TMenue
       OnMouseUp = LbLNeuMouseUp
     end
     object LblAnmelden: TLabel
-      Left = 80
+      Left = 40
       Top = 200
       Width = 122
       Height = 38
@@ -1410,6 +1410,30 @@ object Menue: TMenue
       OnMouseDown = ImgSichtbarPMouseDown
       OnMouseUp = ImgSichtbarPMouseUp
     end
+    object ShpVerbinden: TShape
+      Left = 208
+      Top = 224
+      Width = 177
+      Height = 41
+      Cursor = crHandPoint
+      Shape = stRoundRect
+      OnMouseDown = LblVerbindenMouseDown
+      OnMouseMove = LblVerbindenMouseMove
+      OnMouseUp = LblVerbindenMouseUp
+    end
+    object LblVerbinden: TLabel
+      Left = 232
+      Top = 224
+      Width = 128
+      Height = 38
+      Cursor = crHandPoint
+      Alignment = taCenter
+      Caption = 'Verbinden'
+      Transparent = True
+      OnMouseDown = LblVerbindenMouseDown
+      OnMouseMove = LblVerbindenMouseMove
+      OnMouseUp = LblVerbindenMouseUp
+    end
     object EdtBenutzername: TEdit
       Left = 8
       Top = 80
@@ -1528,7 +1552,7 @@ object Menue: TMenue
       Height = 41
       Cursor = crHandPoint
       Shape = stRoundRect
-      OnMouseDown = LblBestaetigenMouseUp
+      OnMouseDown = LblBestaetigenMouseDown
       OnMouseMove = LblBestaetigenMouseMove
       OnMouseUp = LblBestaetigenMouseUp
     end
@@ -3114,9 +3138,9 @@ object Menue: TMenue
   end
   object GBLehreranmeldung: TGroupBox
     Left = 40
-    Top = 304
-    Width = 401
-    Height = 305
+    Top = 328
+    Width = 400
+    Height = 300
     Caption = '                Verbinden                '
     Color = clWhite
     Ctl3D = False
@@ -3131,9 +3155,9 @@ object Menue: TMenue
     TabOrder = 2
     OnMouseMove = GBLehreranmeldungMouseMove
     object ShpSenden: TShape
-      Left = 160
-      Top = 256
-      Width = 225
+      Left = 208
+      Top = 248
+      Width = 177
       Height = 41
       Cursor = crHandPoint
       Shape = stRoundRect
@@ -3142,15 +3166,40 @@ object Menue: TMenue
       OnMouseUp = LblSendenMouseUp
     end
     object LblSenden: TLabel
-      Left = 208
-      Top = 257
+      Left = 232
+      Top = 249
       Width = 128
       Height = 38
+      Cursor = crHandPoint
       Caption = 'Verbinden'
       Transparent = True
       OnMouseDown = LblSendenMouseDown
       OnMouseMove = LblSendenMouseMove
       OnMouseUp = LblSendenMouseUp
+    end
+    object ShpZurueckL: TShape
+      Left = 16
+      Top = 248
+      Width = 177
+      Height = 41
+      Cursor = crHandPoint
+      Shape = stRoundRect
+      OnMouseDown = LblZurueckLMouseDown
+      OnMouseMove = LblZurueckLMouseMove
+      OnMouseUp = LblZurueckLMouseUp
+    end
+    object LblZurueckL: TLabel
+      Left = 61
+      Top = 248
+      Width = 89
+      Height = 38
+      Cursor = crHandPoint
+      Alignment = taCenter
+      Caption = 'Zurück'
+      Transparent = True
+      OnMouseDown = LblZurueckLMouseDown
+      OnMouseMove = LblZurueckLMouseMove
+      OnMouseUp = LblZurueckLMouseUp
     end
     object EdtVornameL: TEdit
       Left = 8
@@ -3336,6 +3385,20 @@ object Menue: TMenue
     Port = 0
     OnError = CSSendenError
     Left = 400
-    Top = 336
+    Top = 320
+  end
+  object VerbindenTimer: TTimer
+    Enabled = False
+    Interval = 1
+    OnTimer = VerbindenTimerTimer
+    Left = 352
+    Top = 352
+  end
+  object VerbindenZurueckTimer: TTimer
+    Enabled = False
+    Interval = 1
+    OnTimer = VerbindenZurueckTimerTimer
+    Left = 384
+    Top = 352
   end
 end

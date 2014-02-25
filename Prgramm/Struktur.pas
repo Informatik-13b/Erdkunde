@@ -53,6 +53,12 @@ type
     LblSenden: TLabel;
     ShpSenden: TShape;
     CSSenden: TClientSocket;
+    VerbindenTimer: TTimer;
+    VerbindenZurueckTimer: TTimer;
+    LblZurueckL: TLabel;
+    ShpZurueckL: TShape;
+    ShpVerbinden: TShape;
+    LblVerbinden: TLabel;
     procedure FormPaint(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -187,6 +193,20 @@ type
       ErrorEvent: TErrorEvent; var ErrorCode: Integer);
     procedure GBLehreranmeldungMouseMove(Sender: TObject;
       Shift: TShiftState; X, Y: Integer);
+    procedure VerbindenTimerTimer(Sender: TObject);
+    procedure VerbindenZurueckTimerTimer(Sender: TObject);
+    procedure LblZurueckLMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure LblZurueckLMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure LblZurueckLMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure LblVerbindenMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure LblVerbindenMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure LblVerbindenMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
   private
     { Private-Deklarationen }
   public
@@ -233,12 +253,12 @@ end;
 procedure TMenue.FormCreate(Sender: TObject);
 var i : integer;
 begin
-     GBAnmeldung.Top := -320;
+     GBAnmeldung.Top := -GBAnmeldung.Height;
      GBAnmeldung.Left := Screen.Width div 2 - GBAnmeldung.Width div 2;
-
-
      GBRegistrierung.Top := -GBRegistrierung.Height;
      GBRegistrierung.Left := Screen.Width div 2 - GBRegistrierung.Width div 2;
+     GBLehreranmeldung.Top := -GBLehreranmeldung.Height;
+     GBLehreranmeldung.Left := Screen.Width div 2 - GBLehreranmeldung.Width div 2;
 
 
      Themenfarbe1 := RGB(244,164,96);         //Themenfarben können sich durchs ganze
@@ -833,27 +853,27 @@ begin
      LblBestaetigen.Top := LblBestaetigen.Top - 2;
      ShpBestaetigen.Top := ShpBestaetigen.Top - 2;
 
-     if (EdtVorname.Font.Color = clGray) then
-     begin
-          EdtVorname.Font.Color := clRed;
-          exit;
-     end;
-     if (EdtName.Font.Color = clGray) then
-     begin
-          EdtName.Font.Color := clRed;
-          exit;
-     end;
-     if (EdtRPasswort.Font.Color = clGray) then
-     begin
-          EdtRPasswort.Font.Color := clRed;
-          exit;
-     end;
-     if (EdtBenutzernameR.Font.Color = clGray) then
+     if (EdtBenutzernameR.Font.Color = clGray) or (EdtBenutzernameR.Font.Color = clRed) then
      begin
           EdtBenutzernameR.Font.Color := clRed;
           exit;
      end;
-     if RgGeschlecht.ItemIndex = -1 then
+     if (EdtVorname.Font.Color = clGray) or (EdtVorname.Font.Color = clRed) then
+     begin
+          EdtVorname.Font.Color := clRed;
+          exit;
+     end;
+     if (EdtName.Font.Color = clGray) or (EdtName.Font.Color = clRed) then
+     begin
+          EdtName.Font.Color := clRed;
+          exit;
+     end;
+     if (EdtRPasswort.Font.Color = clGray) or (EdtRPAsswort.Font.Color = clRed) then
+     begin
+          EdtRPasswort.Font.Color := clRed;
+          exit;
+     end;
+     if RgGeschlecht.ItemIndex < 0 then
      begin
           RgGeschlecht.Font.Color := clRed;
           exit;
@@ -981,6 +1001,13 @@ begin
           ShpNeu.Left := ShpNeu.Left + 10;
           ShpNeu.Width := ShpNeu.Width - 20;
      end;
+     if ShpVerbinden.Brush.Color = clBlack then
+     begin
+          LblVerbinden.Font.Color := clBlack;
+          ShpVerbinden.Brush.Color := clWhite;
+          ShpVerbinden.Left := ShpVerbinden.Left + 10;
+          ShpVerbinden.Width := ShpVerbinden.Width - 20;
+     end;
 end;
 
 procedure TMenue.GBAnmeldungMouseMove(Sender: TObject; Shift: TShiftState;
@@ -1001,6 +1028,13 @@ begin
           ShpNeu.Left := ShpNeu.Left + 10;
           ShpNeu.Width := ShpNeu.Width - 20;
      end;
+     if ShpVerbinden.Brush.Color = clBlack then
+     begin
+          LblVerbinden.Font.Color := clBlack;
+          ShpVerbinden.Brush.Color := clWhite;
+          ShpVerbinden.Left := ShpVerbinden.Left + 10;
+          ShpVerbinden.Width := ShpVerbinden.Width - 20;
+     end;
 end;
 
 procedure TMenue.LbLNeuMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -1019,6 +1053,13 @@ begin
           ShpAnmelden.Brush.Color := clWhite;
           ShpAnmelden.Left := ShpAnmelden.Left + 10;
           ShpAnmelden.Width := ShpAnmelden.Width - 20;
+     end;
+     if ShpVerbinden.Brush.Color = clBlack then
+     begin
+          LblVerbinden.Font.Color := clBlack;
+          ShpVerbinden.Brush.Color := clWhite;
+          ShpVerbinden.Left := ShpVerbinden.Left + 10;
+          ShpVerbinden.Width := ShpVerbinden.Width - 20;
      end;
 end;
 
@@ -1298,7 +1339,7 @@ begin
           Text := 'IP-Addresse';
           Font.Color := clGray;
      end;
-     if (Length(Text) = 11) and
+     if (Length(Text) = 12) and
         (Font.Color = clGray) then
      begin
           Font.Color := clBlack;
@@ -1306,7 +1347,7 @@ begin
           SelStart := 1;
      end;
      if (Font.Color = clGray) and
-        (Length(Text) < 10) then
+        (Length(Text) < 11) then
         Text := 'IP-Addresse';
 
      end;
@@ -1386,6 +1427,28 @@ begin
      LblSenden.Top := LblSenden.Top - 2;
      ShpSenden.Top := ShpSenden.Top - 2;
 
+     if (EdtVornameL.Font.Color = clGray) or (EdtVornameL.Font.Color = clRed) then
+     begin
+          EdtVornameL.Font.Color := clRed;
+          exit;
+     end;
+
+     if (EdtNameL.Font.Color = clGray) or (EdtNameL.Font.Color = clRed) then
+     begin
+          EdtNameL.Font.Color := clRed;
+          exit;
+     end;
+     if (EdtIP.Font.Color = clGray) or (EdtIP.Font.Color = clRed) then
+     begin
+          EdtIP.Font.Color := clRed;
+          exit;
+     end;
+     if RGeschlecht.ItemIndex < 0 then
+     begin
+          RGEschlecht.Font.Color := clRed;
+          exit;
+     end;
+
      Adresse := EdtIP.Text;
      Vorname := EdtVornameL.Text;
      Nachname := EdtNameL.Text;
@@ -1394,6 +1457,8 @@ begin
      0: Geschlecht := 'M';
      1: Geschlecht := 'J';
      end;
+
+     
 
      Try
       With CSSenden do
@@ -1424,6 +1489,13 @@ begin
           ShpSenden.Left := ShpSenden.Left - 10;
           ShpSenden.Width := ShpSenden.Width + 20;
      end;
+     if ShpZurueckL.Brush.Color = clBlack then
+     begin
+          LblZurueckL.Font.Color := clBlack;
+          ShpZurueckL.Brush.Color := clWhite;
+          ShpZurueckL.Left := ShpZurueckL.Left + 10;
+          ShpZurueckL.Width := ShpZurueckL.Width - 20;
+     end;
 end;
 
 procedure TMenue.RGeschlechtClick(Sender: TObject);
@@ -1448,6 +1520,108 @@ begin
           ShpSenden.Brush.Color := clWhite;
           ShpSenden.Left := ShpSenden.Left + 10;
           ShpSenden.Width := ShpSenden.Width - 20;
+     end;
+     if ShpZurueckL.Brush.Color = clBlack then
+     begin
+          LblZurueckL.Font.Color := clBlack;
+          ShpZurueckL.Brush.Color := clWhite;
+          ShpZurueckL.Left := ShpZurueckL.Left + 10;
+          ShpZurueckL.Width := ShpZurueckL.Width - 20;
+     end;
+end;
+
+procedure TMenue.VerbindenTimerTimer(Sender: TObject);
+begin
+     if GBLehreranmeldung.Top < Screen.Height div 2 - GBLehreranmeldung.Height div 2 then
+    begin
+         GBLehreranmeldung.Top := GBLehreranmeldung.Top + 30;
+    end else VerbindenTimer.Enabled := false;
+end;
+
+procedure TMenue.VerbindenZurueckTimerTimer(Sender: TObject);
+begin
+     if GBLehreranmeldung.Top > -GBLehreranmeldung.Height then
+     begin
+          GBLehreranmeldung.Top := GBLehreranmeldung.Top - 30;
+     end else
+     begin
+          VerbindenZurueckTimer.Enabled := false;
+     end;
+end;
+
+procedure TMenue.LblZurueckLMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+     LblZurueckL.Top := LblZurueckL.Top + 2;
+     ShpZurueckL.Top := ShpZurueckL.Top + 2;
+end;
+
+procedure TMenue.LblZurueckLMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+begin
+     if ShpZurueckL.Brush.Color = clWhite then
+     begin
+          LblZurueckL.Font.Color := clWhite;
+          ShpZurueckL.Brush.Color := clBlack;
+          ShpZurueckL.Left := ShpZurueckL.Left - 10;
+          ShpZurueckL.Width := ShpZurueckL.Width + 20;
+     end;
+     if ShpSenden.Brush.Color = clBlack then
+     begin
+          LblSenden.Font.Color := clBlack;
+          ShpSenden.Brush.Color := clWhite;
+          ShpSenden.Left := ShpSenden.Left + 10;
+          ShpSenden.Width := ShpSenden.Width - 20;
+     end;
+end;
+
+procedure TMenue.LblZurueckLMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+     LblZurueckL.Top := LblZurueckL.Top - 2;
+     ShpZurueckL.Top := ShpZurueckL.Top - 2;
+
+     VerbindenZurueckTimer.Enabled := true;
+end;
+
+procedure TMenue.LblVerbindenMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+     LblVerbinden.Top := LblVerbinden.Top + 2;
+     ShpVerbinden.Top := ShpVerbinden.Top + 2;
+end;
+
+procedure TMenue.LblVerbindenMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+     LblVerbinden.Top := LblVerbinden.Top - 2;
+     ShpVerbinden.Top := ShpVerbinden.Top - 2;
+     VerbindenTimer.Enabled := true;
+end;
+
+procedure TMenue.LblVerbindenMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+begin
+     if ShpVerbinden.Brush.Color = clWhite then
+     begin
+          LblVerbinden.Font.Color := clWhite;
+          ShpVerbinden.Brush.Color := clBlack;
+          ShpVerbinden.Left := ShpVerbinden.Left - 10;
+          ShpVerbinden.Width := ShpVerbinden.Width + 20;
+     end;
+     if ShpNeu.Brush.Color = clBlack then
+     begin
+          LblNeu.Font.Color := clBlack;
+          ShpNeu.Brush.Color := clWhite;
+          ShpNeu.Left := ShpNeu.Left + 10;
+          ShpNeu.Width := ShpNeu.Width - 20;
+     end;
+     if ShpAnmelden.Brush.Color = clBlack then
+     begin
+          LblAnmelden.Font.Color := clBlack;
+          ShpAnmelden.Brush.Color := clWhite;
+          ShpAnmelden.Left := ShpAnmelden.Left + 10;
+          ShpAnmelden.Width := ShpAnmelden.Width - 20;
      end;
 end;
 

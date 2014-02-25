@@ -84,13 +84,13 @@ begin
 
      LBRegion.Left := 2*Rand;
      LBRegion.Top := 2*Rand;
-     LBRegion.Width := ShpHintergrund1.Width - 10*Rand;
+     LBRegion.Width := ShpHintergrund1.Width - 9*Rand;
      LBRegion.Height := ShpHintergrund1.Height - Maskottchen.Height - 3* Rand;
      LBRegion.Color := Themenfarbe1;
 
-     LBKartenTyp.Left := 3*Rand + LBRegion.Width;
+     LBKartenTyp.Left := 2*Rand + LBRegion.Width;
      LBKartenTyp.Top := 2*Rand;
-     LBKartenTyp.Width := ShpHintergrund1.Width - 3*Rand - LBRegion.Width;
+     LBKartenTyp.Width := ShpHintergrund1.Width - 2*Rand - LBRegion.Width;
      LBKartenTyp.Height := ShpHintergrund1.Height - Maskottchen.Height - 3* Rand;
      LBKartenTyp.Color := Themenfarbe1;
 

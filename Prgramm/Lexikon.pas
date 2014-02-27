@@ -85,17 +85,17 @@ begin
      ShpHintergrund2.Height:= Screen.Height - 2*Rand;
      ShpHintergrund2.Brush.Color := Themenfarbe2;
 
-     MText.Left := ShpHintergrund2.Left + Rand;
-     MText.Top  := 2*Rand;
-     MText.Width := ShpHintergrund2.Width - 2*Rand;
-     MText.Height := ShpHintergrund2.Height - 2*Rand;
-     MText.Color := Themenfarbe1;
-
-     LBStichwoerter.Left := 2*Rand;
-     LBStichwoerter.Top := 2*Rand;
-     LBStichwoerter.Width := ShpHintergrund1.Width - 2*Rand;
-     LBStichwoerter.Height := ShpHintergrund1.Height - Maskottchen.Height - 3* Rand;
+     LBStichwoerter.Left := ShpHintergrund2.Left + Rand;
+     LBStichwoerter.Top  := 2*Rand;
+     LBStichwoerter.Width := ShpHintergrund2.Width - 2*Rand;
+     LBStichwoerter.Height := ShpHintergrund2.Height - 2*Rand;
      LBStichwoerter.Color := Themenfarbe1;
+
+     MText.Left := 2*Rand;
+     MText.Top := 2*Rand;
+     MText.Width := ShpHintergrund1.Width - 2*Rand;
+     MText.Height := ShpHintergrund1.Height - Maskottchen.Height - 3* Rand;
+     MText.Color := Themenfarbe1;
                                                                                        // Lexikondatei wird geladen und entschlüsselt
      DateiLadenEntschluesseln;                                                         // die Sitchwörter werden gelistet
      StichwoerterAuflisten;
@@ -105,9 +105,9 @@ procedure TFLexikon.DateiLadenEntschluesseln;
 
 var i : integer;
 begin
-     REdtDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Lexikon/Lexikon.txt');   // Ins UNSICHTBARE REditDatei wird die Lixikondatei geladen
+     REdtDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Lexikon/Lexikon.txt');   // Ins UNSICHTBARE REditDatei wird die Lexikondatei geladen
                                                                                            //
-     Schluessel := 'abcd';                                                                 // entschlüsselt
+     {Schluessel := 'abcd';                                                                 // entschlüsselt
 
      gt := REdtDatei.Text;
      lenT := length(gt);
@@ -121,7 +121,7 @@ begin
           if p <> 0 then kt := kt + copy(ka,p,1)
           else kt := kt + c;;
      end;
-     REdtDatei.Text := kt;                                                               // und wieder ins UNSICHTBARE REdtDate geschrieben
+     REdtDatei.Text := kt; }                                                              // und wieder ins UNSICHTBARE REdtDate geschrieben
 end;
 
 procedure TFLexikon.ErzeugeGa;

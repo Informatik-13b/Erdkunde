@@ -29,7 +29,6 @@ type
     STLoescheV: TStaticText;
     StLoescheN: TStaticText;
     RgGeschlecht: TRadioGroup;
-    MDatei: TMemo;
     Registrierungstimer: TTimer;
     EdtRPasswort: TEdit;
     StLoescheRP: TStaticText;
@@ -59,6 +58,8 @@ type
     ShpZurueckL: TShape;
     ShpVerbinden: TShape;
     LblVerbinden: TLabel;
+    MIndex: TMemo;
+    MDatei: TMemo;
     procedure FormPaint(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -207,6 +208,7 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure LblVerbindenMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
+    procedure CSSendenRead(Sender: TObject; Socket: TCustomWinSocket);
   private
     { Private-Deklarationen }
   public
@@ -241,7 +243,7 @@ var
 
 implementation
 
-uses Karte,Lexikon,Atlas,Einstellungen;
+uses Karte,Lexikon,Atlas,Einstellungen,Lehrermodus;
 
 {$R *.DFM}
 
@@ -266,7 +268,7 @@ begin
      Self.DoubleBuffered := True;
      ScreenMitte := Point(Screen.Width div 2,Screen.Height div 2);    // Mitte des Screen wird ermittelt
 
-     for i := 1 to 5 do
+     for i := 1 to 6 do
      begin                                                            // Die Menüobjekte werden vom Typ
           MenueObjekt[i]:= TImageButton.Create(self);                 // ImageButton erstellt
           MenueObjekt[i].Parent := self;
@@ -279,18 +281,17 @@ begin
      MenueObjekt[2].BildLaden(ExtractFilePath(ParamStr(0)) + 'Bilder/Lexikon-Menüpunkt.gif');        // im gif-Format
      MenueObjekt[3].BildLaden(ExtractFilePath(ParamStr(0)) + 'Bilder/Profil-Menüpunkt.gif');
      MenueObjekt[4].BildLaden(ExtractFilePath(ParamStr(0)) + 'Bilder/Spiel-Menüpunkt.gif');
-     MenueObjekt[5].BildLaden(ExtractFilePath(ParamStr(0)) + 'Bilder/Titel.gif');
-     MenueObjekt[5].Titel := true;
+     MenueObjekt[5].BildLaden(ExtractFilePath(ParamStr(0)) + 'Bilder/Lehrermodus-Menüpunkt.gif');
+     MenueObjekt[6].Titel := true;
+     MenueObjekt[6].BildLaden(ExtractFilePath(ParamStr(0)) + 'Bilder/Titel.gif');
 
-     SchliessenShape := TShapeSchliessen.Create(self);    // Erstellen des Schließen-Komponente
+     SchliessenShape := TShapeSchliessen.Create(self);    // Erstellen der Schließen-Komponente
      SchliessenShape.Parent := self;
      SchliessenShape.Themenfarbe1 := Themenfarbe1;        // die Themenfarben werden übergeben
      SchliessenShape.Themenfarbe2 := Themenfarbe2;
      SchliessenShape.Fenster := Menue;           // Wichtig! Das Fenster wird übergeben, damit die Komponente weiß
                                                  // welches Fenster geschlossen werden soll.
 end;
-
-
 
 
 procedure TMenue.MenueEffektTimer(Sender: TObject);
@@ -313,24 +314,24 @@ var i : integer;
     Anzahl:integer;
 begin
      ButtonBreite := (3*Radius)div 4;                       // Buttonbreite wird in Abhängigkeit der Bildschrimgröße bestimmt
-     for i := 1 to 4 do
+     for i := 1 to 5 do
      begin
           MenueObjekt[i].Width := ButtonBreite;
           MenueObjekt[i].Height:= ButtonBreite;
      end;
 
-     MenueObjekt[5].Width := (ButtonBreite*5) div 2;
-     MenueObjekt[5].Height:= ButtonBreite;
+     MenueObjekt[6].Width := (ButtonBreite*5) div 2;
+     MenueObjekt[6].Height:= ButtonBreite;
                                                                       // im Folgenden werden die Menüpunkte im Kreis(Ellipse) angeordnet:
      Radius_x := Radius*(Screen.Width / Screen.Height);               // Radius in x-Richtung
      Radius_y := Radius;                                              // Radius in y-Richtung
-     Anzahl := 5;
-     for i := 1 to 5 do
+     Anzahl := 6;
+     for i := 1 to 6 do
      begin
           x := Kreisposition_x(i,Anzahl,ScreenMitte,Radius_x);        // x- und y-Koordinate für das i-te Objekt wird ermittelt
           y := Kreisposition_y(i,Anzahl,ScreenMitte,Radius_y);        // dabei werden oben bestimmte Parameter übergeben
 
-          if i <> 5 then
+          if i <> 6 then
           begin
                MenueObjekt[i].Left := x - ButtonBreite div 2;         // jeder Komponente wird ihre Position übergeben.
                MenueObjekt[i].Top  := y - ButtonBreite div 2;
@@ -369,7 +370,7 @@ var i,k,l :integer;
 begin
      k := round(3*((Screen.Height / 3)) / 4);        // (normale Größe)
      l := round(15*((Screen.Height / 3)) / 18);      // (zoom Größe)
-     for i := 1 to 4 do                       // 1-4: Titel wird nicht gezoomt!!!
+     for i := 1 to 5 do                       // 1-5: Titel wird nicht gezoomt!!!
      begin
           if (MenueObjekt[i].Zoom = true) and         // prüft ob, ein Menüobjekt im Zoom-Modus ist
              (MenueObjekt[i].Height < l) then         // und kleiner als die Zoom-End-Größe ist
@@ -396,7 +397,7 @@ begin
           SchliessenShape.Repaint;              // und es zeichnet sich neu.
      end;
 
-     for i := 1 to 4 do
+     for i := 1 to 5 do
      begin
           If MenueObjekt[i].Zoom = true          // Sicherheitsverkleinern: Wenn die Maus wieder auf der Form ist
           then MenueObjekt[i].Zoom := false;     // und das Menüobjekt noch nicht am Verkleinrn ist.
@@ -457,6 +458,11 @@ begin
              Application.CreateForm(TOrte_Finden, Orte_Finden);
              Orte_Finden.BringToFront;
              Orte_Finden.ShowModal;
+        end;
+     5: begin
+             Application.CreateForm(TLehrer,Lehrer);
+             Lehrer.BringToFront;
+             Lehrer.ShowModal;
         end;
      end;
 end;
@@ -980,6 +986,7 @@ begin
           MenueObjekt[2].Enabled := true;
           MenueObjekt[3].Enabled := true;
           MenueObjekt[4].Enabled := true;
+          MenueObjekt[5].Enabled := true;
           Zoomen.Enabled := true;
      end;
 end;
@@ -1336,10 +1343,10 @@ begin
 
      if Text = '' then
      begin
-          Text := 'IP-Addresse';
+          Text := 'IP-Adresse';
           Font.Color := clGray;
      end;
-     if (Length(Text) = 12) and
+     if (Length(Text) = 11) and
         (Font.Color = clGray) then
      begin
           Font.Color := clBlack;
@@ -1347,8 +1354,8 @@ begin
           SelStart := 1;
      end;
      if (Font.Color = clGray) and
-        (Length(Text) < 11) then
-        Text := 'IP-Addresse';
+        (Length(Text) < 10) then
+        Text := 'IP-Adresse';
 
      end;
 end;
@@ -1624,5 +1631,14 @@ begin
           ShpAnmelden.Width := ShpAnmelden.Width - 20;
      end;
 end;
+
+procedure TMenue.CSSendenRead(Sender: TObject; Socket: TCustomWinSocket);
+begin
+     MIndex.clear;
+     MIndex.Lines.add(Socket.ReceiveText);
+     MIndex.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien/index.dat');
+     CSSenden.Active := false;
+end;
+
 
 end.

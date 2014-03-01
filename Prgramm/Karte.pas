@@ -68,6 +68,12 @@ begin
 
      SuchKarte.Picture.Bitmap.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder/DKarte Ohne Städte.bmp'); // Die Deutschlandkarte wird geladen
 
+     SuchKarte.Height := (Screen.Height*14) div 15;          // Die Komponente platziert sich auf dem Formular.
+     SuchKarte.Width := (SuchKarte.Height*19) div 26;
+     SuchKarte.Top := Screen.Height div 30;
+     SuchKarte.Left := Screen.Width - SuchKarte.Width - SuchKarte.Top;
+     SuchKarte.Punkte := 2000;
+
      SchliessenShape := TShapeSchliessen.Create(self);    // Erstellen der Schließen-Komponente
      SchliessenShape.Parent := self;
      SchliessenShape.Themenfarbe1 := Themenfarbe1;        // die Themenfarben werden übergeben
@@ -194,7 +200,7 @@ procedure TOrte_Finden.pruefenTimerTimer(Sender: TObject);
 begin
      if SuchKarte.geklickt = true then                                 // Wenn geklickt wurde,
      begin
-          LblPunkte.Caption := IntToStr(SuchKarte.Punkte);                     // werden die berechneten Punkte 
+          LblPunkte.Caption := IntToStr(SuchKarte.Punkte);                     // werden die berechneten Punkte
           LblEntfernung.Caption := IntToStr(SuchKarte.Entfernung) + ' km';     // und die Entfernung in km  aus der Suchkarte gelesen
           LblPunkte.Left := (ShpHintergrund1.Width div 2 + Rand)-(LblPunkte.Width div 2);
           LblEntfernung.Left := (ShpHintergrund1.Width div 2 + Rand)-(LblEntfernung.Width div 2);

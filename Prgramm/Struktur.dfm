@@ -1,6 +1,6 @@
 object Menue: TMenue
-  Left = 210
-  Top = 154
+  Left = 260
+  Top = 135
   Align = alClient
   BorderStyle = bsNone
   ClientHeight = 674
@@ -3004,17 +3004,6 @@ object Menue: TMenue
       TabOrder = 4
       OnClick = RgGeschlechtClick
     end
-    object MDatei: TMemo
-      Left = 8
-      Top = 40
-      Width = 225
-      Height = 41
-      TabStop = False
-      Lines.Strings = (
-        'MDatei')
-      TabOrder = 7
-      Visible = False
-    end
     object EdtRPasswort: TEdit
       Left = 8
       Top = 216
@@ -3048,7 +3037,7 @@ object Menue: TMenue
       Font.Name = 'Comic Sans MS'
       Font.Style = [fsBold]
       ParentFont = False
-      TabOrder = 8
+      TabOrder = 7
       OnClick = StLoescheRPClick
       OnMouseDown = StLoescheRPMouseDown
       OnMouseUp = StLoescheRPMouseUp
@@ -3087,7 +3076,7 @@ object Menue: TMenue
       Font.Name = 'Comic Sans MS'
       Font.Style = [fsBold]
       ParentFont = False
-      TabOrder = 9
+      TabOrder = 8
       OnClick = STLoescheRBClick
       OnMouseDown = STLoescheRBMouseDown
       OnMouseUp = STLoescheRBMouseUp
@@ -3112,7 +3101,7 @@ object Menue: TMenue
         'e'
         'f')
       ParentFont = False
-      TabOrder = 11
+      TabOrder = 10
       OnClick = RGKlasseClick
     end
     object RGStufe: TRadioGroup
@@ -3132,7 +3121,7 @@ object Menue: TMenue
         '6'
         '7')
       ParentFont = False
-      TabOrder = 10
+      TabOrder = 9
       OnClick = RGStufeClick
     end
   end
@@ -3337,6 +3326,27 @@ object Menue: TMenue
       OnMouseDown = STLoescheIPMouseDown
       OnMouseUp = STLoescheIPMouseUp
     end
+    object MIndex: TMemo
+      Left = 320
+      Top = 64
+      Width = 49
+      Height = 41
+      TabStop = False
+      Lines.Strings = (
+        '0')
+      TabOrder = 7
+      Visible = False
+    end
+  end
+  object MDatei: TMemo
+    Left = 488
+    Top = 32
+    Width = 97
+    Height = 33
+    Lines.Strings = (
+      'MDatei')
+    TabOrder = 3
+    Visible = False
   end
   object MenueEffekt: TTimer
     Interval = 1
@@ -3383,6 +3393,7 @@ object Menue: TMenue
     Active = False
     ClientType = ctNonBlocking
     Port = 0
+    OnRead = CSSendenRead
     OnError = CSSendenError
     Left = 400
     Top = 320

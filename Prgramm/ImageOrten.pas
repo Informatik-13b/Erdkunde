@@ -48,14 +48,9 @@ constructor TImageOrten.Create(AOwner:TComponent);
 begin
      inherited Create(AOwner);
 
-     Height := (Screen.Height*14) div 15;          // Die Komponente platziert sich auf dem Formular.
-     Width := (Height*19) div 26;
-     Top := Screen.Height div 30;
-     Left := Screen.Width - Width - Top;
      Cursor := crCross;                            // Ein Zielkreuz wird als Cursor eingestellt.
      Stretch := true;
      geklickt := true;
-     Punkte := 2000;
 end;
 
 function TImageOrten.SatzLadenAnzeigen(index:integer): string;

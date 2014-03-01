@@ -1,12 +1,12 @@
 object FLexikon: TFLexikon
-  Left = 214
-  Top = 251
+  Left = 325
+  Top = 209
   VertScrollBar.Smooth = True
   VertScrollBar.Size = 10
   Align = alClient
   BorderStyle = bsNone
   Caption = 'FLexikon'
-  ClientHeight = 525
+  ClientHeight = 524
   ClientWidth = 1008
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@ object FLexikon: TFLexikon
     OnMouseMove = FormMouseMove
   end
   object ShpHintergrund1: TShape
-    Left = 72
-    Top = 72
+    Left = 96
+    Top = 144
     Width = 65
     Height = 65
     Pen.Style = psClear
@@ -50,6 +50,19 @@ object FLexikon: TFLexikon
     ParentColor = False
     ParentFont = False
     OnMouseMove = FormMouseMove
+  end
+  object LblStichwort: TLabel
+    Left = 88
+    Top = 64
+    Width = 166
+    Height = 38
+    Caption = 'LblStichwort'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -27
+    Font.Name = 'Comic Sans MS'
+    Font.Style = []
+    ParentFont = False
   end
   object LBStichwoerter: TListBox
     Left = 312
@@ -98,8 +111,6 @@ object FLexikon: TFLexikon
     Font.Height = -20
     Font.Name = 'Comic Sans MS'
     Font.Style = []
-    Lines.Strings = (
-      'MText')
     ParentCtl3D = False
     ParentFont = False
     PlainText = True

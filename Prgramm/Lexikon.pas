@@ -14,12 +14,11 @@ type
     LBStichwoerter: TListBox;
     REdtDatei: TRichEdit;
     MText: TRichEdit;
+    LblStichwort: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
-    procedure DateiLadenEntschluesseln;
-    procedure ErzeugeGa;
-    procedure addition(x:integer);
+    procedure DateiLaden;
     procedure StichwoerterAuflisten;
     procedure AbsaetzeLaden(Stichwort:string);
     procedure LBStichwoerterClick(Sender: TObject);
@@ -31,20 +30,9 @@ type
     Themenfarbe2: TColor;
   end;
 
-Const ka = ',-./0123456789:;Ô?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz';
-
 var
   FLexikon: TFLexikon;
   SchliessenShape : TShapeSchliessen;
-
-  ga, ga2: string;
-  lenA : integer;
-  kt, gt : string;
-  lenT, p : integer;
-  c : char;
-  schl: string;
-  LenSchl: integer;
-  Schluessel: String;
 
 implementation
 
@@ -92,66 +80,26 @@ begin
      LBStichwoerter.Color := Themenfarbe1;
 
      MText.Left := 2*Rand;
-     MText.Top := 2*Rand;
+     MText.Top := 5*Rand;
      MText.Width := ShpHintergrund1.Width - 2*Rand;
-     MText.Height := ShpHintergrund1.Height - Maskottchen.Height - 3* Rand;
+     MText.Height := ShpHintergrund1.Height - Maskottchen.Height - 6* Rand;
      MText.Color := Themenfarbe1;
+
+     LblStichwort.Top := 2*Rand;
+     LblStichwort.Left := 2*Rand;
+     LblStichwort.Color := Themenfarbe2;
+     LblStichwort.Font.Size := Rand;
+     LblStichwort.Caption := 'Wähle ein Stichwort';
                                                                                        // Lexikondatei wird geladen und entschlüsselt
-     DateiLadenEntschluesseln;                                                         // die Sitchwörter werden gelistet
+     DateiLaden;                                                         // die Sitchwörter werden gelistet
      StichwoerterAuflisten;
 end;
 
-procedure TFLexikon.DateiLadenEntschluesseln;
-
-var i : integer;
+procedure TFLexikon.DateiLaden;
 begin
      REdtDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Lexikon/Lexikon.txt');   // Ins UNSICHTBARE REditDatei wird die Lexikondatei geladen
-                                                                                           //
-     {Schluessel := 'abcd';                                                                 // entschlüsselt
-
-     gt := REdtDatei.Text;
-     lenT := length(gt);
-     kt := '';
-     for i := 1 to lenT do
-     begin
-          ErzeugeGa;
-          addition(i);
-          c := gt[i];
-          p := pos(c,ga2);
-          if p <> 0 then kt := kt + copy(ka,p,1)
-          else kt := kt + c;;
-     end;
-     REdtDatei.Text := kt; }                                                              // und wieder ins UNSICHTBARE REdtDate geschrieben
 end;
 
-procedure TFLexikon.ErzeugeGa;
-var Wert1, Wert2: integer;
-     i: integer;
-     schlZahl: integer;
-begin
-    ga := '';
-    schlZahl := ord(schluessel[1]);
-    lenA := length(ka);
-    For i := 1 to lenA do
-     begin
-        c := ka[i];
-        Wert1 := ord(c);
-        Wert2 := ((Wert1-44)*schlZahl mod 79)+44;
-        ga := ga + chr(Wert2);
-     end;
-end;
-
-procedure TFLexikon.addition (x: integer);
-var c2: char;
-    p2, zaehler: integer;
-begin
-     lenSchl := length (schluessel);
-     zaehler := x mod lenSchl +1;
-     c2 := schluessel[zaehler];
-     p2 := pos (c2, ga);
-     ga2 := copy (ga, p2, lenA -p2+1)
-            + copy (ga, 1, p2-1);
-end;
 
 procedure TFLexikon.StichwoerterAuflisten;
 var i,Linie: integer;
@@ -187,6 +135,7 @@ var Stichwort:string;                                                     // das
 begin
      Stichwort := LbStichwoerter.Items.Strings[LbStichwoerter.ItemIndex]; // Das angeklickte Stichwort wird ermittelt
      AbsaetzeLaden(Stichwort);                                            // und die dazugehörigen Absätze werden geladen
+     LblStichwort.Caption := Stichwort;
 end;
 
 procedure TFLexikon.AbsaetzeLaden(Stichwort:string);

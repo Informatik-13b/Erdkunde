@@ -8,7 +8,8 @@ uses
   Lexikon in 'Lexikon.pas' {FLexikon},
   Atlas in 'Atlas.pas' {Karten},
   Grossbild in 'Grossbild.pas' {Vollbild},
-  Einstellungen in 'Einstellungen.pas' {Profil};
+  Einstellungen in 'Einstellungen.pas' {Profil},
+  Lehrermodus in 'Lehrermodus.pas' {Lehrer};
 
 {$R *.RES}
 

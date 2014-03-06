@@ -1,7 +1,7 @@
 object FormKlasseVerbinden: TFormKlasseVerbinden
-  Left = 435
-  Top = 160
-  Width = 652
+  Left = 454
+  Top = 230
+  Width = 645
   Height = 558
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'FormKlasseVerbinden'
@@ -248,10 +248,10 @@ object FormKlasseVerbinden: TFormKlasseVerbinden
     Text = 'EdtKlassenname'
   end
   object StringGridKlassenNamen: TStringGrid
-    Left = 56
-    Top = 16
-    Width = 17
-    Height = 17
+    Left = 88
+    Top = 96
+    Width = 289
+    Height = 33
     TabOrder = 9
   end
   object Memo: TMemo
@@ -262,6 +262,15 @@ object FormKlasseVerbinden: TFormKlasseVerbinden
     Lines.Strings = (
       'Memo')
     TabOrder = 10
+    Visible = False
+  end
+  object EdtPos: TEdit
+    Left = 96
+    Top = 16
+    Width = 25
+    Height = 21
+    TabOrder = 11
+    Text = 'EdtPos'
     Visible = False
   end
   object ServerSocketAnmeldung: TServerSocket

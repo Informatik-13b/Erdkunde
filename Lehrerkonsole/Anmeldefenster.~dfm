@@ -1,6 +1,7 @@
 object FormAnmeldung: TFormAnmeldung
   Left = 557
   Top = 348
+  BorderIcons = [biSystemMenu]
   BorderStyle = bsToolWindow
   Caption = 'Lehrerkonsole -Passwortabfrage'
   ClientHeight = 215
@@ -2996,7 +2997,13 @@ object FormAnmeldung: TFormAnmeldung
     Left = 288
     Top = 96
     Width = 121
-    Height = 21
+    Height = 24
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 0
     Text = 'EdtBenutzername'
   end
@@ -3047,7 +3054,13 @@ object FormAnmeldung: TFormAnmeldung
     Left = 288
     Top = 128
     Width = 121
-    Height = 21
+    Height = 24
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    ParentFont = False
     PasswordChar = '*'
     TabOrder = 1
     Text = 'EdtPasswort'

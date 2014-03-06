@@ -87,7 +87,7 @@ procedure TFormKlasseAnlegen.BtnServerOffnenClick(Sender: TObject);
           Try  //Es wird eine Fehlmermeldung verhindert;
            NeuDatei.Add(EdtAnzahl.Text); //Text hinzufügen
            NeuDatei.Add('8');
-           NeuDatei.SaveToFile('Transportordner\KlassenNamen\'
+           NeuDatei.SaveToFile('TransportOrdner\KlassenNamen\'
                                 +EdtKlassenName.Text + '.txt'); //Datei speichern
           Finally
            NeuDatei.free; //Objekt wieder freigeben

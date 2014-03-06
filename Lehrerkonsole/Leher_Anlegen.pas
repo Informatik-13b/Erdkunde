@@ -171,6 +171,7 @@ procedure TFormAnlegen.SchreibeDatei(NameLehrer: String; Passwort: String);
            PasswortDateiV.Add(IntToStr(StringGridPasswort.RowCount));
            For L := 0 to (StringGridPasswort.RowCount -1) do
             PasswortdateiV.Add(StringGridPasswort.Rows[L].CommaText);
+
            PasswortDateiV.SaveToFile('Datenbank\PasswortDateiL.txt');
            showmessage('Ein neuer Lehrer wurde angelegt.' +#10#13+
                        'Starten Sie das Programm neu, um sich anzumelden!');
@@ -209,12 +210,12 @@ procedure TFormAnlegen.Erzeuge_Ordner();
      Try
        Liste.SaveToFile ('TransportOrdner\LehrerOrdner\'
                          + EdtLehrerName.Text + '\Lehrer_Adresse.txt');
-       Liste.Add ('Keine Klasse vorhanden');                  
+       Liste.Add ('Exit');                  
        Liste.SaveToFile ('TransportOrdner\LehrerOrdner\'
                          + EdtLehrerName.Text + '\Last_Class.txt');
       Finally
          Liste.Free;
-       end;
+       end;            //Notwendige Ordner, bzw. Dateien werden erstellt!
   end;
 
 end.

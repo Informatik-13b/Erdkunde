@@ -33,6 +33,7 @@ type
     ServerSocketAnmeldung: TServerSocket;
     StringGridKlassenNamen: TStringGrid;
     Memo: TMemo;
+    EdtPos: TEdit;
     procedure FormCreate(Sender: TObject);
     function GetLocalIpAddress : string;
     procedure BtnAbbrechenClick(Sender: TObject);
@@ -66,6 +67,7 @@ var
   schl: string;
   LenSchl: integer;
   Schluessel: String;
+
 const
   ka ='-./0123456789Ô?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_´abcdefghijklmnopqrstuvwxyz!';
    //Das ',' musste entfernt werden, da es ansonsten Probleme mit der texdatei gegeben hätte!
@@ -115,6 +117,8 @@ procedure TFormKlasseVerbinden.FormCreate(Sender: TObject);
      EdtKlassenName.Enabled := False;      //Die Form wird gestaltet
      StringGridKlassenNamen.Visible := False;
      Schluessel := 'aLH7wm5HfrU';  //sehr sicherer Schlüssel!!!
+     PositionGrid := 0;
+     EdtPos.Visible := False;
   end;
 
 function TFormKlasseVerbinden.GetLocalIpAddress : string;
@@ -145,11 +149,14 @@ procedure TFormKlasseVerbinden.BtnAbbrechenClick(Sender: TObject);
                              'Alle bereits gespeicherten Daten gehen verloren!',
                              'Warnung', MB_ICONWARNING or MB_OKCANCEL)
          = IDOK then begin     //Fragt den User, ob wirklich beendet werden soll!
+                       KlassenNamenDatei.Free;
+                       DeleteFile('TransportOrdner\KlassenNamen\'
+                                  + EdtKlassenname.Text +'.txt');
                        Close();  //Löscht die zuvor angelegte Datei!
                        FormKlasseAnlegen.Close;
                        FormKonsole.Show; //Kehrt zrück zum Anmeldefenster
-                       DeleteFile('KlassenNamen\' + EdtKlassenname.Text +'.txt');
-  end;               end;
+                     end;
+  end;
 
 procedure TFormKlasseVerbinden.BtnCopyClick(Sender: TObject);
   begin
@@ -195,6 +202,9 @@ procedure TFormKlasseVerbinden.ServerSocketAnmeldungClientRead(
              EdtSchuelerNachname.Text := EdtSchuelerNachname.Text + x[i];
         end;   //Das 1.Zeichen muss gelöscht werden, da es sich um den Server-Index handelt
       If Nachricht[1] = '3' then Geschlecht := Nachricht[2];
+      EdtPos.Text := IntToStr (PositionGrid);
+      ServerSocketAnmeldung.Socket.Connections[0].SendText(EdtPos.Text);  //Sendet den Index
+      showmessage(EdtPos.Text);
      Except showmessage('Fehler bei Datenempfang');
      end;
   end;
@@ -203,7 +213,8 @@ procedure TFormKlasseVerbinden.DateiVerbindung ();
   begin
      KlassenNamenDatei := TStringList.Create(); //Erzeugt die Datei
      Try
-       KlassenNamenDatei.LoadFromFile ('KlassenNamen\' + EdtKlassenname.Text +'.txt');
+       KlassenNamenDatei.LoadFromFile ('TransportOrdner\KlassenNamen\'
+                                       + EdtKlassenname.Text +'.txt');
        StringGridKlassenNamen.RowCount := StrToInt(KlassenNamenDatei[0]);
        StringGridKlassenNAmen.ColCount := 8;  //Initialisiert das StringGrid
      Except
@@ -217,13 +228,17 @@ procedure TFormKlasseVerbinden.BtnBestaetigenClick(Sender: TObject);
   begin
      BtnBestaetigen.Enabled := False;
      Anzahl := StrToInt (EdtSchuelerAnzahl.Text);
-     StringGridKlassenNamen.Cells[0,PositionGrid] := EdtSchuelerNachname.Text;
-     StringGridKlassenNAmen.Cells[1,PositionGrid] := EdtSchuelerVorname.Text;
-     StringGridKlassenNAmen.Cells[2,PositionGrid] := Geschlecht;
-     StringGridKlassenNamen.Cells[3,PositionGrid] := EdtKlassenName.Text;
-     StringGridKlassenNamen.Cells[4,PositionGrid] := IntToStr(PositionGrid);
-     ServerSocketAnmeldung.Socket.Connections[0].SendText (IntToStr(PositionGrid));  //Sendet den Index
+     StringGridKlassenNamen.Cells[1,PositionGrid] := EdtSchuelerNachname.Text;
+     StringGridKlassenNAmen.Cells[2,PositionGrid] := EdtSchuelerVorname.Text;
+     StringGridKlassenNAmen.Cells[5,PositionGrid] := Geschlecht;
+     StringGridKlassenNamen.Cells[3,PositionGrid] := ' ';
+     StringGridKlassenNamen.Cells[4,PositionGrid] := EdtKlassenName.Text;
+     StringGridKlassenNamen.Cells[6,PositionGrid] := IntToStr(PositionGrid);
+     Sleep(150);
      ServerSocketAnmeldung.Close;
+     ServerSocketAnmeldung.Active := False;
+     Sleep(100);
+     ServerSocketAnmeldung.Active := True;
      Inc(PositionGrid);
      ProgressBarFortschritt.Position := PositionGrid;
      If (PositionGrid = Anzahl) then
@@ -233,9 +248,11 @@ procedure TFormKlasseVerbinden.BtnBestaetigenClick(Sender: TObject);
                        EdtKlassenName.Text + #10#13 +
                       'wurde erfolgreich angelegt!');
           FormKonsole.Geladene_Klasse := EdtKlassenName.Text;
-          FormKonsole.Visible := True;
           ServerSocketAnmeldung.Active := False;
           FormKlasseVerbinden.Close;
+          FormKlasseAnlegen.Close();
+          FormKonsole.Visible := True;
+          FormKonsole.BringToFront;
        end;
    end;    //Falls kein Schüler mehr folgt, wird das Fenster geschlossen!
 
@@ -271,7 +288,7 @@ Procedure TFormKlasseVerbinden.ErzeugeGa();
 procedure TFormKlasseVerbinden.SchreibeKlassenDatei();
  var i,k,L,z: Integer;
   begin
-    For i := 0 to 8 do         //Alle 8 Spalten werden eingelesen
+    For i := 0 to 6 do         //Alle 8 Spalten werden eingelesen
     For k := 0 to (StringGridKlassenNamen.RowCount -1) do
      begin
         kt := StringGridKlassenNamen.Cells[i,k];

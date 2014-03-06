@@ -60,7 +60,7 @@ Const
    //Es handelt sich hierbei um das Klaralphabet!
 implementation
 
-uses Leher_Anlegen, Konsole;
+uses Leher_Anlegen, Konsole, Klasse_Anlegen;
 
 {$R *.DFM}
 
@@ -194,16 +194,22 @@ procedure TFormAnmeldung.BtnAnmeldungClick(Sender: TObject);
                     GeladeneKlassen_Liste.LoadFromFile('TransportOrdner\LehrerOrdner\'
                                                       + Benutzername + '\Last_Class.txt');
                     StringGrid_GeladeneKlasse.Rows[0].CommaText := GeladeneKlassen_Liste[0];
+                    If (StringGrid_GeladeneKlasse.Cells[0,0] <> 'Exit') then  //nur, wenn vorhanden
+                      begin
+                         FormKonsole.Geladene_Klasse := StringGrid_GeladeneKlasse.Cells[0,0];
+                         FormKonsole.KlassenNamen_Finden;
+                         FormKonsole.GridEinlesen ();
+                         FormKonsole.ComboBoxKlassenNamen.SetFocus;
+                      end         //initialisiert die Konsolen-Form
+                     Else FormKlasseAnlegen.Visible := True;    
                   Finally
-                      GeladeneKlassen_Liste.Free;  //Liest die letzte geladene Klasse ein!
+                    GeladeneKlassen_Liste.Free;
                    end;
-                  FormKonsole.Geladene_Klasse := StringGrid_GeladeneKlasse.Cells[0,0];
-                  FormKonsole.GridEinlesen ();
                   Try
-                    FormAnlegen.Close();
+                    FormAnlegen.Close();  //Schlieﬂt diese Form
                   Finally
                    end;
-                  Exit;
+                  Exit; //verl‰sst die Schleife!
                end
               Else begin
                      showmessage('Sie haben ein falsches Passwort eingegeben!');

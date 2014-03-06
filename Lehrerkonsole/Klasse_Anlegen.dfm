@@ -1,6 +1,6 @@
 object FormKlasseAnlegen: TFormKlasseAnlegen
-  Left = 623
-  Top = 262
+  Left = 572
+  Top = 267
   Width = 374
   Height = 257
   Caption = 'FormKlasseAnlegen'
@@ -83,6 +83,12 @@ object FormKlasseAnlegen: TFormKlasseAnlegen
     Width = 137
     Height = 25
     Caption = 'BtnServerOffnen'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 3
     OnClick = BtnServerOffnenClick
   end
@@ -101,6 +107,12 @@ object FormKlasseAnlegen: TFormKlasseAnlegen
     Width = 137
     Height = 25
     Caption = 'BtnAbbrechen'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 4
     OnClick = BtnAbbrechenClick
   end

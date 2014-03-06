@@ -81,10 +81,19 @@ object Lehrer: TLehrer
     TabOrder = 1
     Visible = False
   end
+  object Button1: TButton
+    Left = 80
+    Top = 288
+    Width = 75
+    Height = 25
+    Caption = 'Button1'
+    TabOrder = 2
+    OnClick = Button1Click
+  end
   object CSSenden: TClientSocket
     Active = False
     ClientType = ctNonBlocking
-    Port = 0
+    Port = 8080
     OnConnect = CSSendenConnect
     OnRead = CSSendenRead
     OnError = CSSendenError

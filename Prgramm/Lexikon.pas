@@ -78,16 +78,19 @@ begin
      LBStichwoerter.Width := ShpHintergrund2.Width - 2*Rand;
      LBStichwoerter.Height := ShpHintergrund2.Height - 2*Rand;
      LBStichwoerter.Color := Themenfarbe1;
+     LBStichwoerter.Font.Color := Themenfarbe2;
 
      MText.Left := 2*Rand;
      MText.Top := 5*Rand;
      MText.Width := ShpHintergrund1.Width - 2*Rand;
      MText.Height := ShpHintergrund1.Height - Maskottchen.Height - 6* Rand;
      MText.Color := Themenfarbe1;
+     MText.Font.Color := Themenfarbe2;
 
      LblStichwort.Top := 2*Rand;
      LblStichwort.Left := 2*Rand;
      LblStichwort.Color := Themenfarbe2;
+     LblStichwort.Font.Color := Themenfarbe1;
      LblStichwort.Font.Size := Rand;
      LblStichwort.Caption := 'Wähle ein Stichwort';
                                                                                        // Lexikondatei wird geladen und entschlüsselt

@@ -80,6 +80,7 @@ begin
      LblUeberschrift.Left := ShpHintergrund2.Left;
      LblUeberschrift.Top := 2*Rand;
      LblUeberschrift.Color := Themenfarbe1;
+     LblUeberschrift.Font.Color := Themenfarbe2;
      LblUeberschrift.Font.Size := Rand;
 
      LBRegion.Left := 2*Rand;
@@ -87,12 +88,14 @@ begin
      LBRegion.Width := ShpHintergrund1.Width - 9*Rand;
      LBRegion.Height := ShpHintergrund1.Height - Maskottchen.Height - 3* Rand;
      LBRegion.Color := Themenfarbe1;
+     LbRegion.Font.Color := Themenfarbe2;
 
      LBKartenTyp.Left := 2*Rand + LBRegion.Width;
      LBKartenTyp.Top := 2*Rand;
      LBKartenTyp.Width := ShpHintergrund1.Width - 2*Rand - LBRegion.Width;
      LBKartenTyp.Height := ShpHintergrund1.Height - Maskottchen.Height - 3* Rand;
      LBKartenTyp.Color := Themenfarbe1;
+     LbKartenTyp.Font.Color := Themenfarbe2;
 
      LBRegion.ItemIndex := 0;
      LBKartenTyp.ItemIndex := 0;

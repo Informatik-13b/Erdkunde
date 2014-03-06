@@ -1,6 +1,6 @@
 object Menue: TMenue
-  Left = 260
-  Top = 135
+  Left = 145
+  Top = 264
   Align = alClient
   BorderStyle = bsNone
   ClientHeight = 674
@@ -3330,21 +3330,26 @@ object Menue: TMenue
       Left = 320
       Top = 64
       Width = 49
-      Height = 41
+      Height = 161
       TabStop = False
       Lines.Strings = (
         '0')
       TabOrder = 7
-      Visible = False
     end
   end
   object MDatei: TMemo
-    Left = 488
-    Top = 32
-    Width = 97
+    Left = 448
+    Top = 24
+    Width = 129
     Height = 33
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Comic Sans MS'
+    Font.Style = []
     Lines.Strings = (
       'MDatei')
+    ParentFont = False
     TabOrder = 3
     Visible = False
   end

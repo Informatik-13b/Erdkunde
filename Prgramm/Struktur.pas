@@ -218,6 +218,7 @@ type
     angemeldet:boolean;
     index :integer;
     procedure FensterOeffnen(Button:integer);
+    procedure FarbenWechseln;
   end;
 
 Const ka = ',-./0123456789:;Ô?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz';
@@ -250,6 +251,18 @@ uses Karte,Lexikon,Atlas,Einstellungen,Lehrermodus;
 procedure TMenue.FormPaint(Sender: TObject);
 begin
      Menue.Color := Themenfarbe1;
+end;
+
+procedure TMenue.FarbenWechseln;
+var i:integer;
+begin
+     SchliessenShape.Themenfarbe1 := Themenfarbe1;        // die Themenfarben werden übergeben
+     SchliessenShape.Themenfarbe2 := Themenfarbe2;
+     for i := 1 to 6 do
+     begin                                                            // Die Menüobjekte werden vom Typ
+          MenueObjekt[i].Themenfarbe1 := Themenfarbe1;                // und es wird ihnen die aktuellen Themenfarbe
+          MenueObjekt[i].Themenfarbe2 := Themenfarbe2;                // übermittelt.
+     end;
 end;
 
 procedure TMenue.FormCreate(Sender: TObject);
@@ -1464,8 +1477,6 @@ begin
      0: Geschlecht := 'M';
      1: Geschlecht := 'J';
      end;
-
-     
 
      Try
       With CSSenden do

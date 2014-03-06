@@ -15,6 +15,7 @@ type
     LblStatus: TLabel;
     EdtIP: TEdit;
     MIndex: TMemo;
+    Button1: TButton;
     procedure FormCreate(Sender: TObject);
     procedure SpielzeitTimer(Sender: TObject);
     procedure CSSendenConnect(Sender: TObject; Socket: TCustomWinSocket);
@@ -28,6 +29,7 @@ type
       Shift: TShiftState);
     procedure CSSendenError(Sender: TObject; Socket: TCustomWinSocket;
       ErrorEvent: TErrorEvent; var ErrorCode: Integer);
+    procedure Button1Click(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -53,8 +55,8 @@ begin
      Lehrer.Color := clBlack;
      Self.DoubleBuffered := True;
 
-     LblStatus.Caption := '';
-     LblSpielzeit.Caption := '';
+     LblStatus.Caption := '123';
+     LblSpielzeit.Caption := '123';
 
      EdtIP.Left := Screen.Width div 2 - EdtIP.Width div 2;
      EdtIP.Top := Screen.Height div 2 - EdtIP.Height div 2;
@@ -99,23 +101,36 @@ begin
 end;
 
 procedure TLehrer.CSSendenRead(Sender: TObject; Socket: TCustomWinSocket);
+var Nachricht:string;
 begin
-     if Socket.ReceiveText[1] = 't' then
+     Nachricht := Socket.ReceiveText;
+     EdtIP.Text := Nachricht;
+
+     if Nachricht[1] = 'Z' then
      begin
-          sZeit := 10 * StrToInt(Socket.ReceiveText[2]);
-          sZeit := sZeit + StrToInt(Socket.ReceiveText[3]);
+
+          sZeit := 10 * StrToInt(Nachricht[2]);
+          sZeit := sZeit + StrToInt(Nachricht[3]);
      end;
-     if Socket.ReceiveText[1] = 's' then
+     if Nachricht[1] = 'S' then
      begin
-          stadt := 10 * StrToInt(Socket.ReceiveText[2]);
-          stadt := stadt + StrToInt(Socket.ReceiveText[3]);
+          if length(Nachricht) = 2 then stadt := StrToInt(Nachricht[2])
+          else
+          begin
+               stadt := 10 * StrToInt(Nachricht[2]);
+               stadt := stadt + StrToInt(Nachricht[3]);
+          end;
           Zeit := sZeit;
+          SuchKarte.Picture.Bitmap.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder/DKarte Ohne Städte.bmp'); // neu geladen
           LblStatus.Caption := 'BEREIT!?';
           LblSpielzeit.Caption := '3';
+          repaint;
           sleep(1000);
           LblSpielzeit.Caption := '2';
+          repaint;
           sleep(1000);
           LblSpielzeit.Caption := '1';
+          repaint;
           sleep(1000);
           LblStatus.Caption := 'Wo ist ' + SuchKarte.SatzLadenAnzeigen(stadt);
           Spielzeit.Enabled := true;
@@ -123,7 +138,7 @@ begin
           SuchKarte.geklickt := false;
           LblSpielzeit.Caption := IntToStr(Zeit);
      end;
-     if Socket.ReceiveText = 'close' then close;
+     if Nachricht = 'close' then close;
 end;
 
 procedure TLehrer.pruefenTimerTimer(Sender: TObject);
@@ -146,6 +161,7 @@ begin
      if SuchKarte.Entfernung < 100 then EntfernungMessage := 'e0' + IntToStr(SuchKarte.Entfernung);
      if SuchKarte.Entfernung < 10  then EntfernungMessage := 'e00' + IntToStr(SuchKarte.Entfernung);
 
+     if CsSenden.Active = true then
      CsSenden.Socket.SendText(indexMessage + EntfernungMessage);
 end;
 
@@ -202,6 +218,13 @@ procedure TLehrer.CSSendenError(Sender: TObject; Socket: TCustomWinSocket;
   ErrorEvent: TErrorEvent; var ErrorCode: Integer);
 begin
      close;
+end;
+
+procedure TLehrer.Button1Click(Sender: TObject);
+begin
+     CsSenden.Active := false;
+     //CsSenden.Close;
+
 end;
 
 end.

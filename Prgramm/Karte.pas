@@ -159,7 +159,7 @@ end;
 
 procedure TOrte_Finden.PunkteSpeichern;
 begin
-     if Menue.MDatei.Lines.Count < 7 then
+     {if Menue.MDatei.Lines.Count < 7 then
      begin
           Menue.MDatei.Lines.add(LblPunkte.Caption);
           Menue.MDatei.Lines.add('Orten');
@@ -169,7 +169,7 @@ begin
           Menue.MDatei.Lines[7] := 'Orten';
      end;
      Menue.MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(Menue.index) + '.txt');
-end;
+}end;
 
 procedure TOrte_Finden.Runde;
 begin

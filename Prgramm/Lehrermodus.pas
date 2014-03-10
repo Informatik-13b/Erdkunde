@@ -77,6 +77,7 @@ type
     procedure LblZurueckLMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure StatusAnpassen;
   private
     { Private-Deklarationen }
   public
@@ -106,6 +107,8 @@ begin
      GBLehreranmeldung.Top := -GBLehreranmeldung.Height;
      GBLehreranmeldung.Left := Screen.Width div 2 - GBLehreranmeldung.Width div 2;
 
+     LblStatus.Left := 10;
+     LblSpielzeit.Left := 10;
      LblStatus.Caption := ' ';
      LblSpielzeit.Caption := ' ';
 
@@ -134,6 +137,7 @@ begin
           Spielzeit.Enabled := false;
           LblSpielzeit.Caption := IntToStr(sZeit);
           LblStatus.Caption := 'PAUSE';
+          StatusAnpassen;
           pruefenTimer.Enabled := false;
           SuchKarte.geklickt := true;
      end;
@@ -154,11 +158,11 @@ begin
           end;
 
           sleep(100);
-          Socket.SendText ('1' + Vorname);
+          CSSenden.Socket.SendText ('1' + Vorname);
           sleep(100);
-          Socket.SendText ('2' + Nachname);
-          sleep(1000);
-          Socket.SendText ('3' + Geschlecht);
+          CSSenden.Socket.SendText ('2' + Nachname);
+          sleep(100);
+          CSSenden.Socket.SendText ('3' + Geschlecht);
      end else
      begin
           if index < 10 then IndexMessage := 'i0' + IntToStr(index)
@@ -210,6 +214,7 @@ begin
           Zeit := sZeit;
           SuchKarte.Picture.Bitmap.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder/DKarte Ohne Städte.bmp'); // neu geladen
           LblStatus.Caption := 'BEREIT!?';
+          StatusAnpassen;
           LblSpielzeit.Caption := '3';
           repaint;
           sleep(1000);
@@ -219,7 +224,8 @@ begin
           LblSpielzeit.Caption := '1';
           repaint;
           sleep(1000);
-          LblStatus.Caption := 'Wo ist ' + SuchKarte.SatzLadenAnzeigen(stadt);
+          LblStatus.Caption := SuchKarte.SatzLadenAnzeigen(stadt)+ '?';
+          StatusAnpassen;
           Spielzeit.Enabled := true;
           pruefenTimer.Enabled := true;
           SuchKarte.geklickt := false;
@@ -235,6 +241,23 @@ begin
      end;
 end;
 
+procedure TLehrer.StatusAnpassen;
+begin
+     if LblStatus.Width > (Screen.Width - Suchkarte.Width)div 2 - 20 then
+     begin
+          while LblStatus.Width > (Screen.Width - Suchkarte.Width) div 2 - 20 do
+          begin
+               LblStatus.Font.Size := LblStatus.Font.Size - 1;
+          end;
+     end else
+     begin
+          while LblStatus.Width < (Screen.Width - Suchkarte.Width) div 2 - 20 do
+          begin
+               LblStatus.Font.Size := LblStatus.Font.Size + 1;
+          end;
+     end;
+end;
+
 procedure TLehrer.pruefenTimerTimer(Sender: TObject);
 begin
      if SuchKarte.geklickt = true then
@@ -242,6 +265,7 @@ begin
           KilometerSenden;
           pruefenTimer.Enabled := false;
           SPielzeit.Enabled := false;
+          LblSpielzeit.Caption := 'PAUSE'
      end;
 end;
 
@@ -490,9 +514,7 @@ begin
 
      With CSSenden do
        begin
-          Port := 8080; //Festlegung des Ports
           Host := Adresse; //IP des Zielrechners
-          Open;
           Active := True; //Aufbau der Verbindung
        end;
 end;

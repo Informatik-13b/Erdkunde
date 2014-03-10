@@ -1,6 +1,6 @@
 object FLexikon: TFLexikon
-  Left = 325
-  Top = 261
+  Left = 230
+  Top = 210
   VertScrollBar.Smooth = True
   VertScrollBar.Size = 10
   Align = alClient
@@ -71,7 +71,7 @@ object FLexikon: TFLexikon
     Height = 97
     Cursor = crHandPoint
     TabStop = False
-    Columns = 3
+    Columns = 2
     Ctl3D = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText

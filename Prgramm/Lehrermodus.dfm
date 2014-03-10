@@ -1,11 +1,11 @@
 object Lehrer: TLehrer
-  Left = 503
-  Top = 243
+  Left = 0
+  Top = 205
   Align = alClient
   BorderStyle = bsNone
   Caption = 'Lehrer'
   ClientHeight = 525
-  ClientWidth = 1072
+  ClientWidth = 1008
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object Lehrer: TLehrer
   TextHeight = 13
   object LblSpielzeit: TLabel
     Left = 72
-    Top = 112
+    Top = 288
     Width = 224
     Height = 55
     Caption = 'LblSpielzeit'
@@ -56,7 +56,7 @@ object Lehrer: TLehrer
     Width = 241
     Height = 62
     AutoSelect = False
-    Color = clBackground
+    Color = clBlack
     Ctl3D = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clGray

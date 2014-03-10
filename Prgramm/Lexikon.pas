@@ -22,6 +22,7 @@ type
     procedure StichwoerterAuflisten;
     procedure AbsaetzeLaden(Stichwort:string);
     procedure LBStichwoerterClick(Sender: TObject);
+    procedure StichwortAnpassen;
   private
     { Private-Deklarationen }
   public
@@ -33,6 +34,7 @@ type
 var
   FLexikon: TFLexikon;
   SchliessenShape : TShapeSchliessen;
+  Rand:integer;
 
 implementation
 
@@ -41,7 +43,6 @@ uses Struktur;
 {$R *.DFM}
 
 procedure TFLexikon.FormCreate(Sender: TObject);
-var Rand:integer;
 begin
      Themenfarbe1 := Menue.Themenfarbe1;                   //Übergabe der Themenfarbe
      Themenfarbe2 := Menue.Themenfarbe2;
@@ -93,9 +94,18 @@ begin
      LblStichwort.Font.Color := Themenfarbe1;
      LblStichwort.Font.Size := Rand;
      LblStichwort.Caption := 'Wähle ein Stichwort';
+     StichwortAnpassen;
                                                                                        // Lexikondatei wird geladen und entschlüsselt
      DateiLaden;                                                         // die Sitchwörter werden gelistet
      StichwoerterAuflisten;
+end;
+
+procedure TFLexikon.StichwortAnpassen;
+begin
+     LblStichwort.Font.Size := 30;
+     if LblStichwort.Width > ShpHintergrund1.Width - 2*Rand then
+     while LblStichwort.Width > ShpHintergrund1.Width - 2*Rand do
+       LblStichwort.Font.Size := LblStichwort.Font.Size - 1;
 end;
 
 procedure TFLexikon.DateiLaden;
@@ -139,6 +149,7 @@ begin
      Stichwort := LbStichwoerter.Items.Strings[LbStichwoerter.ItemIndex]; // Das angeklickte Stichwort wird ermittelt
      AbsaetzeLaden(Stichwort);                                            // und die dazugehörigen Absätze werden geladen
      LblStichwort.Caption := Stichwort;
+     StichwortAnpassen;
 end;
 
 procedure TFLexikon.AbsaetzeLaden(Stichwort:string);

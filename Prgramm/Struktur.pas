@@ -138,8 +138,6 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure EdtPasswortKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure CSSendenError(Sender: TObject; Socket: TCustomWinSocket;
-      ErrorEvent: TErrorEvent; var ErrorCode: Integer);
   private
     { Private-Deklarationen }
   public
@@ -187,8 +185,10 @@ end;
 procedure TMenue.FarbenWechseln;
 var i:integer;
 begin
+     Menue.Color := Themenfarbe1;
      SchliessenShape.Themenfarbe1 := Themenfarbe1;        // die Themenfarben werden übergeben
      SchliessenShape.Themenfarbe2 := Themenfarbe2;
+     SchliessenShape.Repaint;
      for i := 1 to 6 do
      begin                                                            // Die Menüobjekte werden vom Typ
           MenueObjekt[i].Themenfarbe1 := Themenfarbe1;                // und es wird ihnen die aktuellen Themenfarbe
@@ -699,24 +699,27 @@ begin
      Benutzername := Verschluesseln(EdtBenutzername.Text);
      Passwort := Verschluesseln(EdtPasswort.Text);
 
-     if not FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\index.txt') then
+     if not FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\index.dat') then
      begin
           RegistrierungsTimer.Enabled := true;
           exit;   // !!!
      end;
 
-     MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.txt');
+     MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.dat');
      index := MDatei.Lines.IndexOf(Benutzername);
 
-     if FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt') then
+     if FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat') then
      begin
-          MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt');
+          MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat');
           if Passwort = MDatei.Lines[0] then
           begin
-               MDatei.Lines[5] := 'online';
-               MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt');
+               MDatei.Lines[7] := 'online';
+               MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat');
                ZurueckATimer.Enabled := true;
                angemeldet := true;
+               Themenfarbe1 := StringToColor(MDatei.Lines[5]);
+               Themenfarbe2 := StringToColor(MDatei.Lines[6]);
+               FarbenWechseln;
           end else
              Showmessage('Falsches Passwort');
      end else
@@ -831,13 +834,13 @@ begin
      Passwort := EdtRPasswort.Text;
 
      Mdatei.Clear;
-     if not FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\index.txt') then
-        MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.txt');
+     if not FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\index.dat') then
+        MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.dat');
 
-     MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.txt');
+     MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.dat');
      MDatei.Lines.Add(Verschluesseln(Benutzername));
      index := MDatei.Lines.IndexOf(Verschluesseln(Benutzername));
-     MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.txt');
+     MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.dat');
 
 
      MDatei.Lines.Clear;
@@ -846,8 +849,10 @@ begin
      MDatei.Lines.Add(Verschluesseln(Vorname));       //2
      MDatei.Lines.Add(Verschluesseln(Nachname));      //3
      MDatei.Lines.Add('index');                       //4
+     MDAtei.Lines.Add(ColorToString(Themenfarbe1));   //5
+     MDatei.Lines.Add(ColorToString(Themenfarbe2));   //6
 
-     MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt');
+     MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat');
 
 
      ZurueckRTimer.Enabled := true;
@@ -1119,8 +1124,8 @@ procedure TMenue.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
      if angemeldet then
      begin
-          MDatei.Lines[5] := 'offline';
-          MDAtei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt');
+          MDatei.Lines[7] := 'offline';
+          MDAtei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat');
           angemeldet := false;
      end;
 end;
@@ -1134,21 +1139,24 @@ procedure TMenue.EdtPasswortKeyDown(Sender: TObject; var Key: Word;
           Benutzername := Verschluesseln(EdtBenutzername.Text);
           Passwort := Verschluesseln(EdtPasswort.Text);
 
-          If not FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\index.txt') then
+          If not FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\index.dat') then
            Exit;   // !!!
 
-     MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.txt');
+     MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.dat');
      Index := MDatei.Lines.IndexOf(Benutzername);
 
-     If FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt') then
+     If FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat') then
        begin
-          MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt');
+          MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat');
           if Passwort = MDatei.Lines[0] then
           begin
-               MDatei.Lines[5] := 'online';
-               MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt');
+               MDatei.Lines[7] := 'online';
+               MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat');
                ZurueckATimer.Enabled := true;
                angemeldet := true;
+               Themenfarbe1 := StringToColor(MDatei.Lines[5]);
+               Themenfarbe2 := StringToColor(MDatei.Lines[6]);
+               FarbenWechseln;
           end else
              Showmessage('Falsches Passwort');
        end else
@@ -1159,11 +1167,5 @@ procedure TMenue.EdtPasswortKeyDown(Sender: TObject; var Key: Word;
        end;
   end;
 
-procedure TMenue.CSSendenError(Sender: TObject; Socket: TCustomWinSocket;
-  ErrorEvent: TErrorEvent; var ErrorCode: Integer);
-begin
-     showmessage ('Fehler bei der Verbindung!' + #13#10 +
-                  'Fehler: ' + IntToStr(ErrorCode));;  //Gibt den FehlerCode aus!
-end;
 
 end.

@@ -108,6 +108,10 @@ begin
      Menue.Themenfarbe1 := Themenfarbe1;
      Menue.Themenfarbe2 := Themenfarbe2;
      Menue.Farbenwechseln;
+
+     Menue.MDAtei.Lines[5] := ColorToString(Themenfarbe1);
+     Menue.MDatei.Lines[6] := ColorToString(Themenfarbe2);
+     Menue.MDatei.Lines.SaveTofile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(Menue.index) + '.dat');
 end;
 
 
@@ -119,5 +123,6 @@ begin
      if Farbe1 = true then Themenfarbe1 := ImgFarbe.Canvas.Pixels[x,y] //Pixelfarbe(x,y)
                       else Themenfarbe2 := ImgFarbe.Canvas.Pixels[x,y]; //Pixelfarbe(x,y);
 end;
+
 
 end.

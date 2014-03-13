@@ -60,7 +60,7 @@ var Textposition:integer;
     Text:string;
 begin
      inherited Paint;
-     Text := 'zum Schlieﬂen, Fenster nach unter ziehen';
+     Text := 'zum Schlieﬂen, Fenster nach unten ziehen';
      if inaktiv = true then
      begin
           Brush.Style := bsClear;       // im inaktiven Modus macht sich das Shape unsichtbar

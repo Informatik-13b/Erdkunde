@@ -1,6 +1,6 @@
 object FLexikon: TFLexikon
-  Left = 230
-  Top = 210
+  Left = 284
+  Top = 228
   VertScrollBar.Smooth = True
   VertScrollBar.Size = 10
   Align = alClient
@@ -16,6 +16,7 @@ object FLexikon: TFLexikon
   Font.Style = []
   OldCreateOrder = False
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnMouseMove = FormMouseMove
   PixelsPerInch = 96
   TextHeight = 13
@@ -33,22 +34,6 @@ object FLexikon: TFLexikon
     Width = 65
     Height = 65
     Pen.Style = psClear
-    OnMouseMove = FormMouseMove
-  end
-  object Maskottchen: TLabel
-    Left = 216
-    Top = 144
-    Width = 413
-    Height = 38
-    Caption = 'Platzhalter für das Maskottchen'
-    Color = clGrayText
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -27
-    Font.Name = 'Comic Sans MS'
-    Font.Style = []
-    ParentColor = False
-    ParentFont = False
     OnMouseMove = FormMouseMove
   end
   object LblStichwort: TLabel
@@ -118,5 +103,11 @@ object FLexikon: TFLexikon
     ScrollBars = ssVertical
     TabOrder = 2
     WantReturns = False
+  end
+  object TMaskottchen: TTimer
+    Interval = 1
+    OnTimer = TMaskottchenTimer
+    Left = 32
+    Top = 40
   end
 end

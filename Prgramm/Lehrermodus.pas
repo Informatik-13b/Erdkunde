@@ -23,10 +23,8 @@ type
     EdtNameL: TEdit;
     STLoescheVornameL: TStaticText;
     STLoescheNameL: TStaticText;
-    RGeschlecht: TRadioGroup;
     EdtIPV: TEdit;
     STLoescheIP: TStaticText;
-    VerbindenZurueckTimer: TTimer;
     VerbindenTimer: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure SpielzeitTimer(Sender: TObject);
@@ -65,11 +63,9 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure LblSendenMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
-    procedure RGeschlechtClick(Sender: TObject);
     procedure GBLehreranmeldungMouseMove(Sender: TObject;
       Shift: TShiftState; X, Y: Integer);
     procedure VerbindenTimerTimer(Sender: TObject);
-    procedure VerbindenZurueckTimerTimer(Sender: TObject);
     procedure LblZurueckLMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure LblZurueckLMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -116,6 +112,7 @@ begin
      begin
           VerbindenTimer.Enabled := true;
           Erstanmeldung := true;
+          EdtIP.Enabled := false;
      end else
      begin
           index := StrToInt(Menue.MDatei.Lines[4]);
@@ -145,24 +142,18 @@ end;
 
 procedure TLehrer.CSSendenConnect(Sender: TObject;
   Socket: TCustomWinSocket);
-  var indexMessage,Vorname,Nachname,Geschlecht:string;
+  var indexMessage,Vorname,Nachname:string;
 begin
      if Erstanmeldung = true then
      begin
           Vorname := EdtVornameL.Text;
           Nachname := EdtNameL.Text;
 
-          case RGeschlecht.ItemIndex of
-          0: Geschlecht := 'M';
-          1: Geschlecht := 'J';
-          end;
-
           sleep(100);
           CSSenden.Socket.SendText ('1' + Vorname);
           sleep(100);
           CSSenden.Socket.SendText ('2' + Nachname);
           sleep(100);
-          CSSenden.Socket.SendText ('3' + Geschlecht);
      end else
      begin
           if index < 10 then IndexMessage := 'i0' + IntToStr(index)
@@ -189,7 +180,7 @@ begin
 end;
 
 procedure TLehrer.CSSendenRead(Sender: TObject; Socket: TCustomWinSocket);
-var Nachricht:string;
+var Nachricht, indexMessage:string;
 begin
      Nachricht := Socket.ReceiveText;
      EdtIP.Text := Nachricht;
@@ -232,6 +223,13 @@ begin
           LblSpielzeit.Caption := IntToStr(Zeit);
      end;
      if Nachricht = 'close' then close;
+
+     if Nachricht = 'NewIndex' then
+     begin
+          if index < 10 then indexMessage := 'i0' + IntToStr(index)
+                   else indexMessage := 'i' + IntToStr(index);
+          Socket.SendText(indexMessage);
+     end;
 
      end else
      begin
@@ -322,8 +320,7 @@ begin
      If (Key = VK_RETURN) then
      begin
           CSSenden.Host := EdtIP.Text;
-          //CSSenden.Port := 8080;
-          CSSenden.Active := true;
+          //CSSenden.Active := true;
           sleep(100);
      end;
 end;
@@ -331,9 +328,9 @@ end;
 procedure TLehrer.CSSendenError(Sender: TObject; Socket: TCustomWinSocket;
   ErrorEvent: TErrorEvent; var ErrorCode: Integer);
 begin
-     //Lehrer.Close;
      ErrorCode := 0;
      Showmessage('Server nicht erreichbar!' + #13 + 'Ip-Adresse überprüfen');
+     if Erstanmeldung = true then LblSenden.Enabled := true;
 end;
 
 procedure TLehrer.EdtVornameLChange(Sender: TObject);
@@ -499,17 +496,13 @@ begin
           EdtNameL.Font.Color := clRed;
           exit;
      end;
-     if (EdtIP.Font.Color = clGray) or (EdtIP.Font.Color = clRed) then
+     if (EdtIPV.Font.Color = clGray) or (EdtIPV.Font.Color = clRed) then
      begin
-          EdtIP.Font.Color := clRed;
-          exit;
-     end;
-     if RGeschlecht.ItemIndex < 0 then
-     begin
-          RGEschlecht.Font.Color := clRed;
+          EdtIPV.Font.Color := clRed;
           exit;
      end;
 
+     CSSenden.Active := false;
      Adresse := EdtIPV.Text;
 
      With CSSenden do
@@ -517,6 +510,9 @@ begin
           Host := Adresse; //IP des Zielrechners
           Active := True; //Aufbau der Verbindung
        end;
+     sleep(100);
+
+     LblSenden.Enabled := false;
 end;
 
 procedure TLehrer.LblSendenMouseMove(Sender: TObject; Shift: TShiftState;
@@ -538,10 +534,6 @@ begin
      end;
 end;
 
-procedure TLehrer.RGeschlechtClick(Sender: TObject);
-begin
-     RGeschlecht.Font.Color := clBlack;
-end;
 
 procedure TLehrer.GBLehreranmeldungMouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
@@ -570,16 +562,6 @@ begin
     end else VerbindenTimer.Enabled := false;
 end;
 
-procedure TLehrer.VerbindenZurueckTimerTimer(Sender: TObject);
-begin
-     if GBLehreranmeldung.Top > -GBLehreranmeldung.Height then
-     begin
-          GBLehreranmeldung.Top := GBLehreranmeldung.Top - 30;
-     end else
-     begin
-          VerbindenZurueckTimer.Enabled := false;
-     end;
-end;
 
 procedure TLehrer.LblZurueckLMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);

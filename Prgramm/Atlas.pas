@@ -110,7 +110,7 @@ begin
      LblUeberschrift.Caption := Region + ' - ' + Typ;
      ImgKarte.Stretch := false;
      ImgKarte.Autosize := true;
-     ImgKarte.Picture.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder/Atlas/' + Region + Typ + '.jpg');
+     ImgKarte.Picture.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder\Atlas\' + Region + Typ + '.jpg');
      ImageAusrichten;
 end;
 

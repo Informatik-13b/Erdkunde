@@ -4,17 +4,17 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  ShapeSchliessen, StdCtrls, ExtCtrls, ComCtrls;
+  ShapeSchliessen, StdCtrls, ExtCtrls, ComCtrls, ImageMaskottchen;
 
 type
   TFLexikon = class(TForm)
-    Maskottchen: TLabel;
     ShpHintergrund1: TShape;
     ShpHintergrund2: TShape;
     LBStichwoerter: TListBox;
     REdtDatei: TRichEdit;
     MText: TRichEdit;
     LblStichwort: TLabel;
+    TMaskottchen: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
@@ -23,6 +23,8 @@ type
     procedure AbsaetzeLaden(Stichwort:string);
     procedure LBStichwoerterClick(Sender: TObject);
     procedure StichwortAnpassen;
+    procedure TMaskottchenTimer(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -35,6 +37,8 @@ var
   FLexikon: TFLexikon;
   SchliessenShape : TShapeSchliessen;
   Rand:integer;
+  Maskottchen:TImageMaskottchen;
+
 
 implementation
 
@@ -57,10 +61,19 @@ begin
      SchliessenShape.Fenster := FLexikon;           // Wichtig! Das Fenster wird übergeben, damit die Komponente weiß
                                                  // welches Fenster geschlossen werden soll.
      Rand := Screen.Height div 30;
-     Maskottchen.Top := 17*Rand;
-     Maskottchen.Left := 2*Rand;                                                    // Platzvergabe der Objekte in Abhängigkeit der Auflösung
-     Maskottchen.Width := Screen.Width - 8*Rand - ((Screen.Height*133)div 195);     //   |
-     Maskottchen.Height := 11*Rand;                                                 //   |
+
+     Maskottchen := TImageMaskottchen.Create(self);
+     Maskottchen.Parent := self;
+     Maskottchen.Left := 8*Rand;
+     Maskottchen.Top := 15*Rand;
+     Maskottchen.Height := 14*Rand;
+     Maskottchen.Width := (Maskottchen.Height * 225) div 300;
+     Maskottchen.Zustand := 'Normal';
+     Maskottchen.aktuellesBild := 0;
+     Maskottchen.Normalzustand := true;
+     Maskottchen.Laenge := 7;
+
+     self.DoubleBuffered := true;                                                //   |
                                                                                     //   |
      ShpHintergrund1.Left := Rand;                                                  //   V
      ShpHintergrund1.Top  := Rand;
@@ -173,6 +186,39 @@ begin                                                                     // MTe
                          MText.Lines.Add(tmp);
                end;
      until length(tmp) < 4;                                               // bis ein neuer Datensatz erreicht wird
+end;
+
+procedure TFLexikon.TMaskottchenTimer(Sender: TObject);
+begin
+     with Maskottchen do
+     begin
+          if Normalzustand = true then
+          begin
+               inc(aktuellesBild);
+               if aktuellesBild <= laenge then
+                  BildLaden(ExtractFilePath(ParamStr(0)) + 'Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif')
+          else aktuellesBild := 0;
+          end else
+          begin
+
+               if aktuellesBild <= laenge then
+               begin
+                    inc(aktuellesBild);
+                    BildLaden(ExtractFilePath(ParamStr(0)) + 'Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif');
+               end else
+               begin
+                    Zustand := 'Normal';
+                    Normalzustand := true;
+                    laenge := 7;
+                    aktuellesBild := 0;
+               end;
+          end;
+     end;
+end;
+
+procedure TFLexikon.FormDestroy(Sender: TObject);
+begin
+     TMaskottchen.Enabled := false;
 end;
 
 end.

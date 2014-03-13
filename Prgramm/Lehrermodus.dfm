@@ -1,6 +1,6 @@
 object Lehrer: TLehrer
-  Left = 0
-  Top = 205
+  Left = 429
+  Top = 250
   Align = alClient
   BorderStyle = bsNone
   Caption = 'Lehrer'
@@ -77,7 +77,7 @@ object Lehrer: TLehrer
     Left = 216
     Top = 169
     Width = 400
-    Height = 300
+    Height = 240
     Caption = '                Verbinden                '
     Color = clWhite
     Ctl3D = False
@@ -93,7 +93,7 @@ object Lehrer: TLehrer
     OnMouseMove = GBLehreranmeldungMouseMove
     object ShpSenden: TShape
       Left = 208
-      Top = 248
+      Top = 184
       Width = 177
       Height = 41
       Cursor = crHandPoint
@@ -101,7 +101,7 @@ object Lehrer: TLehrer
     end
     object LblSenden: TLabel
       Left = 232
-      Top = 249
+      Top = 185
       Width = 128
       Height = 38
       Cursor = crHandPoint
@@ -113,7 +113,7 @@ object Lehrer: TLehrer
     end
     object ShpZurueckL: TShape
       Left = 16
-      Top = 248
+      Top = 184
       Width = 177
       Height = 41
       Cursor = crHandPoint
@@ -121,7 +121,7 @@ object Lehrer: TLehrer
     end
     object LblZurueckL: TLabel
       Left = 61
-      Top = 248
+      Top = 184
       Width = 89
       Height = 38
       Cursor = crHandPoint
@@ -133,7 +133,7 @@ object Lehrer: TLehrer
       OnMouseUp = LblZurueckLMouseUp
     end
     object EdtVornameL: TEdit
-      Left = 8
+      Left = 16
       Top = 56
       Width = 265
       Height = 34
@@ -152,7 +152,7 @@ object Lehrer: TLehrer
       OnClick = EdtVornameLClick
     end
     object EdtNameL: TEdit
-      Left = 8
+      Left = 16
       Top = 96
       Width = 265
       Height = 34
@@ -171,7 +171,7 @@ object Lehrer: TLehrer
       OnClick = EdtNameLClick
     end
     object STLoescheVornameL: TStaticText
-      Left = 282
+      Left = 290
       Top = 50
       Width = 26
       Height = 39
@@ -189,7 +189,7 @@ object Lehrer: TLehrer
       OnMouseUp = STLoescheVornameLMouseUp
     end
     object STLoescheNameL: TStaticText
-      Left = 282
+      Left = 290
       Top = 90
       Width = 26
       Height = 39
@@ -206,31 +206,9 @@ object Lehrer: TLehrer
       OnMouseDown = STLoescheNameLMouseDown
       OnMouseUp = STLoescheNameLMouseUp
     end
-    object RGeschlecht: TRadioGroup
-      Left = 8
-      Top = 136
-      Width = 265
-      Height = 57
-      Cursor = crHandPoint
-      Caption = '             Geschlecht             '
-      Color = clWhite
-      Columns = 2
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -19
-      Font.Name = 'Comic Sans MS'
-      Font.Style = []
-      Items.Strings = (
-        'weiblich'
-        'männlich')
-      ParentColor = False
-      ParentFont = False
-      TabOrder = 4
-      OnClick = RGeschlechtClick
-    end
     object EdtIPV: TEdit
-      Left = 8
-      Top = 200
+      Left = 16
+      Top = 136
       Width = 265
       Height = 34
       AutoSelect = False
@@ -242,14 +220,14 @@ object Lehrer: TLehrer
       Font.Style = []
       MaxLength = 20
       ParentFont = False
-      TabOrder = 5
+      TabOrder = 4
       Text = 'IP-Adresse'
       OnChange = EdtIPVChange
       OnClick = EdtIPVClick
     end
     object STLoescheIP: TStaticText
-      Left = 282
-      Top = 194
+      Left = 290
+      Top = 130
       Width = 26
       Height = 39
       Cursor = crHandPoint
@@ -261,7 +239,7 @@ object Lehrer: TLehrer
       Font.Name = 'Comic Sans MS'
       Font.Style = [fsBold]
       ParentFont = False
-      TabOrder = 6
+      TabOrder = 5
       OnMouseDown = STLoescheIPMouseDown
       OnMouseUp = STLoescheIPMouseUp
     end
@@ -273,8 +251,8 @@ object Lehrer: TLehrer
     OnConnect = CSSendenConnect
     OnRead = CSSendenRead
     OnError = CSSendenError
-    Left = 128
-    Top = 48
+    Left = 72
+    Top = 40
   end
   object Spielzeit: TTimer
     Enabled = False
@@ -288,13 +266,6 @@ object Lehrer: TLehrer
     OnTimer = pruefenTimerTimer
     Left = 680
     Top = 16
-  end
-  object VerbindenZurueckTimer: TTimer
-    Enabled = False
-    Interval = 1
-    OnTimer = VerbindenZurueckTimerTimer
-    Left = 568
-    Top = 184
   end
   object VerbindenTimer: TTimer
     Enabled = False

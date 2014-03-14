@@ -4,35 +4,46 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  ImageOrten, ShapeSchliessen, OleCtrls, SHDocVw, StdCtrls, ExtCtrls;
+  ImageOrten, ShapeSchliessen, OleCtrls, SHDocVw, StdCtrls, ExtCtrls, Grids;
 
 type
+    TOrte = record
+     Index : integer;
+     Ortsname : string[20];
+     Schwierigkeit : string[10];
+     KoSy_x, KoSy_y : integer;
+    end;
   TOrte_Finden = class(TForm)
-    BtnNeu: TButton;
     ShpHintergrund1: TShape;
     LblUeberschrift: TLabel;
     Maskottchen: TLabel;
     LblStadt: TLabel;
     LblSchwierigkeit: TLabel;
     pruefenTimer: TTimer;
-    LblPunkte: TLabel;
     LblEntfernung: TLabel;
-    Lblverbleibend: TLabel;
-    BtnWeiter: TButton;
+    StrGrdOrte: TStringGrid;
+    LblWeiter: TLabel;
+    ShpWeiter: TShape;
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
-    procedure BtnNeuClick(Sender: TObject);
     procedure ShpHintergrund1MouseMove(Sender: TObject; Shift: TShiftState;
       X, Y: Integer);
     procedure pruefenTimerTimer(Sender: TObject);
-    procedure BtnWeiterClick(Sender: TObject);
-    procedure PunkteSpeichern;
+    procedure OrteLaden;
+    procedure GridSpeichern;
+    procedure GridLaden;
+    procedure LblWeiterMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure LblWeiterClick(Sender: TObject);
+    procedure ShpWeiterMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private-Deklarationen }
+    procedure weiter;
+    procedure EntfernungSpeichern;
   public
     { Public-Deklarationen }
-    procedure Runde;
   end;
 
 var
@@ -42,8 +53,8 @@ var
   SchliessenShape:TShapeSchliessen;
   SuchKarte:TImageOrten;
   Rand:integer;
-  index:integer;
-  Durchlauf:integer;
+  Ort:integer;
+  Orteanzahl:integer;
 
 implementation
 
@@ -54,7 +65,6 @@ uses Struktur;
 procedure TOrte_Finden.FormCreate(Sender: TObject);
 //var Stadt:integer;
 begin
-     Durchlauf := 1;
 
      self.DoubleBuffered := true;
 
@@ -66,13 +76,10 @@ begin
      SuchKarte := TImageOrten.Create(self);          // Die Suchkarte wird erzeugt
      SuchKarte.Parent := self;
 
-     SuchKarte.Picture.Bitmap.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder/DKarte Ohne Städte.bmp'); // Die Deutschlandkarte wird geladen
-
      SuchKarte.Height := (Screen.Height*14) div 15;          // Die Komponente platziert sich auf dem Formular.
      SuchKarte.Width := (SuchKarte.Height*19) div 26;
      SuchKarte.Top := Screen.Height div 30;
      SuchKarte.Left := Screen.Width - SuchKarte.Width - SuchKarte.Top;
-     SuchKarte.Punkte := 2000;
 
      SchliessenShape := TShapeSchliessen.Create(self);    // Erstellen der Schließen-Komponente
      SchliessenShape.Parent := self;
@@ -93,6 +100,7 @@ begin
      LblUeberschrift.Top := 2*Rand;
      LblUeberschrift.Left := ((ShpHintergrund1.Width + 2*Rand) div 2)
                               - LblUeberschrift.Width div 2;
+     LblUeberschrift.Font.Color := Themenfarbe1;
 
      Maskottchen.Top := 17*Rand;
      Maskottchen.Left := 2*Rand;
@@ -101,28 +109,109 @@ begin
 
      LblStadt.Font.Size := Screen.Height div 20;
      LblStadt.Top := 5*Rand;
-     LblStadt.Left := (ShpHintergrund1.Width div 2 + Rand)-(LblStadt.Width div 2);
-     LblStadt.Caption := '';
+     LblStadt.Font.Color := Themenfarbe1;
 
      LblSchwierigkeit.Font.Size := Screen.Height div 40;
      LblSchwierigkeit.Top := 8*Rand;
-     LblSchwierigkeit.Left := (ShpHintergrund1.Width div 2 + Rand)-(LblSchwierigkeit.Width div 2);
+     LblSchwierigkeit.Left := ShpHintergrund1.Left + ShpHintergrund1.Width div 2 - LblSchwierigkeit.Width div 2;
      LblSchwierigkeit.Caption := '';
-
-     LblPunkte.Font.Size := Screen.Height div 20;
-     LblPunkte.Top := 12*Rand;
-     LblPunkte.Left := (ShpHintergrund1.Width div 2 + Rand)-(LblPunkte.Width div 2);
-     LblPunkte.Caption := '';
+     LblSchwierigkeit.Font.Color := Themenfarbe1;
 
      LblEntfernung.Font.Size := Screen.Height div 40;
      LblEntfernung.Top := 10*Rand;
-     LblEntfernung.Left := (ShpHintergrund1.Width div 2 + Rand)-(LblEntfernung.Width div 2);
+     LblEntfernung.Left := ShpHintergrund1.Left + ShpHintergrund1.Width div 2 - LblEntfernung.Width div 2;
      LblEntfernung.Caption := '';
+     LblEntfernung.Font.Color := Themenfarbe1;
 
-     Lblverbleibend.Font.Size := Screen.Height div 20;
-     Lblverbleibend.Top := 5*Rand;
-     Lblverbleibend.Left := 2*Rand;
-     Lblverbleibend.Caption := '';
+     ShpWeiter.Top := 13*Rand;
+     ShpWeiter.Height := 3*Rand;
+     ShpWeiter.Left := 2*Rand;
+     ShpWeiter.Width := ShpHintergrund1.Width - 2*Rand;
+     ShpWeiter.Brush.Color := Themenfarbe1;
+     ShpWeiter.Pen.Color := Themenfarbe2;
+
+     LblWeiter.Font.Color := Themenfarbe2;
+     LblWeiter.Font.Size := Screen.Height div 30;
+     LblWeiter.Top := ShpWeiter.Top + ShpWeiter.Height div 2 - LblWeiter.Height div 2;
+     LblWeiter.Left := ShpWeiter.Left + ShpWeiter.Width div 2 - LblWeiter.Width div 2;
+
+     StrGrdOrte.Cells[0,0] := 'Stadt';
+     StrGrdOrte.Cells[1,0] := 'beste Ortung in km';
+     OrteLaden;
+
+     randomize;
+     weiter;
+end;
+
+procedure TOrte_Finden.weiter;
+begin
+     SuchKarte.Picture := nil;
+     SuchKarte.Picture.Bitmap.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder/DKarte Ohne Städte.bmp'); // Die Deutschlandkarte wird geladen
+     Ort := random(Orteanzahl-1)+1;
+     LblStadt.Caption := SuchKarte.SatzLadenAnzeigen(Ort);
+     LblStadt.Left := ShpHintergrund1.Left + ShpHintergrund1.Width div 2 - LblStadt.Width div 2;
+     SuchKarte.geklickt := false;
+     LblWeiter.Enabled := false;
+     ShpWeiter.Enabled := false;
+     LblEntfernung.Caption := '';
+     pruefenTimer.Enabled := true;
+end;
+
+procedure TOrte_Finden.OrteLaden;
+var aktueller_record : integer;
+    ROrte : TOrte;
+    Orte_Datei : file of TOrte;
+begin
+     if not FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\Ergebnisse\' + IntToStr(Menue.index) + '.dat') then
+     begin
+          AssignFile(Orte_Datei,ExtractFilePath(ParamStr(0)) + 'OrtsKoordinaten\Orte_KoSy.dat');      // Datei wird geöffnetReset(Orte_Datei);
+          Reset(Orte_Datei);
+          for aktueller_record := 0 to FileSize(Orte_Datei)-1 do
+          begin
+               Seek(Orte_Datei,aktueller_record);
+               Read(Orte_Datei,ROrte);
+               StrGrdOrte.Cells[0,aktueller_record+1] := ROrte.Ortsname;
+               StrGrdOrte.Cells[1,aktueller_record+1] := '999';
+               StrGrdOrte.RowCount := StrGrdOrte.RowCount + 1;
+          end;
+          StrGrdOrte.Cells[0,StrGrdOrte.RowCount - 1] := 'Durchschnitt';
+          StrGrdOrte.Cells[1,StrGrdOrte.RowCount - 1] := '999';
+          CloseFile(Orte_Datei);
+          GridSpeichern;
+     end else GridLaden;
+     Orteanzahl := StrGrdOrte.RowCount-2;
+end;
+
+procedure TOrte_Finden.GridSpeichern;
+var Tabelle:TStringList;
+    i:integer;
+begin
+     Tabelle := TStringList.Create;
+     try
+        Tabelle.Add(IntToStr(StrGrdOrte.RowCount));
+        Tabelle.Add(IntToStr(StrGrdOrte.ColCount));
+        for i := 0 to StrGrdOrte.RowCount -1 do
+            Tabelle.Add(StrGrdOrte.Rows[i].CommaText);
+        Tabelle.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\Ergebnisse\' + IntToStr(Menue.index) + '.dat');
+     finally
+        Tabelle.free;
+     end;
+end;
+
+procedure TOrte_Finden.GridLaden;
+var Tabelle:TStringList;
+    i:integer;
+begin
+     Tabelle := TStringList.Create;
+     try
+        Tabelle.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\Ergebnisse\' + IntToStr(Menue.index) + '.dat');
+        StrGrdOrte.RowCount := StrToInt(Tabelle[0]);
+        StrGrdOrte.ColCount := StrToInt(Tabelle[1]);
+        for i := 0 to StrGrdOrte.RowCount - 1 do
+            StrGrdOrte.Rows[i].CommaText := Tabelle[i+2];
+        finally
+            Tabelle.Free;
+        end;
 end;
 
 procedure TOrte_Finden.FormMouseMove(Sender: TObject; Shift: TShiftState;
@@ -136,55 +225,6 @@ begin
 end;
 
 
-procedure TOrte_Finden.BtnNeuClick(Sender: TObject);
-begin
-     Durchlauf := 10;
-     runde;
-     BtnNeu.Enabled := false;
-     Lblverbleibend.Caption := IntToStr(Durchlauf);
-
-end;
-
-procedure TOrte_Finden.BtnWeiterClick(Sender: TObject);
-begin
-     if Durchlauf > 0 then
-     begin
-          dec(Durchlauf);
-          runde;
-          Lblverbleibend.Caption := IntToStr(Durchlauf);
-          BtnWeiter.Enabled := false;
-          PunkteSpeichern;
-     end;
-end;
-
-procedure TOrte_Finden.PunkteSpeichern;
-begin
-     {if Menue.MDatei.Lines.Count < 7 then
-     begin
-          Menue.MDatei.Lines.add(LblPunkte.Caption);
-          Menue.MDatei.Lines.add('Orten');
-     end else
-     begin
-          Menue.MDatei.Lines[6] := LblPunkte.Caption;
-          Menue.MDatei.Lines[7] := 'Orten';
-     end;
-     Menue.MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(Menue.index) + '.txt');
-}end;
-
-procedure TOrte_Finden.Runde;
-begin
-     SuchKarte.geklickt := false;
-     SuchKarte.Picture := nil;                                                                              // Die Suchkarte wird geleert und
-     SuchKarte.Picture.Bitmap.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder/DKarte Ohne Städte.bmp'); // neu geladen
-     SuchKarte.geklickt := false;
-     randomize;
-     index := random(76)+1;
-     LblStadt.Caption := SuchKarte.SatzLadenAnzeigen(index);
-     LblStadt.Left := (ShpHintergrund1.Width div 2 + Rand)-(LblStadt.Width div 2);
-     LblSchwierigkeit.Caption := SuchKarte.ROrte.Schwierigkeit;
-     LblSchwierigkeit.Left := (ShpHintergrund1.Width div 2 + Rand)-(LblSchwierigkeit.Width div 2);
-     pruefenTimer.Enabled := true;
-end;
 
 procedure TOrte_Finden.ShpHintergrund1MouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
@@ -194,25 +234,65 @@ begin
           SchliessenShape.inaktiv := true;      // wird sein Status auf inaktiv gesetzt
           SchliessenShape.Repaint;              // und es zeichnet sich neu.
      end;
+     if ShpWeiter.Brush.Color = Themenfarbe2 then
+     begin
+          ShpWeiter.Brush.Color := Themenfarbe1;
+          LblWeiter.Font.Color := Themenfarbe2;
+          ShpWeiter.Pen.Color := Themenfarbe2;
+     end;
 end;
 
 procedure TOrte_Finden.pruefenTimerTimer(Sender: TObject);
 begin
      if SuchKarte.geklickt = true then                                 // Wenn geklickt wurde,
      begin
-          LblPunkte.Caption := IntToStr(SuchKarte.Punkte);                     // werden die berechneten Punkte
-          LblEntfernung.Caption := IntToStr(SuchKarte.Entfernung) + ' km';     // und die Entfernung in km  aus der Suchkarte gelesen
-          LblPunkte.Left := (ShpHintergrund1.Width div 2 + Rand)-(LblPunkte.Width div 2);
-          LblEntfernung.Left := (ShpHintergrund1.Width div 2 + Rand)-(LblEntfernung.Width div 2);
+          LblEntfernung.Caption := IntToStr(SuchKarte.Entfernung) + ' km';     // wird die Entfernung in km  aus der Suchkarte gelesen
+          LblEntfernung.Left := ShpHintergrund1.Left + ShpHintergrund1.Width div 2 - LblEntfernung.Width div 2;
+          ShpWeiter.Enabled := true;
+          LblWeiter.Enabled := true;
           pruefenTimer.Enabled := false;
+          EntfernungSpeichern;
+     end;
+end;
 
-     if Durchlauf > 1 then Orte_Finden.BtnWeiter.Enabled := true
-     else
+procedure TOrte_Finden.EntfernungSpeichern;
+var i,Durchschnitt: integer;
+begin
+     if SuchKarte.Entfernung < StrToInt(StrGrdOrte.Cells[1,Ort]) then
      begin
-          Orte_Finden.BtnNeu.Enabled := true;
-          Orte_Finden.PunkteSpeichern;
+          StrGrdOrte.Cells[1,Ort] := IntToStr(SuchKarte.Entfernung);
+          Durchschnitt := 0;
+          for i := 1 to Orteanzahl do
+          begin
+               Durchschnitt := Durchschnitt + StrToInt(StrGrdOrte.Cells[1,i]);
+          end;
+          Durchschnitt := Durchschnitt div Orteanzahl;
+          StrGrdOrte.Cells[1,StrGrdOrte.RowCount-1] := IntToStr(Durchschnitt);
+          GridSpeichern;
      end;
+end;
+
+procedure TOrte_Finden.LblWeiterMouseMove(Sender: TObject;
+  Shift: TShiftState; X, Y: Integer);
+begin
+     if ShpWeiter.Brush.Color = Themenfarbe1 then
+     begin
+          ShpWeiter.Brush.Color := Themenfarbe2;
+          LblWeiter.Font.Color := Themenfarbe1;
+          ShpWeiter.Pen.Color := Themenfarbe1;
      end;
+end;
+
+
+procedure TOrte_Finden.LblWeiterClick(Sender: TObject);
+begin
+     weiter;
+end;
+
+procedure TOrte_Finden.ShpWeiterMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+     weiter;
 end;
 
 end.

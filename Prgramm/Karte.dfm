@@ -1,6 +1,6 @@
 object Orte_Finden: TOrte_Finden
-  Left = 391
-  Top = 239
+  Left = 352
+  Top = 254
   Align = alClient
   BorderStyle = bsNone
   Caption = 'Orte_Finden'
@@ -39,21 +39,6 @@ object Orte_Finden: TOrte_Finden
     ParentFont = False
     Transparent = True
   end
-  object Maskottchen: TLabel
-    Left = 200
-    Top = 288
-    Width = 413
-    Height = 38
-    Caption = 'Platzhalter für das Maskottchen'
-    Color = clAppWorkSpace
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -27
-    Font.Name = 'Comic Sans MS'
-    Font.Style = []
-    ParentColor = False
-    ParentFont = False
-  end
   object LblStadt: TLabel
     Left = 224
     Top = 112
@@ -82,20 +67,6 @@ object Orte_Finden: TOrte_Finden
     ParentFont = False
     Transparent = True
   end
-  object LblPunkte: TLabel
-    Left = 224
-    Top = 184
-    Width = 51
-    Height = 16
-    Caption = 'LblPunkte'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Comic Sans MS'
-    Font.Style = [fsBold]
-    ParentFont = False
-    Transparent = True
-  end
   object LblEntfernung: TLabel
     Left = 224
     Top = 208
@@ -110,38 +81,73 @@ object Orte_Finden: TOrte_Finden
     ParentFont = False
     Transparent = True
   end
-  object Lblverbleibend: TLabel
-    Left = 112
-    Top = 112
-    Width = 76
-    Height = 16
-    Caption = 'Lblverbleibend'
+  object Maskottchen: TLabel
+    Left = 200
+    Top = 288
+    Width = 413
+    Height = 38
+    Caption = 'Platzhalter für das Maskottchen'
+    Color = clAppWorkSpace
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -27
+    Font.Name = 'Comic Sans MS'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
+  end
+  object ShpWeiter: TShape
+    Left = 56
+    Top = 200
+    Width = 65
+    Height = 65
+    Cursor = crHandPoint
+    Pen.Width = 3
+    Shape = stRoundRect
+    OnMouseDown = ShpWeiterMouseDown
+    OnMouseMove = LblWeiterMouseMove
+  end
+  object LblWeiter: TLabel
+    Left = 72
+    Top = 224
+    Width = 37
+    Height = 15
+    Cursor = crHandPoint
+    Caption = 'Weiter'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
     Font.Name = 'Comic Sans MS'
-    Font.Style = [fsBold]
+    Font.Style = []
     ParentFont = False
     Transparent = True
+    OnClick = LblWeiterClick
+    OnMouseMove = LblWeiterMouseMove
   end
-  object BtnNeu: TButton
-    Left = 552
-    Top = 336
-    Width = 75
-    Height = 25
-    Caption = 'Neu'
+  object StrGrdOrte: TStringGrid
+    Left = 15
+    Top = 464
+    Width = 186
+    Height = 49
+    BorderStyle = bsNone
+    ColCount = 2
+    Ctl3D = False
+    FixedCols = 0
+    RowCount = 2
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Comic Sans MS'
+    Font.Style = []
+    GridLineWidth = 2
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine]
+    ParentCtl3D = False
+    ParentFont = False
     TabOrder = 0
-    OnClick = BtnNeuClick
-  end
-  object BtnWeiter: TButton
-    Left = 632
-    Top = 336
-    Width = 75
-    Height = 25
-    Caption = 'Weiter'
-    Enabled = False
-    TabOrder = 1
-    OnClick = BtnWeiterClick
+    Visible = False
+    RowHeights = (
+      24
+      24)
   end
   object pruefenTimer: TTimer
     Interval = 1

@@ -1,6 +1,6 @@
 object Profil: TProfil
-  Left = 250
-  Top = 176
+  Left = 283
+  Top = 298
   Align = alClient
   BorderStyle = bsNone
   Caption = 'Profil'
@@ -38458,7 +38458,44 @@ object Profil: TProfil
       C37791C37791C37791C37891C37791C37891C37791C37791C37791C37791C377
       91C3}
     Stretch = True
-    OnClick = ImgFarbeClick
-    OnMouseMove = ImgFarbeMouseMove
+    OnMouseDown = ImgFarbeMouseDown
+  end
+  object LblFarbe: TLabel
+    Left = 192
+    Top = 56
+    Width = 279
+    Height = 95
+    Caption = 'LblFarbe'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -67
+    Font.Name = 'Comic Sans MS'
+    Font.Style = []
+    ParentFont = False
+    Transparent = True
+  end
+  object StrGrdOrte: TStringGrid
+    Left = 656
+    Top = 96
+    Width = 345
+    Height = 281
+    BorderStyle = bsNone
+    ColCount = 2
+    Ctl3D = False
+    FixedCols = 0
+    RowCount = 2
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Comic Sans MS'
+    Font.Style = []
+    GridLineWidth = 2
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine]
+    ParentCtl3D = False
+    ParentFont = False
+    TabOrder = 0
+    RowHeights = (
+      24
+      24)
   end
 end

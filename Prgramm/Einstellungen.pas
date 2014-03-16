@@ -215,12 +215,36 @@ end;
 
 procedure TProfil.ImgFarbeMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
+var tempFarbe:TColor;
 begin
      x := round(x * 640 / ImgFarbe.Width);
      y := round(y * 640 / ImgFarbe.Height);
-     if Button = mbLeft then Themenfarbe1 := ImgFarbe.Canvas.Pixels[x,y];
-     if Button = mbright then Themenfarbe2 := ImgFarbe.Canvas.Pixels[x,y];
-     FarbeWechseln;
+     tempFarbe := ImgFarbe.Canvas.Pixels[x,y];
+
+     if (Button = mbLeft) then
+     begin
+        if (GetRValue(tempFarbe) < GetRValue(Themenfarbe2) + 10) and
+           (GetRValue(tempFarbe) > GetRValue(Themenfarbe2) - 10) then exit;
+        if (GetgValue(tempFarbe) < GetgValue(Themenfarbe2) + 10) and
+           (GetgValue(tempFarbe) > GetgValue(Themenfarbe2) - 10) then exit;
+        if (GetbValue(tempFarbe) < GetbValue(Themenfarbe2) + 10) and
+           (GetbValue(tempFarbe) > GetbValue(Themenfarbe2) - 10) then exit;
+        Themenfarbe1 := tempFarbe;
+        FarbeWechseln;
+     end;
+
+     if (Button = mbright) then
+     begin
+        if (GetRValue(tempFarbe) < GetRValue(Themenfarbe1) + 10) and
+           (GetRValue(tempFarbe) > GetRValue(Themenfarbe1) - 10) then exit;
+        if (GetgValue(tempFarbe) < GetgValue(Themenfarbe1) + 10) and
+           (GetgValue(tempFarbe) > GetgValue(Themenfarbe1) - 10) then exit;
+        if (GetbValue(tempFarbe) < GetbValue(Themenfarbe1) + 10) and
+           (GetbValue(tempFarbe) > GetbValue(Themenfarbe1) - 10) then exit;
+        Themenfarbe2 := tempFarbe;
+        FarbeWechseln;
+     end;
 end;
+
 
 end.

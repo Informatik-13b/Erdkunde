@@ -105,25 +105,25 @@ end;
 
 procedure TKarten.LBKartenTypClick(Sender: TObject);
 begin
-     Region := LBRegion.Items.Strings[LbRegion.ItemIndex];
-     Typ := LBKartenTyp.Items.Strings[LBKartenTyp.ItemIndex];
-     LblUeberschrift.Caption := Region + ' - ' + Typ;
+     Region := LBRegion.Items.Strings[LbRegion.ItemIndex]; // ausgewählte Zelle legt Region fest
+     Typ := LBKartenTyp.Items.Strings[LBKartenTyp.ItemIndex];  // ausgewählte Zelle legt Typ fest
+     LblUeberschrift.Caption := Region + ' - ' + Typ;   //Überschrift wird gesetzt
      ImgKarte.Stretch := false;
      ImgKarte.Autosize := true;
      ImgKarte.Picture.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder\Atlas\' + Region + Typ + '.jpg');
-     ImageAusrichten;
+     ImageAusrichten;                        // Karte wird ausgerichtet
 end;
 
 procedure TKarten.ImageAusrichten;
 begin
-     if ImgKarte.Width <> ShpHintergrund2.Width then
+     if ImgKarte.Width <> ShpHintergrund2.Width then  // wenn Die Kartengröße nicht der Hintergrundgröße entspricht
      begin
           ImgKarte.AutoSize := false;
-          ImgKarte.Height := round(ImgKarte.Height * ShpHintergrund2.Width / ImgKarte.Width);
-          ImgKarte.Width := ShpHintergrund2.Width;
-          ImgKarte.Stretch := true;
+          ImgKarte.Height := round(ImgKarte.Height * ShpHintergrund2.Width / ImgKarte.Width);  //wird die Höhe angepasst
+          ImgKarte.Width := ShpHintergrund2.Width;    //und die Breite
+          ImgKarte.Stretch := true;                   // und schließlich ImgKarte.Picture angepasst
      end;
-     if ImgKarte.Height > ShpHintergrund2.Width then
+     if ImgKarte.Height > ShpHintergrund2.Width then    // wenn die Höhe... s.o.
      begin
           ImgKarte.Width := round(ImgKarte.Width*ShpHintergrund2.Height / Imgkarte.Height);
           ImgKarte.Height:= ShpHintergrund2.Height;
@@ -139,7 +139,7 @@ end;
 
 procedure TKarten.ImgKarteClick(Sender: TObject);
 begin
-     Application.CreateForm(TVollbild, Vollbild);
+     Application.CreateForm(TVollbild, Vollbild);  //neue Form für das Vollbild wird geöffnet
      Vollbild.BringToFront;
      Vollbild.ShowModal;
 end;

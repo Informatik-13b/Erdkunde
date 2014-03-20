@@ -42,6 +42,7 @@ type
     { Private-Deklarationen }
     procedure weiter;
     procedure EntfernungSpeichern;
+    procedure StadtAnpassen;
   public
     { Public-Deklarationen }
   end;
@@ -63,7 +64,6 @@ uses Struktur;
 {$R *.DFM}
 
 procedure TOrte_Finden.FormCreate(Sender: TObject);
-//var Stadt:integer;
 begin
 
      self.DoubleBuffered := true;
@@ -98,9 +98,13 @@ begin
 
      LblUeberschrift.Font.Size := Screen.Height div 30;
      LblUeberschrift.Top := 2*Rand;
+     LblUeberschrift.Font.Color := Themenfarbe1;
+     while LblUeberschrift.Width > ShpHintergrund1.Width - 2*Rand do
+     begin
+          LblUeberschrift.Font.Size := LblUeberschrift.Font.Size - 1;
+     end;
      LblUeberschrift.Left := ((ShpHintergrund1.Width + 2*Rand) div 2)
                               - LblUeberschrift.Width div 2;
-     LblUeberschrift.Font.Color := Themenfarbe1;
 
      Maskottchen.Top := 17*Rand;
      Maskottchen.Left := 2*Rand;
@@ -145,11 +149,11 @@ end;
 
 procedure TOrte_Finden.weiter;
 begin
-     SuchKarte.Picture := nil;
+     SuchKarte.Picture := nil;  //Image wird geleert
      SuchKarte.Picture.Bitmap.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder/DKarte Ohne Städte.bmp'); // Die Deutschlandkarte wird geladen
-     Ort := random(Orteanzahl-1)+1;
-     LblStadt.Caption := SuchKarte.SatzLadenAnzeigen(Ort);
-     LblStadt.Left := ShpHintergrund1.Left + ShpHintergrund1.Width div 2 - LblStadt.Width div 2;
+     Ort := random(Orteanzahl)+1; // eine Zufallsstadt wird gelost
+     LblStadt.Caption := SuchKarte.SatzLadenAnzeigen(Ort);  //Stadtname wird angezeigt und der Karte zugewiesen
+     StadtAnpassen;
      SuchKarte.geklickt := false;
      LblWeiter.Enabled := false;
      ShpWeiter.Enabled := false;
@@ -157,8 +161,17 @@ begin
      pruefenTimer.Enabled := true;
 end;
 
-procedure TOrte_Finden.OrteLaden;
-var aktueller_record : integer;
+procedure TOrte_Finden.StadtAnpassen;
+begin
+     LblStadt.Font.Size := 40;
+     if LblStadt.Width > ShpHintergrund1.Width - 2*Rand then
+     while LblStadt.Width > ShpHintergrund1.Width - 2*Rand do
+       LblStadt.Font.Size := LblStadt.Font.Size - 1;
+     LblStadt.Left := ShpHintergrund1.Left + ShpHintergrund1.Width div 2 - LblStadt.Width div 2;  //Position wird angepasst
+end;
+
+procedure TOrte_Finden.OrteLaden;  // Ergebnissdatei wird geöffnet
+var aktueller_record : integer;    // oder neu erzeugt und mit anfangsdaten gefüllt
     ROrte : TOrte;
     Orte_Datei : file of TOrte;
 begin
@@ -182,7 +195,7 @@ begin
      Orteanzahl := StrGrdOrte.RowCount-2;
 end;
 
-procedure TOrte_Finden.GridSpeichern;
+procedure TOrte_Finden.GridSpeichern;  // Tabelle wird gespeichert
 var Tabelle:TStringList;
     i:integer;
 begin
@@ -198,7 +211,7 @@ begin
      end;
 end;
 
-procedure TOrte_Finden.GridLaden;
+procedure TOrte_Finden.GridLaden;  //  Tabelle wird geladen
 var Tabelle:TStringList;
     i:integer;
 begin

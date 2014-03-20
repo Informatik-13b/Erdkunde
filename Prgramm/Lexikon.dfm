@@ -1,5 +1,5 @@
 object FLexikon: TFLexikon
-  Left = 284
+  Left = 426
   Top = 228
   VertScrollBar.Smooth = True
   VertScrollBar.Size = 10
@@ -105,7 +105,7 @@ object FLexikon: TFLexikon
     WantReturns = False
   end
   object TMaskottchen: TTimer
-    Interval = 1
+    Interval = 200
     OnTimer = TMaskottchenTimer
     Left = 32
     Top = 40

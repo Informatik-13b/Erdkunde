@@ -1,11 +1,11 @@
 object Lehrer: TLehrer
-  Left = 429
-  Top = 250
+  Left = 206
+  Top = 201
   Align = alClient
   BorderStyle = bsNone
   Caption = 'Lehrer'
   ClientHeight = 525
-  ClientWidth = 1008
+  ClientWidth = 784
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

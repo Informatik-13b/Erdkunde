@@ -71,7 +71,7 @@ begin
      Maskottchen.Zustand := 'Normal';
      Maskottchen.aktuellesBild := 0;
      Maskottchen.Normalzustand := true;
-     Maskottchen.Laenge := 7;
+     Maskottchen.Laenge := 27;
 
      self.DoubleBuffered := true;                                                //   |
                                                                                     //   |
@@ -209,7 +209,7 @@ begin
                begin
                     Zustand := 'Normal';
                     Normalzustand := true;
-                    laenge := 7;
+                    laenge := 27;
                     aktuellesBild := 0;
                end;
           end;

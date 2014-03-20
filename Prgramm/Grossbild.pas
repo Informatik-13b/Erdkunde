@@ -38,7 +38,7 @@ end;
 
 procedure TVollbild.ImageAusrichten;
 begin
-     if Bild.Height <> Screen.Height then
+     if Bild.Height <> Screen.Height then    // s.Atlas
      begin
           Bild.AutoSize := false;
           Bild.Width := round(Bild.Width*Screen.Height / Bild.Height);

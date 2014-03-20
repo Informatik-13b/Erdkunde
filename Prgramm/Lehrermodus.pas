@@ -76,6 +76,7 @@ type
     procedure StatusAnpassen;
   private
     { Private-Deklarationen }
+    function IPpruefen(Text:string):boolean;
   public
     { Public-Deklarationen }
   end;
@@ -108,14 +109,14 @@ begin
      LblStatus.Caption := ' ';
      LblSpielzeit.Caption := ' ';
 
-     if Menue.MDatei.Lines[4] = 'index' then
-     begin
-          VerbindenTimer.Enabled := true;
+     if Menue.MDatei.Lines[4] = 'index' then   // Wenn dem angemeldeten Schüler noch keine index
+     begin                                     // einer in der Leherkonsole angelegten Klasse zugewiesen wurde
+          VerbindenTimer.Enabled := true;      // wird das Modus zum erstanmelden geöffnet
           Erstanmeldung := true;
           EdtIP.Enabled := false;
      end else
      begin
-          index := StrToInt(Menue.MDatei.Lines[4]);
+          index := StrToInt(Menue.MDatei.Lines[4]);  // ansonsten der Index ausgelesen
           Erstanmeldung := false;
           EdtIP.Visible := true;
           EdtIP.Left := Screen.Width div 2 - EdtIP.Width div 2;
@@ -137,6 +138,7 @@ begin
           StatusAnpassen;
           pruefenTimer.Enabled := false;
           SuchKarte.geklickt := true;
+          SuchKarte.Enabled := false;
      end;
 end;
 
@@ -146,15 +148,15 @@ procedure TLehrer.CSSendenConnect(Sender: TObject;
 begin
      if Erstanmeldung = true then
      begin
-          Vorname := EdtVornameL.Text;
-          Nachname := EdtNameL.Text;
+          Vorname := EdtVornameL.Text;   // Bei der Erstanmeldung werden der Lehrerkonsole
+          Nachname := EdtNameL.Text;     // die Namen gesendet
 
           sleep(100);
           CSSenden.Socket.SendText ('1' + Vorname);
           sleep(100);
           CSSenden.Socket.SendText ('2' + Nachname);
           sleep(100);
-     end else
+     end else                                    // ansonsten der index
      begin
           if index < 10 then IndexMessage := 'i0' + IntToStr(index)
                         else IndexMessage := 'i'  + IntToStr(index);
@@ -168,7 +170,7 @@ begin
           SuchKarte.Top := 0;
           SuchKarte.Left := Screen.Width div 2 - SuchKarte.Width div 2;
           SuchKarte.Picture.Bitmap.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder/DKarte Ohne Städte.bmp'); // Die Deutschlandkarte wird geladen
-
+                                               //Die Karte wird geöffnet
           EdtIP.Visible := false;
           EdtIP.Enabled := false;
      end;
@@ -176,25 +178,25 @@ end;
 
 procedure TLehrer.FormClick(Sender: TObject);
 begin
-     close;
+     if not CSSenden.Active = true then close;
 end;
 
 procedure TLehrer.CSSendenRead(Sender: TObject; Socket: TCustomWinSocket);
 var Nachricht, indexMessage:string;
 begin
-     Nachricht := Socket.ReceiveText;
+     Nachricht := Socket.ReceiveText;   // Empfangene Nachricht wird ausgelesen
      EdtIP.Text := Nachricht;
 
      if Erstanmeldung = false then
      begin
 
-     if Nachricht[1] = 'Z' then
+     if Nachricht[1] = 'Z' then    // Spielzeit wird gespeichert
      begin
 
           sZeit := 10 * StrToInt(Nachricht[2]);
           sZeit := sZeit + StrToInt(Nachricht[3]);
      end;
-     if Nachricht[1] = 'S' then
+     if Nachricht[1] = 'S' then         // empfangene Stadt wird gespeichert und geladen
      begin
           if length(Nachricht) = 2 then stadt := StrToInt(Nachricht[2])
           else
@@ -204,7 +206,7 @@ begin
           end;
           Zeit := sZeit;
           SuchKarte.Picture.Bitmap.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder/DKarte Ohne Städte.bmp'); // neu geladen
-          LblStatus.Caption := 'BEREIT!?';
+          LblStatus.Caption := 'BEREIT!?';      // Countdown...
           StatusAnpassen;
           LblSpielzeit.Caption := '3';
           repaint;
@@ -220,11 +222,12 @@ begin
           Spielzeit.Enabled := true;
           pruefenTimer.Enabled := true;
           SuchKarte.geklickt := false;
+          SuchKarte.Enabled := true;
           LblSpielzeit.Caption := IntToStr(Zeit);
      end;
      if Nachricht = 'close' then close;
 
-     if Nachricht = 'NewIndex' then
+     if Nachricht = 'NewIndex' then    // Index wird auf Anfrage erneut gesendet
      begin
           if index < 10 then indexMessage := 'i0' + IntToStr(index)
                    else indexMessage := 'i' + IntToStr(index);
@@ -232,10 +235,13 @@ begin
      end;
 
      end else
-     begin
-          Menue.MDatei.Lines[6] := Nachricht;
+     begin                  // während der Erstanmeldung wird die Empfangende Index beim Schüler gespeichert
+          Menue.MDatei.Lines[4] := Nachricht;
           CSSenden.Active := false;
-          close;
+          GBLehreranmeldung.Visible := false;
+          EdtIP.Visible := true;
+          EdtIP.Enabled := true;
+          EdtIP.Text := EdtIPV.Text;
      end;
 end;
 
@@ -257,28 +263,29 @@ begin
 end;
 
 procedure TLehrer.pruefenTimerTimer(Sender: TObject);
-begin
-     if SuchKarte.geklickt = true then
+begin                      // Timer prueft, die stadt schon geortet wurde
+     if SuchKarte.geklickt = true then    // und beendet den Ortungsmodus
      begin
           KilometerSenden;
           pruefenTimer.Enabled := false;
           SPielzeit.Enabled := false;
-          LblSpielzeit.Caption := 'PAUSE'
+          LblSpielzeit.Caption := 'PAUSE';
+          SuchKarte.Enabled := false;
      end;
 end;
 
 procedure TLehrer.KilometerSenden;
 var indexMessage,EntfernungMessage:string;
 begin
-     if index < 10 then indexMessage := 'i0' + IntToStr(index)
+     if index < 10 then indexMessage := 'i0' + IntToStr(index) // indexMessage wird erstellt
                    else indexMessage := 'i' + IntToStr(index);
 
-     EntfernungMessage := 'e' + IntToStr(SuchKarte.Entfernung);
+     EntfernungMessage := 'e' + IntToStr(SuchKarte.Entfernung);   // Kilometermessage wird erstellt
      if SuchKarte.Entfernung < 100 then EntfernungMessage := 'e0' + IntToStr(SuchKarte.Entfernung);
      if SuchKarte.Entfernung < 10  then EntfernungMessage := 'e00' + IntToStr(SuchKarte.Entfernung);
 
      if CsSenden.Active = true then
-     CsSenden.Socket.SendText(indexMessage + EntfernungMessage);
+     CsSenden.Socket.SendText(indexMessage + EntfernungMessage); // Message wird gesendet
 end;
 
 procedure TLehrer.EdtIPChange(Sender: TObject);
@@ -314,15 +321,34 @@ begin
      end;
 end;
 
+
 procedure TLehrer.EdtIPKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
      If (Key = VK_RETURN) then
      begin
-          CSSenden.Host := EdtIP.Text;
-          //CSSenden.Active := true;
-          sleep(100);
+          if IPpruefen(EdtIP.Text) then
+          begin
+               CSSenden.Host := EdtIP.Text;
+               CSSenden.Active := true;
+               sleep(100);
+          end;
      end;
+end;
+
+function TLehrer.IPpruefen(Text:string):boolean;
+var i,laenge,Punkte : integer;
+    c:char;
+begin
+     result := false;
+     laenge := length(Text);
+     Punkte := 0;
+     for i := 1 to laenge do
+     begin
+          c := Text[i];
+          if c = '.' then inc(Punkte);
+     end;
+     if Punkte = 3 then result := true;
 end;
 
 procedure TLehrer.CSSendenError(Sender: TObject; Socket: TCustomWinSocket;
@@ -496,7 +522,8 @@ begin
           EdtNameL.Font.Color := clRed;
           exit;
      end;
-     if (EdtIPV.Font.Color = clGray) or (EdtIPV.Font.Color = clRed) then
+     if (EdtIPV.Font.Color = clGray) or (EdtIPV.Font.Color = clRed) or
+        (IPpruefen(EdtIPV.Text) = false) then
      begin
           EdtIPV.Font.Color := clRed;
           exit;

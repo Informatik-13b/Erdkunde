@@ -1,10 +1,10 @@
 object Menue: TMenue
-  Left = 363
-  Top = 205
+  Left = 0
+  Top = 11
   Align = alClient
   BorderStyle = bsNone
   ClientHeight = 555
-  ClientWidth = 875
+  ClientWidth = 784
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText

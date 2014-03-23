@@ -1,10 +1,11 @@
 object FormKonsole: TFormKonsole
-  Left = 294
-  Top = 180
-  Width = 965
-  Height = 577
+  Left = 335
+  Top = 190
   BorderIcons = [biSystemMenu]
-  Caption = 'FormKonsole'
+  BorderStyle = bsSingle
+  Caption = 'Konsole'
+  ClientHeight = 531
+  ClientWidth = 788
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +20,7 @@ object FormKonsole: TFormKonsole
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
-    Left = 304
+    Left = 288
     Top = 8
     Width = 216
     Height = 37
@@ -32,8 +33,8 @@ object FormKonsole: TFormKonsole
     ParentFont = False
   end
   object Label2: TLabel
-    Left = 568
-    Top = 472
+    Left = 432
+    Top = 496
     Width = 108
     Height = 20
     Caption = 'Serverstatus:'
@@ -45,28 +46,28 @@ object FormKonsole: TFormKonsole
     ParentFont = False
   end
   object ShapeServerStatus: TShape
-    Left = 688
-    Top = 464
+    Left = 552
+    Top = 488
     Width = 33
     Height = 33
     Shape = stEllipse
   end
   object Label3: TLabel
-    Left = 568
+    Left = 432
     Top = 120
-    Width = 165
-    Height = 20
+    Width = 169
+    Height = 24
     Caption = 'ausgewählte Klasse:'
-    Font.Charset = DEFAULT_CHARSET
+    Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -17
-    Font.Name = 'MS Sans Serif'
+    Font.Height = -20
+    Font.Name = 'Calibri'
     Font.Style = [fsBold]
     ParentFont = False
   end
   object Label4: TLabel
-    Left = 568
-    Top = 272
+    Left = 432
+    Top = 312
     Width = 120
     Height = 20
     Caption = 'Schüleranzahl:'
@@ -78,21 +79,21 @@ object FormKonsole: TFormKonsole
     ParentFont = False
   end
   object Label5: TLabel
-    Left = 568
+    Left = 432
     Top = 80
-    Width = 123
-    Height = 20
+    Width = 128
+    Height = 24
     Caption = 'Benutzername:'
-    Font.Charset = DEFAULT_CHARSET
+    Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -17
-    Font.Name = 'MS Sans Serif'
+    Font.Height = -20
+    Font.Name = 'Calibri'
     Font.Style = [fsBold]
     ParentFont = False
   end
   object Label6: TLabel
-    Left = 568
-    Top = 312
+    Left = 432
+    Top = 352
     Width = 52
     Height = 20
     Caption = 'Online'
@@ -103,11 +104,24 @@ object FormKonsole: TFormKonsole
     Font.Style = [fsBold]
     ParentFont = False
   end
+  object Label7: TLabel
+    Left = 432
+    Top = 160
+    Width = 94
+    Height = 24
+    Caption = 'IP-Adresse:'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -20
+    Font.Name = 'Calibri'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
   object StringGridUbersicht: TStringGrid
     Left = 16
     Top = 64
-    Width = 529
-    Height = 441
+    Width = 393
+    Height = 449
     ColCount = 7
     DefaultColWidth = 50
     DefaultRowHeight = 30
@@ -126,8 +140,8 @@ object FormKonsole: TFormKonsole
       50)
   end
   object EdtSchuelerAnzahl: TEdit
-    Left = 712
-    Top = 264
+    Left = 576
+    Top = 304
     Width = 65
     Height = 32
     Font.Charset = DEFAULT_CHARSET
@@ -140,8 +154,8 @@ object FormKonsole: TFormKonsole
     Text = 'EdtSchuelerAnzahl'
   end
   object BtnBeenden: TButton
-    Left = 568
-    Top = 408
+    Left = 432
+    Top = 448
     Width = 329
     Height = 33
     Caption = 'BtnBeenden'
@@ -155,39 +169,39 @@ object FormKonsole: TFormKonsole
     OnClick = BtnBeendenClick
   end
   object EdtBenutzername_Lehrer: TEdit
-    Left = 744
+    Left = 608
     Top = 80
     Width = 153
-    Height = 28
+    Height = 31
     Enabled = False
-    Font.Charset = DEFAULT_CHARSET
+    Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -16
-    Font.Name = 'MS Sans Serif'
+    Font.Height = -19
+    Font.Name = 'Calibri'
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 3
     Text = 'EdtBenutzername_Lehrer'
   end
   object ComboBoxKlassenNamen: TComboBox
-    Left = 744
+    Left = 608
     Top = 120
     Width = 153
-    Height = 28
-    Font.Charset = DEFAULT_CHARSET
+    Height = 31
+    Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -16
-    Font.Name = 'MS Sans Serif'
-    Font.Style = []
-    ItemHeight = 20
+    Font.Height = -19
+    Font.Name = 'Calibri'
+    Font.Style = [fsBold]
+    ItemHeight = 23
     ParentFont = False
     TabOrder = 4
     Text = 'ComboBoxKlassenNamen'
     OnChange = ComboBoxKlassenNamenChange
   end
   object BtnServerAktion: TButton
-    Left = 568
-    Top = 216
+    Left = 432
+    Top = 256
     Width = 329
     Height = 33
     Caption = 'BtnServerAktion'
@@ -201,8 +215,8 @@ object FormKonsole: TFormKonsole
     OnClick = BtnServerAktionClick
   end
   object BtnModus_Lehrer: TButton
-    Left = 568
-    Top = 360
+    Left = 432
+    Top = 400
     Width = 329
     Height = 33
     Caption = 'BtnModus_Lehrer'
@@ -216,8 +230,8 @@ object FormKonsole: TFormKonsole
     OnClick = BtnModus_LehrerClick
   end
   object EdtSchuelerOnline: TEdit
-    Left = 712
-    Top = 304
+    Left = 576
+    Top = 344
     Width = 65
     Height = 32
     Font.Charset = DEFAULT_CHARSET
@@ -230,8 +244,8 @@ object FormKonsole: TFormKonsole
     Text = 'EdtSchuelerOnline'
   end
   object BtnKlasseChange: TButton
-    Left = 568
-    Top = 168
+    Left = 432
+    Top = 208
     Width = 329
     Height = 33
     Caption = 'BtnKlasseChange'
@@ -247,20 +261,35 @@ object FormKonsole: TFormKonsole
   object EdtNachricht: TEdit
     Left = 104
     Top = 8
-    Width = 57
+    Width = 73
     Height = 21
     TabOrder = 9
     Text = 'EdtNachricht'
     Visible = False
   end
   object EdtPunkte: TEdit
-    Left = 168
-    Top = 24
-    Width = 33
+    Left = 104
+    Top = 32
+    Width = 73
     Height = 21
     TabOrder = 10
     Text = 'EdtPunkte'
     Visible = False
+  end
+  object EdtIP: TEdit
+    Left = 608
+    Top = 160
+    Width = 153
+    Height = 31
+    Enabled = False
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Calibri'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 11
+    Text = 'EdtIP'
   end
   object MainMenu: TMainMenu
     Left = 8
@@ -282,9 +311,6 @@ object FormKonsole: TFormKonsole
         Caption = 'Schüler anlegen'
         OnClick = Bearbeiten1Click
       end
-      object SchlerLschen1: TMenuItem
-        Caption = 'Schüler Löschen'
-      end
     end
     object Hilfe1: TMenuItem
       Caption = 'Hilfe'
@@ -303,6 +329,7 @@ object FormKonsole: TFormKonsole
     Port = 8080
     ServerType = stNonBlocking
     ThreadCacheSize = 25
+    OnClientDisconnect = ServerSocketLehrerClientDisconnect
     OnClientRead = ServerSocketLehrerClientRead
     OnClientError = ServerSocketLehrerClientError
     Left = 48

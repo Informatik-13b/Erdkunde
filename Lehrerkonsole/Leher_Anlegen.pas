@@ -51,6 +51,7 @@ uses Anmeldefenster;
 
 procedure TFormAnlegen.FormCreate(Sender: TObject);
   begin
+     Position:=poScreenCenter;
      RemoveMenu(GetSystemMenu(handle, false), SC_MOVE, MF_BYCOMMAND);
      RemoveMenu(GetSystemMenu(handle, false),SC_SIZE, MF_BYCOMMAND);
      FormAnlegen.Position := poScreenCenter; //Form wird zentriert

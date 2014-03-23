@@ -1,10 +1,10 @@
 object FormKlasseLoschen: TFormKlasseLoschen
-  Left = 586
-  Top = 211
-  Width = 314
-  Height = 415
+  Left = 612
+  Top = 215
+  Width = 307
+  Height = 473
   BorderIcons = [biSystemMenu]
-  Caption = 'FormKlasseLoschen'
+  Caption = 'Klasse -Löschen'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -33,7 +33,7 @@ object FormKlasseLoschen: TFormKlasseLoschen
     Left = 32
     Top = 72
     Width = 233
-    Height = 185
+    Height = 233
     ColCount = 2
     DefaultColWidth = 40
     DefaultRowHeight = 35
@@ -53,7 +53,7 @@ object FormKlasseLoschen: TFormKlasseLoschen
   end
   object BtnAbbrechen: TButton
     Left = 24
-    Top = 328
+    Top = 376
     Width = 249
     Height = 33
     Caption = 'BtnAbbrechen'
@@ -68,7 +68,7 @@ object FormKlasseLoschen: TFormKlasseLoschen
   end
   object BtnLoschen: TButton
     Left = 24
-    Top = 272
+    Top = 320
     Width = 249
     Height = 33
     Caption = 'BtnLoschen'

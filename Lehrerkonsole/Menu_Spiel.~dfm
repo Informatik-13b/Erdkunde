@@ -1,9 +1,10 @@
 object FormSpiel: TFormSpiel
-  Left = 314
-  Top = 157
-  Width = 1190
-  Height = 662
-  Caption = 'FormSpiel'
+  Left = 294
+  Top = 154
+  Width = 910
+  Height = 625
+  VertScrollBar.Visible = False
+  Caption = 'Spiel -Lehrermodus'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,22 +17,72 @@ object FormSpiel: TFormSpiel
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
-    Left = 424
-    Top = 16
-    Width = 192
-    Height = 45
+    Left = 288
+    Top = 8
+    Width = 251
+    Height = 59
     Caption = 'Spiel-Modus'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -37
+    Font.Height = -48
     Font.Name = 'Calibri'
     Font.Style = [fsBold]
     ParentFont = False
   end
+  object Bevel1: TBevel
+    Left = 248
+    Top = 408
+    Width = 129
+    Height = 1
+  end
+  object Bevel2: TBevel
+    Left = 248
+    Top = 344
+    Width = 129
+    Height = 1
+  end
+  object Label2: TLabel
+    Left = 248
+    Top = 200
+    Width = 104
+    Height = 19
+    Caption = 'Sortieren nach:'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Calibri'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Bevel3: TBevel
+    Left = 248
+    Top = 472
+    Width = 129
+    Height = 1
+  end
+  object Label3: TLabel
+    Left = 248
+    Top = 272
+    Width = 79
+    Height = 19
+    Caption = 'Antworten:'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Calibri'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Bevel4: TBevel
+    Left = 240
+    Top = 256
+    Width = 137
+    Height = 1
+  end
   object StringGridAuswahl: TStringGrid
-    Left = 32
+    Left = 16
     Top = 80
-    Width = 353
+    Width = 217
     Height = 489
     ColCount = 3
     DefaultColWidth = 40
@@ -53,9 +104,9 @@ object FormSpiel: TFormSpiel
       40)
   end
   object StringGridPunkte: TStringGrid
-    Left = 576
+    Left = 392
     Top = 80
-    Width = 569
+    Width = 481
     Height = 489
     DefaultColWidth = 40
     DefaultRowHeight = 32
@@ -77,19 +128,10 @@ object FormSpiel: TFormSpiel
       155
       40)
   end
-  object ProgressBarZeit: TProgressBar
-    Left = 32
-    Top = 584
-    Width = 833
-    Height = 25
-    Min = 0
-    Max = 100
-    TabOrder = 2
-  end
   object BtnAktion: TButton
-    Left = 392
-    Top = 384
-    Width = 105
+    Left = 248
+    Top = 360
+    Width = 129
     Height = 33
     Caption = 'BtnAktion'
     Font.Charset = ANSI_CHARSET
@@ -98,13 +140,13 @@ object FormSpiel: TFormSpiel
     Font.Name = 'Calibri'
     Font.Style = [fsBold]
     ParentFont = False
-    TabOrder = 3
+    TabOrder = 2
     OnClick = BtnAktionClick
   end
   object BtnCopy: TButton
-    Left = 392
+    Left = 248
     Top = 536
-    Width = 105
+    Width = 129
     Height = 33
     Caption = 'BtnCopy'
     Font.Charset = ANSI_CHARSET
@@ -113,27 +155,13 @@ object FormSpiel: TFormSpiel
     Font.Name = 'Calibri'
     Font.Style = [fsBold]
     ParentFont = False
-    TabOrder = 4
+    TabOrder = 3
     OnClick = BtnCopyClick
   end
-  object BtnAuto: TButton
-    Left = 392
-    Top = 432
-    Width = 105
-    Height = 33
-    Caption = 'BtnAuto'
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -16
-    Font.Name = 'Calibri'
-    Font.Style = [fsBold]
-    ParentFont = False
-    TabOrder = 5
-  end
   object BtnAbbrechen: TButton
-    Left = 392
-    Top = 480
-    Width = 105
+    Left = 248
+    Top = 488
+    Width = 129
     Height = 33
     Caption = 'BtnAbbrechen'
     Font.Charset = ANSI_CHARSET
@@ -142,14 +170,79 @@ object FormSpiel: TFormSpiel
     Font.Name = 'Calibri'
     Font.Style = [fsBold]
     ParentFont = False
-    TabOrder = 6
+    TabOrder = 4
     OnClick = BtnAbbrechenClick
   end
-  object TimerZeit: TTimer
-    Enabled = False
-    Interval = 1005
-    OnTimer = TimerZeitTimer
+  object ComboBoxFunktion: TComboBox
+    Left = 248
+    Top = 224
+    Width = 129
+    Height = 23
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Calibri'
+    Font.Style = [fsBold]
+    ItemHeight = 15
+    ParentFont = False
+    TabOrder = 5
+    Text = 'ComboBoxFunktion'
+    OnChange = ComboBoxFunktionChange
+    Items.Strings = (
+      'Gesamtentfernung'
+      'letzte Entfernung')
+  end
+  object BtnPrint: TButton
+    Left = 248
+    Top = 424
+    Width = 129
+    Height = 33
+    Caption = 'BtnPrint'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Calibri'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 6
+    OnClick = BtnPrintClick
+  end
+  object RichEditPrint: TRichEdit
     Left = 16
+    Top = 576
+    Width = 217
+    Height = 33
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -25
+    Font.Name = 'Courier'
+    Font.Style = [fsBold]
+    Lines.Strings = (
+      'RichEditPrint')
+    ParentFont = False
+    TabOrder = 7
+    Visible = False
+  end
+  object EdtText: TEdit
+    Left = 56
     Top = 16
+    Width = 25
+    Height = 21
+    TabOrder = 8
+    Text = 'EdtText'
+    Visible = False
+  end
+  object ProgressBarStand: TProgressBar
+    Left = 248
+    Top = 304
+    Width = 129
+    Height = 25
+    Min = 0
+    Max = 100
+    TabOrder = 9
+  end
+  object PrintDialog: TPrintDialog
+    Left = 16
+    Top = 8
   end
 end

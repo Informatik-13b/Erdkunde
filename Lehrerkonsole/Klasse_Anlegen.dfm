@@ -1,9 +1,9 @@
 object FormKlasseAnlegen: TFormKlasseAnlegen
-  Left = 572
-  Top = 267
+  Left = 614
+  Top = 270
   Width = 374
   Height = 257
-  Caption = 'FormKlasseAnlegen'
+  Caption = 'KlasseAnlegen'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

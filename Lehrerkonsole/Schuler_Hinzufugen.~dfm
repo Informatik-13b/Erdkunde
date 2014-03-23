@@ -1,10 +1,10 @@
 object FormSchuler_Add: TFormSchuler_Add
-  Left = 567
-  Top = 200
+  Left = 597
+  Top = 199
   Width = 371
   Height = 491
   BorderIcons = [biSystemMenu]
-  Caption = 'FormSchuler_Add'
+  Caption = 'Schüler -Hinzufügen'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -112,6 +112,7 @@ object FormSchuler_Add: TFormSchuler_Add
     Font.Style = [fsBold]
     ItemHeight = 20
     ParentFont = False
+    Sorted = True
     TabOrder = 0
     Text = 'ComboBoxKlassenNamen'
   end

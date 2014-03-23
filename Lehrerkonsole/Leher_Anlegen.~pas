@@ -34,7 +34,6 @@ type
     procedure SchreibeDatei(NameLehrer: String; Passwort: String);
     procedure EdtLehrerNameExit(Sender: TObject);
     procedure Erzeuge_Ordner();
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
      //
   public
@@ -217,13 +216,6 @@ procedure TFormAnlegen.Erzeuge_Ordner();
       Finally
          Liste.Free;
        end;            //Notwendige Ordner, bzw. Dateien werden erstellt!
-  end;
-
-procedure TFormAnlegen.FormClose(Sender: TObject;
- var Action: TCloseAction);
-  begin
-     //FormAnlegen.Close;
-     //FormAnmeldung.Visible := True;
   end;
 
 end.

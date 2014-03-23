@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, Grids, ExtCtrls;
+  StdCtrls, Grids, ExtCtrls, WinSock, ComCtrls, ShellAPI;
 
 type
   TOrte = record
@@ -27,6 +27,10 @@ type
     Label5: TLabel;
     EdtSpielzeit: TEdit;
     Bevel1: TBevel;
+    Label6: TLabel;
+    EdtIP: TEdit;
+    Label7: TLabel;
+    EdtOnline: TEdit;
     procedure BtnAbbrechenClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -37,12 +41,12 @@ type
       Rect: TRect; State: TGridDrawState);
     procedure BtnStartClick(Sender: TObject);
     procedure ComboBoxZeitChange(Sender: TObject);
-//    procedure StringGridStadtSelectCell(Sender: TObject; ACol,
-     // ARow: Integer; var CanSelect: Boolean);
+    function GetLocalIPAddress : String;
+
   private
     { Private-Deklarationen }
   public
-    Zellen_Farbe : Array of Integer;    //dynamisches Array
+    Zellen_Farbe : Array of Integer;    //dynamisches Array, da Anzahl variabel
   end;
 
 var
@@ -66,7 +70,8 @@ procedure TFormStadt_Auswahl.BtnAbbrechenClick(Sender: TObject);
   end;
 
 procedure TFormStadt_Auswahl.FormCreate(Sender: TObject);
-  begin
+  begin                      //initialisiert die Form
+     Position:=poScreenCenter;
      ComboBoxZeit.ItemIndex := 0;
      FormStadt_Auswahl.Visible := False;
      RemoveMenu(GetSystemMenu(handle, false), SC_MOVE, MF_BYCOMMAND);
@@ -82,8 +87,10 @@ procedure TFormStadt_Auswahl.FormCreate(Sender: TObject);
      EdtKlasse.Enabled := False;
      EdtSpielzeit.Enabled := False;
      EdtSpielZeit.Text := '0s';
-     Zeit := 5;
+     Zeit := 10;
      BtnStart.Enabled := False;
+     EdtIp.Text := GetLocalIPAddress;
+     EdtOnline.Enabled := False;
   end;
 
 
@@ -168,6 +175,7 @@ procedure TFormStadt_Auswahl.StringGridStadtDrawCell(Sender: TObject; ACol,
 procedure TFormStadt_Auswahl.BtnStartClick(Sender: TObject);
  var Anzahl_Verbindungen, i, k, Pos, z: Integer;
   begin
+     FormKonsole.Stat_Anzahl := 0;  //Bisher haben null Schüler gespielt!
      Pos := 1;
      FormSpiel.Visible := True;
      FormStadt_Auswahl.Visible := False;
@@ -181,10 +189,10 @@ procedure TFormStadt_Auswahl.BtnStartClick(Sender: TObject);
        end;
     With FormSpiel do            // Zugriff auf die nächste Form
       begin
+         ProgressBarStand.Max := Anzahl_Verbindungen //initiallisiert die ProgressBar
          GridEinlesen();
-         Spielzeit := Zeit;  //weist der Form die Zeitdauer extra zu!
          BtnAktion.Caption := 'Starten';
-         Position := 0;
+         Position1 := 0;
          SetLength(Zellen_Position, (StrToInt(EdtAnzahl.Text)));  //legt die Länge des Arrays fest
          StringGridAuswahl.RowCount := (StrToInt(EdtAnzahl.Text)) +1;
          For k := 1 to High(Zellen_Farbe) do
@@ -196,10 +204,11 @@ procedure TFormStadt_Auswahl.BtnStartClick(Sender: TObject);
                   Inc(Pos); //erhöht die Position im Grid
                 end;
            end;
-         ProgressBarZeit.Max := Zeit;  //weist die PB entsprechend der Zeit zu! 
+
          For z := 1 to StringGridAuswahl.RowCount do
            StringGridAuswahl.Cells[0,z] := IntToStr (z);
       end;
+    SetLength(FormSpiel.Wert, FormSpiel.StringGridPunkte.RowCount-1);
   end;
 
 procedure TFormStadt_Auswahl.ComboBoxZeitChange(Sender: TObject);
@@ -209,5 +218,27 @@ procedure TFormStadt_Auswahl.ComboBoxZeitChange(Sender: TObject);
      Anzahl := StrToInt(EdtAnzahl.Text);
      EdtSpielzeit.Text := (IntToStr(Anzahl*Zeit) + ' Sekunden');
   end;
+
+function TFormStadt_Auswahl.GetLocalIpAddress : string;
+ type pu_long = ^u_long;
+ var varTWSAData : TWSAData;
+     varPHostEnt : PHostEnt;
+     varTInAddr : TInAddr;
+     namebuf : Array[0..255] of char;
+     fd : integer;
+     rc : integer;
+  begin
+      result := '';
+      rc := WSAStartup($101,varTWSAData);
+      if rc <> 0 then exit;
+      gethostname(namebuf,sizeof(namebuf));
+      varPHostEnt := gethostbyname(namebuf);
+      varTInAddr.S_addr := u_long(pu_long(varPHostEnt^.h_addr_list^)^);
+      result := inet_ntoa(varTInAddr);
+      fd := WinSock.Socket( PF_INET, SOCK_STREAM, 0 );
+      if fd = INVALID_SOCKET then
+      exit;
+      WSACleanup;  //Mit dieser Funktion wird die IP-Adresse des Users ausgelsen!
+  end;            //übernommen von Wb
 
 end.

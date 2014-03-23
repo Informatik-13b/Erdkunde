@@ -1,10 +1,10 @@
 object FormKlasseVerbinden: TFormKlasseVerbinden
-  Left = 454
-  Top = 230
+  Left = 473
+  Top = 175
   Width = 645
   Height = 558
   BorderIcons = [biSystemMenu, biMinimize]
-  Caption = 'FormKlasseVerbinden'
+  Caption = 'Klasse -Verbinden'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

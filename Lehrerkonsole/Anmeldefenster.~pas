@@ -115,6 +115,8 @@ procedure TFormAnmeldung.FormCreate(Sender: TObject);
      StringGridPasswort.Visible := False; //Grid ist dem Anwender nicht sichtbar
      RemoveMenu(GetSystemMenu(handle, false), SC_MOVE, MF_BYCOMMAND);
      RemoveMenu(GetSystemMenu(handle, false),SC_SIZE, MF_BYCOMMAND);
+     EdtBenutzername.MaxLength := 25;
+     EdtPasswort.MaxLength := 25;
   end;    //verhindert das verschieben der Form!
 
 procedure TFormAnmeldung.EdtPasswortClick(Sender: TObject);
@@ -200,6 +202,7 @@ procedure TFormAnmeldung.BtnAnmeldungClick(Sender: TObject);
                          FormKonsole.KlassenNamen_Finden;
                          FormKonsole.GridEinlesen ();
                          FormKonsole.ComboBoxKlassenNamen.SetFocus;
+                         FormKonsole.BtnServerAktion.Click; //aktiviert den Server
                       end         //initialisiert die Konsolen-Form
                      Else FormKlasseAnlegen.Visible := True;    
                   Finally
@@ -245,6 +248,7 @@ procedure TFormAnmeldung.BtnCopyClick(Sender: TObject);
   begin
      showmessage('Lehrerkonsole V0.1' +#10#13+
                  'Copyright © 2013-2014' +#10#13+
+                 'Benutzung auf eigene Gefahr!' +#10#13+
                  'OHG-Geesthacht-13b Entwicklerteam' +#10#13+
                  'E-Mail: info@ohg-Lernprogramm.de');    //Entwicklerinformationen
 

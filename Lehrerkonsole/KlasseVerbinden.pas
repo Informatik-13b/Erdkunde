@@ -82,6 +82,7 @@ uses Klasse_Anlegen, Konsole;
 procedure TFormKlasseVerbinden.FormCreate(Sender: TObject);
  var H: THandle;
   begin
+     Position:=poScreenCenter;
      //ServerSocketAnmeldung.Port := 8080;  //Port wird zugewiesen
      //ServerSocketAnmeldung.Active := True;
      H := GetSystemMenu(Handle, False);
@@ -230,7 +231,7 @@ procedure TFormKlasseVerbinden.BtnBestaetigenClick(Sender: TObject);
      StringGridKlassenNamen.Cells[1,PositionGrid] := EdtSchuelerNachname.Text;
      StringGridKlassenNAmen.Cells[2,PositionGrid] := EdtSchuelerVorname.Text;
      StringGridKlassenNAmen.Cells[5,PositionGrid] := Geschlecht;
-     StringGridKlassenNamen.Cells[3,PositionGrid] := ' ';
+     StringGridKlassenNamen.Cells[3,PositionGrid] := '';
      StringGridKlassenNamen.Cells[4,PositionGrid] := EdtKlassenName.Text;
      StringGridKlassenNamen.Cells[6,PositionGrid] := IntToStr(PositionGrid);
      Sleep(150);
@@ -248,6 +249,8 @@ procedure TFormKlasseVerbinden.BtnBestaetigenClick(Sender: TObject);
                       'wurde erfolgreich angelegt!');
           FormKonsole.Geladene_Klasse := EdtKlassenName.Text;
           ServerSocketAnmeldung.Active := False;
+          FormKonsole.KlassenNamen_Finden;
+          FormKonsole.GridEinlesen ();
           FormKlasseVerbinden.Close;
           FormKlasseAnlegen.Close();
           FormKonsole.Visible := True;
@@ -317,8 +320,10 @@ procedure TFormKlasseVerbinden.SchreibeKlassenDatei();
  end;
 
 procedure TFormKlasseVerbinden.IP_DateiSchreiben ();
-  begin
+  begin               //IP-Adresse wird in Textdatei geschrieben!!!
      Try
+        Memo.Lines[0] := 'IP-Adresse Lehrer  '
+                         + FormatDateTime('dd.mm.yyyy, hh:nn', now);
         Memo.Lines[1] :=  (EdtIpAdresse.Text);
         Memo.Lines.SaveToFile ('Transportordner\LehrerOrdner\'
                                 + FormKonsole.EdtBenutzername_Lehrer.Text

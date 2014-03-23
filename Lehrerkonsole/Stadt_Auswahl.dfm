@@ -1,9 +1,9 @@
 object FormStadt_Auswahl: TFormStadt_Auswahl
-  Left = 572
-  Top = 149
+  Left = 501
+  Top = 125
   Width = 415
   Height = 626
-  Caption = 'FormStadt_Auswahl'
+  Caption = 'Städte -Auswahl'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -30,7 +30,7 @@ object FormStadt_Auswahl: TFormStadt_Auswahl
   end
   object Label2: TLabel
     Left = 256
-    Top = 153
+    Top = 145
     Width = 90
     Height = 18
     Caption = 'Stadt-Auswahl'
@@ -56,7 +56,7 @@ object FormStadt_Auswahl: TFormStadt_Auswahl
   end
   object Label4: TLabel
     Left = 256
-    Top = 312
+    Top = 424
     Width = 133
     Height = 21
     Caption = 'Antwort-Zeit (sec.)'
@@ -69,7 +69,7 @@ object FormStadt_Auswahl: TFormStadt_Auswahl
   end
   object Label5: TLabel
     Left = 256
-    Top = 224
+    Top = 280
     Width = 58
     Height = 18
     Caption = 'Spielzeit:'
@@ -82,9 +82,35 @@ object FormStadt_Auswahl: TFormStadt_Auswahl
   end
   object Bevel1: TBevel
     Left = 256
-    Top = 304
+    Top = 416
     Width = 129
     Height = 1
+  end
+  object Label6: TLabel
+    Left = 256
+    Top = 352
+    Width = 71
+    Height = 18
+    Caption = 'IP-Adresse:'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = 'Calibri'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label7: TLabel
+    Left = 256
+    Top = 216
+    Width = 82
+    Height = 15
+    Caption = 'Schüler Onlline'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Calibri'
+    Font.Style = [fsBold]
+    ParentFont = False
   end
   object StringGridStadt: TStringGrid
     Left = 24
@@ -112,7 +138,7 @@ object FormStadt_Auswahl: TFormStadt_Auswahl
   end
   object BtnStart: TButton
     Left = 256
-    Top = 480
+    Top = 488
     Width = 129
     Height = 33
     Caption = 'BtnStart'
@@ -122,12 +148,14 @@ object FormStadt_Auswahl: TFormStadt_Auswahl
     Font.Name = 'MS Sans Serif'
     Font.Style = [fsBold]
     ParentFont = False
+    ParentShowHint = False
+    ShowHint = False
     TabOrder = 1
     OnClick = BtnStartClick
   end
   object BtnAbbrechen: TButton
     Left = 256
-    Top = 528
+    Top = 536
     Width = 129
     Height = 33
     Caption = 'BtnAbbrechen'
@@ -142,7 +170,7 @@ object FormStadt_Auswahl: TFormStadt_Auswahl
   end
   object EdtAnzahl: TEdit
     Left = 264
-    Top = 184
+    Top = 176
     Width = 121
     Height = 27
     Enabled = False
@@ -171,7 +199,7 @@ object FormStadt_Auswahl: TFormStadt_Auswahl
   end
   object ComboBoxZeit: TComboBox
     Left = 264
-    Top = 336
+    Top = 448
     Width = 121
     Height = 21
     Style = csDropDownList
@@ -186,7 +214,6 @@ object FormStadt_Auswahl: TFormStadt_Auswahl
     TabOrder = 5
     OnChange = ComboBoxZeitChange
     Items.Strings = (
-      '05'
       '10'
       '15'
       '20'
@@ -196,7 +223,7 @@ object FormStadt_Auswahl: TFormStadt_Auswahl
   end
   object EdtSpielzeit: TEdit
     Left = 264
-    Top = 256
+    Top = 312
     Width = 121
     Height = 27
     Enabled = False
@@ -208,5 +235,34 @@ object FormStadt_Auswahl: TFormStadt_Auswahl
     ParentFont = False
     TabOrder = 6
     Text = 'EdtSpielzeit'
+  end
+  object EdtIP: TEdit
+    Left = 264
+    Top = 384
+    Width = 121
+    Height = 24
+    Enabled = False
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 7
+    Text = 'EdtIP'
+  end
+  object EdtOnline: TEdit
+    Left = 264
+    Top = 240
+    Width = 121
+    Height = 23
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Calibri'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 8
+    Text = 'EdtOnline'
   end
 end

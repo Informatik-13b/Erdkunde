@@ -37,6 +37,7 @@ uses Konsole;
 
 procedure TFormKlasseLoschen.FormCreate(Sender: TObject);
   begin
+     Position:=poScreenCenter;
      With StringGridKlassenAuswahl do
        begin
           FormKlasseLoschen.Visible := False;
@@ -128,7 +129,7 @@ procedure TFormKlasseLoschen.LetzteKlasse_Schreiben();
   begin
      LastClass_Liste := TStringList.Create;
      Try
-       LastClass_Liste.Add (Auswahl);
+       LastClass_Liste.Add (FormKonsole.Geladene_Klasse);
        LastClass_Liste.SaveToFile ('TransportOrdner\LehrerOrdner\'
                                    + FormKonsole.EdtBenutzername_Lehrer.Text
                                    + '\Last_Class.txt');

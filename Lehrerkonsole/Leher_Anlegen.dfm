@@ -1,8 +1,8 @@
 object FormAnlegen: TFormAnlegen
-  Left = 563
-  Top = 208
+  Left = 609
+  Top = 205
   BorderStyle = bsToolWindow
-  Caption = 'FormAnlegen'
+  Caption = 'Lehrer -Anlegen'
   ClientHeight = 451
   ClientWidth = 334
   Color = clBtnFace

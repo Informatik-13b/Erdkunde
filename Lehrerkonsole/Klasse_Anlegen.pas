@@ -67,13 +67,14 @@ function TFormKlasseAnlegen.GetLocalIpAddress : string;
 
 procedure TFormKlasseAnlegen.FormCreate(Sender: TObject);
   begin
+     Position:=poScreenCenter;
      EdtIpAdresse.Text := GetLocalIpAddress;
      BtnServerOffnen.Caption := 'Verbindung öffnen';
      BtnAbbrechen.Caption := 'Abbrechen';
      EdtAnzahl.Text := '';
      BtnServerOffnen.Enabled := False;
      EdtKlassenName.Text := '';
-     //RemoveMenu(GetSystemMenu(handle, false), SC_MOVE, MF_BYCOMMAND);
+     RemoveMenu(GetSystemMenu(handle, false), SC_MOVE, MF_BYCOMMAND);
     // RemoveMenu(GetSystemMenu(handle, false),SC_SIZE, MF_BYCOMMAND);
   end;        //verhindert das verschieben er Form!
 

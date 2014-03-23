@@ -71,6 +71,7 @@ uses Konsole;
 
 procedure TFormSchuler_Add.FormCreate(Sender: TObject);
   begin
+     Position:=poScreenCenter;
      BtnFreischalten.Caption := 'Verbindung öffnen';
      EdtAdresse.Text := GetLocalIpAddress;
      FormSchuler_Add.Visible := False;
@@ -88,6 +89,7 @@ procedure TFormSchuler_Add.FormCreate(Sender: TObject);
      EdtPos.Text := '0';
      EdtAuswahl.visible := False;
      Schluessel := 'aLH7wm5HfrU';  //sehr sicherer Schlüssel!!!
+     ComboBoxKlassenNamen.Style := csDropDownList;
   end;
 
 function TFormSchuler_Add.GetLocalIpAddress : string;
@@ -133,17 +135,21 @@ procedure TFormSchuler_Add.BtnAbbrechenClick(Sender: TObject);
 
 procedure TFormSchuler_Add.BtnFreischaltenClick(Sender: TObject);
   begin
-     btnFreischalten.Enabled := False;
-     ServerSocketSchuler_Add.Active := True;
-     ShapeServerStatus.Brush.Color := clLime;
-     EdtVorname.Text := 'warte ...';
-     EdtName.Text := '...';
-     Klassen_Auswahl := ComboBoxKlassenNAmen.Items [ComboBoxKlassenNamen.ItemIndex];
-     EdtAuswahl.Text := Klassen_Auswahl;
-     FormKonsole.ComboBoxKlassenNamen.ItemIndex := ComboBoxKlassenNamen.ItemIndex;
-     FormKonsole.Geladene_Klasse := Klassen_Auswahl;
-     FormKonsole.GridEinlesen();
-     Index := FormKonsole.StringGridUbersicht.RowCount -1;
+     If FormKonsole.ServerSocketLehrer.Active = False then
+       begin
+          BtnFreischalten.Enabled := False;
+          ServerSocketSchuler_Add.Active := True;
+          ShapeServerStatus.Brush.Color := clLime;
+          EdtVorname.Text := 'warte ...';
+          EdtName.Text := '...';
+          Klassen_Auswahl := ComboBoxKlassenNAmen.Items [ComboBoxKlassenNamen.ItemIndex];
+          EdtAuswahl.Text := Klassen_Auswahl;
+          FormKonsole.ComboBoxKlassenNamen.ItemIndex := ComboBoxKlassenNamen.ItemIndex;
+          FormKonsole.Geladene_Klasse := Klassen_Auswahl;
+          FormKonsole.GridEinlesen();
+          Index := FormKonsole.StringGridUbersicht.RowCount -1;
+       end
+      Else showmessage ('Konsolen-Server muss beendet werden!'); 
   end;
 
 procedure TFormSchuler_Add.KlassenNamen_Finden();

@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  Grids, Menus, StdCtrls, ScktComp, ExtCtrls, ShellApi;
+  Grids, Menus, StdCtrls, ScktComp, ExtCtrls, ShellApi,WinSock,ComCtrls;
 
 type
   TFormKonsole = class(TForm)
@@ -13,7 +13,6 @@ type
     MainMenu: TMainMenu;
     Auswertung1: TMenuItem;
     Bearbeiten1: TMenuItem;
-    SchlerLschen1: TMenuItem;
     Auswertung2: TMenuItem;
     Hilfe1: TMenuItem;
     Adminkontaktieren1: TMenuItem;
@@ -37,6 +36,8 @@ type
     BtnKlasseChange: TButton;
     EdtNachricht: TEdit;
     EdtPunkte: TEdit;
+    Label7: TLabel;
+    EdtIP: TEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Adminkontaktieren1Click(Sender: TObject);
@@ -60,12 +61,16 @@ type
     procedure BtnModus_LehrerClick(Sender: TObject);
     procedure ServerSocketLehrerClientRead(Sender: TObject;
       Socket: TCustomWinSocket);
+    function GetLocalIPAddress : String; 
+    procedure ServerSocketLehrerClientDisconnect(Sender: TObject;
+      Socket: TCustomWinSocket);
+
 
   private
     { Private-Deklarationen }
   public
      Geladene_Klasse: String;
-     Anzahl_Online: Integer; 
+     Anzahl_Online, Stat_Anzahl: Integer;
   end;
 
 var
@@ -89,12 +94,13 @@ const
 implementation
 
 uses Anmeldefenster, Klasse_Anlegen, Klasse_Loschen, Schuler_Hinzufugen,
-  Stadt_Auswahl, Menu_Spiel;
+  Stadt_Auswahl, Menu_Spiel, Leher_Anlegen;
 
 {$R *.DFM}
 
 procedure TFormKonsole.FormCreate(Sender: TObject);
   begin
+      Position:=poScreenCenter;   // Mitte des Fensters
       With StringGridUbersicht do
         begin
            Cells[0,0] := 'Nr.';
@@ -125,6 +131,10 @@ procedure TFormKonsole.FormCreate(Sender: TObject);
       EdtNachricht.Visible := False;
       EdtNachricht.Enabled := False;
       EdtPunkte.Visible := False;
+      BtnModus_Lehrer.Enabled := False;
+      RemoveMenu(GetSystemMenu(handle, false), SC_MOVE, MF_BYCOMMAND);
+      EdtIp.Text := GetLocalIPAddress;
+      EdtIp.Enabled := False;
   end;
 
 procedure TFormKonsole.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -152,8 +162,25 @@ procedure TFormKonsole.Adminkontaktieren1Click(Sender: TObject);
   end;
 
 procedure TFormKonsole.NeueKlasseanlegen1Click(Sender: TObject);
+ var i, Zahl: Integer;
   begin
-     FormKlasseAnlegen.ShowModal;
+     If ServerSocketLehrer.Active = True then
+       begin
+          If Application.MessageBox('Spiele-Server bereits geöffnet!' +#10+#13+
+                                    'Soll dieser geschlossen werden?' +#10#13+
+                                    '-> notwendig für Klassenanmeldung!',
+                                    'Warnung', MB_ICONWARNING or MB_OKCANCEL)
+             = IDOK then begin
+                            FormKlasseAnlegen.ShowModal;
+                            Zahl := ServerSocketLehrer.Socket.ActiveConnections;
+                            For i := 0 to Zahl -1 do
+                              begin
+                                 ServerSocketLehrer.Socket.SendText('close');
+                              end;        //Bestehende Verbidnugen werden geschlossen!
+                            ServerSocketLehrer.Active := False;
+                         end;
+       end
+      Else FormKlasseAnlegen.ShowModal;
   end;
 
 procedure TFormKonsole.ServerSocketLehrerClientError(Sender: TObject;
@@ -233,7 +260,7 @@ procedure TFormKonsole.GridEinlesen();
        StringGridUbersicht.ColCount := StrToInt(KlassenDatei[1]);  //Die Form des Grids wird festgelegt
        For i := 0 to (StringGridUbersicht.RowCount) -1 do
         begin
-           StringGridUbersicht.Rows[i +1].CommaText := KlassenDatei[i + 2];   
+           StringGridUbersicht.Rows[i +1].CommaText := KlassenDatei[i + 2];
         end;                    // Grid wird beschrieben
        StringGridUbersicht.RowCount := StringGridUbersicht.RowCount +1;
        For k := 0 to (StringGridUbersicht.RowCount -1)  do
@@ -245,8 +272,9 @@ procedure TFormKonsole.GridEinlesen();
      Finally                               //Grid wird entschlüsselt
        KlassenDatei.Free;   //Gibt die Liste frei
        EdtSchuelerAnzahl.Text := IntToStr (StringGridUbersicht.RowCount -1);
-      end;       
+      end;
      With ComboBoxKlassenNamen do ItemIndex := Items.IndexOf (Geladene_Klasse);
+     StringGridUbersicht.Row := 1;
   end;                 //weist der ComboBox die Klasse zu
 
 
@@ -344,6 +372,7 @@ procedure TFormKonsole.BtnKlasseChangeClick(Sender: TObject);
              ServerStatus := False;
              BtnServerAktion.Caption := 'Server aktivieren';
              ServerSocketLehrer.Active := False;
+             ShapeServerStatus.Brush.Color := clyellow;
           end;
       end
       Else begin
@@ -353,6 +382,7 @@ procedure TFormKonsole.BtnKlasseChangeClick(Sender: TObject);
               ServerStatus := False;
               BtnServerAktion.Caption := 'Server aktivieren';
               ServerSocketLehrer.Active := False;
+              ShapeServerStatus.Brush.Color := clyellow;
            end;
   end;
 
@@ -394,6 +424,7 @@ procedure TFormKonsole.Bearbeiten1Click(Sender: TObject);
           KlassenNamen_Finden();
           FormSchuler_Add.Visible := True;
           FormSchuler_Add.BringToFront;
+          FormSchuler_Add.ComboBoxKlassenNamen.ItemIndex := 0;
        end;
   end;
 
@@ -404,21 +435,21 @@ procedure TFormKonsole.BtnModus_LehrerClick(Sender: TObject);
      FormStadt_Auswahl.OrteEintragen;
      FormStadt_Auswahl.EdtKlasse.Text := Geladene_Klasse;
      FormStadt_Auswahl.EdtAnzahl.Text := '0';
+     FormStadt_Auswahl.EdtOnline.Text := EdtSchuelerOnline.Text;
      FormKonsole.Visible := False;
   end;
-
+ 
 procedure TFormKonsole.ServerSocketLehrerClientRead(Sender: TObject;
  Socket: TCustomWinSocket);
  var Nachricht,x,h: String;
-     Index,i,k,l,z,m: Integer;
+     Index,i,k,l,z,m,Gesamtpunkte: Integer;
   begin
-     //If ServerSocketLehrer.Active Connections <> 0
-      // then BtnModus_Lehrer.Enabled := True;
      EdtNachricht.Text := '';
      Nachricht := Socket.ReceiveText;
      If (Nachricht[1] = 'i') and (length(Nachricht) = 3) then
-       begin
+       begin                         // Nur wenn Verbindung hergestellt wird!!!
           EdtSchuelerOnline.TExt := IntToStr(ServerSocketLehrer.Socket.ActiveConnections);
+          FormStadt_Auswahl.EdtOnline.Text := IntToStr(ServerSocketLehrer.Socket.ActiveConnections);
           EdtNachricht.Text := Nachricht;
           x := EdtNachricht.Text;
           EdtNachricht.Clear;
@@ -431,9 +462,9 @@ procedure TFormKonsole.ServerSocketLehrerClientRead(Sender: TObject;
                     StringGridUbersicht.Cells[3,l] := 'X';
                  end;
             end;
-       end;
+      end;
      If (Nachricht[1] = 'i') and (Nachricht[4] = 'e') then
-       begin
+       begin                         //Abfrage, ob Entfernung gesendet wurde!!!
           EdtNachricht.Text := Nachricht;
           x := EdtNachricht.Text;
           EdtNachricht.Clear;
@@ -443,8 +474,7 @@ procedure TFormKonsole.ServerSocketLehrerClientRead(Sender: TObject;
           EdtPunkte.Text := Nachricht;
           h := EdtPunkte.Text;
           EdtPunkte.Clear;
-          For k := 5 to 7 do
-            EdtPunkte.Text := EdtPunkte.Text + h[k];
+          For k := 5 to 7 do EdtPunkte.Text := EdtPunkte.Text + h[k];
           With FormSpiel do
             begin
                For m := 1 to StringGridPunkte.RowCount -1 do
@@ -452,13 +482,65 @@ procedure TFormKonsole.ServerSocketLehrerClientRead(Sender: TObject;
                     If StringGridPunkte.Cells[4,m] = IntToStr (Index) then
                       begin
                          StringGridPunkte.Cells[2,m] := EdtPunkte.Text;
+                         Gesamtpunkte := StrToInt (StringGridPunkte.Cells[2,m])
+                                         + StrToInt(StringGridPunkte.Cells[3,m]);
+                         StringGridPunkte.Cells[3,m] := IntToStr (Gesamtpunkte);
+                         If FormSpiel.Spielen = True then FormSpiel.InsertionSort();
                       end;
                  end;
 
             end;
-     
+          Stat_Anzahl := Stat_Anzahl +1;
+          FormSpiel.ProgressBarStand.Position :=Stat_Anzahl;
+          If Stat_Anzahl = ServerSocketLehrer.Socket.ActiveConnections then
+            begin
+               FormSpiel.BtnAktion.Enabled := True;
+               showmessage('Alle Schüler haben geantwortet!');  //Ende der Runde!
+               FormSpiel.Spielen := False;
+               FormSpiel.InsertionSort;
+            end;
        end;
+  end;
+
+function TFormKonsole.GetLocalIpAddress : string;
+ type pu_long = ^u_long;
+ var varTWSAData : TWSAData;
+     varPHostEnt : PHostEnt;
+     varTInAddr : TInAddr;
+     namebuf : Array[0..255] of char;
+     fd : integer;
+     rc : integer;
+  begin
+      result := '';
+      rc := WSAStartup($101,varTWSAData);
+      if rc <> 0 then exit;
+      gethostname(namebuf,sizeof(namebuf));
+      varPHostEnt := gethostbyname(namebuf);
+      varTInAddr.S_addr := u_long(pu_long(varPHostEnt^.h_addr_list^)^);
+      result := inet_ntoa(varTInAddr);
+      fd := WinSock.Socket( PF_INET, SOCK_STREAM, 0 );
+      if fd = INVALID_SOCKET then
+      exit;
+      WSACleanup;  //Mit dieser Funktion wird die IP-Adresse des Users ausgelsen
+  end;
+
+
+procedure TFormKonsole.ServerSocketLehrerClientDisconnect(Sender: TObject;
+  Socket: TCustomWinSocket);
+ var i,k: Integer;
+  begin                       //Falls die Verbindung unterbrochen wird!!!
+     EdtSchuelerOnline.Text := IntToStr(ServerSocketLehrer.Socket.ActiveConnections);
+     FormStadt_Auswahl.EdtOnline.Text := EdtSchuelerOnline.Text;
+     For k := 1 to StringGridUbersicht.RowCount -1 do
+       begin
+          StringGridUbersicht.Cells[3,k] := '';
        end;
- 
+     For i := 0 to ServerSocketLehrer.Socket.ActiveConnections do
+       begin
+          ServerSocketLehrer.Socket.Connections[i].SendText('NewIndex');
+       end;            //Es wird überprüft, wer noch online ist!
+  end;
+
+
 
 end.

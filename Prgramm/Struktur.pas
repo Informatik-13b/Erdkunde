@@ -442,6 +442,7 @@ begin
     begin
          Anmeldungstimer.Enabled := false;
          GBAnmeldung.Enabled := true;
+         EdtBenutzername.SetFocus;
     end;
 end;
 

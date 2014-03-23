@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, Math, jpeg, ImageButton, ShapeSchliessen, ScktComp;
+  StdCtrls, ExtCtrls, Math, jpeg, ImageButton, ShapeSchliessen, ImageMaskottchen;
 
 type
   TMenue = class(TForm)
@@ -28,9 +28,6 @@ type
     EdtName: TEdit;
     STLoescheV: TStaticText;
     StLoescheN: TStaticText;
-    RgGeschlecht: TRadioGroup;
-    CSRegistrierung: TClientSocket;
-    MDatei: TMemo;
     Registrierungstimer: TTimer;
     EdtRPasswort: TEdit;
     StLoescheRP: TStaticText;
@@ -39,11 +36,10 @@ type
     ShpZurueck: TShape;
     ZurueckRTimer: TTimer;
     ZurueckATimer: TTimer;
-    ShpAnmeldung: TShape;
     EdtBenutzernameR: TEdit;
     STLoescheRB: TStaticText;
-    RGStufe: TRadioGroup;
-    RGKlasse: TRadioGroup;
+    MDatei: TMemo;
+    TMaskottchen: TTimer;
     procedure FormPaint(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -112,12 +108,6 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure StLoescheRPMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure RgGeschlechtClick(Sender: TObject);
-    procedure CSRegistrierungError(Sender: TObject;
-      Socket: TCustomWinSocket; ErrorEvent: TErrorEvent;
-      var ErrorCode: Integer);
-    procedure CSRegistrierungRead(Sender: TObject;
-      Socket: TCustomWinSocket);
     procedure LblZurueckMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure LblZurueckMouseUp(Sender: TObject; Button: TMouseButton;
@@ -146,9 +136,10 @@ type
     function Verschluesseln(Text:string) :string;
     procedure ErzeugeGa;
     procedure addition(x:integer);
-    procedure RGStufeClick(Sender: TObject);
-    procedure RGKlasseClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure EdtPasswortKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure TMaskottchenTimer(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -158,6 +149,7 @@ type
     angemeldet:boolean;
     index :integer;
     procedure FensterOeffnen(Button:integer);
+    procedure FarbenWechseln;
   end;
 
 Const ka = ',-./0123456789:;Ô?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz';
@@ -169,6 +161,8 @@ var
   ScreenZaehler: Integer;
   MenueObjekt : array[1..6] of TImageButton;
   SchliessenShape : TShapeSchliessen;
+  Maskottchen:TImageMaskottchen;
+  k,l:integer;
 
   ga, ga2: string;
   lenA : integer;
@@ -183,7 +177,7 @@ var
 
 implementation
 
-uses Karte,Lexikon,Atlas,Einstellungen;
+uses Karte,Lexikon,Atlas,Einstellungen,Lehrermodus;
 
 {$R *.DFM}
 
@@ -192,15 +186,40 @@ begin
      Menue.Color := Themenfarbe1;
 end;
 
+procedure TMenue.FarbenWechseln;
+var i:integer;
+begin
+     Menue.Color := Themenfarbe1;
+     SchliessenShape.Themenfarbe1 := Themenfarbe1;        // die Themenfarben werden übergeben
+     SchliessenShape.Themenfarbe2 := Themenfarbe2;
+     SchliessenShape.Repaint;
+     for i := 1 to 6 do
+     begin                                                            // Die Menüobjekte werden vom Typ
+          MenueObjekt[i].Themenfarbe1 := Themenfarbe1;                // und es wird ihnen die aktuellen Themenfarbe
+          MenueObjekt[i].Themenfarbe2 := Themenfarbe2;                // übermittelt.
+     end;
+end;
+
 procedure TMenue.FormCreate(Sender: TObject);
 var i : integer;
 begin
-     GBAnmeldung.Top := -320;
-     GBAnmeldung.Left := Screen.Width div 2 - GBAnmeldung.Width div 2;
-     ShpAnmeldung.Top := -340;
-     ShpAnmeldung.Left := GBAnmeldung.Left - 20;
-     
+     k := round(3*((Screen.Height / 3)) / 4);        // (normale Größe)
+     l := round(15*((Screen.Height / 3)) / 18);      // (zoom Größe)
 
+     Rand := Screen.Height div 30;
+     Maskottchen := TImageMaskottchen.Create(self);
+     Maskottchen.Height := 17*Rand;
+     Maskottchen.Parent := self;
+     Maskottchen.Width := (Maskottchen.Height * 225) div 300;
+     Maskottchen.Left := Screen.Width div 2 - Maskottchen.Width div 2;
+     Maskottchen.Top := Screen.Height div 2 - Maskottchen.Height div 2 + Rand;
+     Maskottchen.Zustand := 'Normal';
+     Maskottchen.aktuellesBild := 0;
+     Maskottchen.Normalzustand := true;
+     Maskottchen.Laenge := 27;
+
+     GBAnmeldung.Top := -GBAnmeldung.Height;
+     GBAnmeldung.Left := Screen.Width div 2 - GBAnmeldung.Width div 2;
      GBRegistrierung.Top := -GBRegistrierung.Height;
      GBRegistrierung.Left := Screen.Width div 2 - GBRegistrierung.Width div 2;
 
@@ -210,7 +229,7 @@ begin
      Self.DoubleBuffered := True;
      ScreenMitte := Point(Screen.Width div 2,Screen.Height div 2);    // Mitte des Screen wird ermittelt
 
-     for i := 1 to 5 do
+     for i := 1 to 6 do
      begin                                                            // Die Menüobjekte werden vom Typ
           MenueObjekt[i]:= TImageButton.Create(self);                 // ImageButton erstellt
           MenueObjekt[i].Parent := self;
@@ -223,18 +242,17 @@ begin
      MenueObjekt[2].BildLaden(ExtractFilePath(ParamStr(0)) + 'Bilder/Lexikon-Menüpunkt.gif');        // im gif-Format
      MenueObjekt[3].BildLaden(ExtractFilePath(ParamStr(0)) + 'Bilder/Profil-Menüpunkt.gif');
      MenueObjekt[4].BildLaden(ExtractFilePath(ParamStr(0)) + 'Bilder/Spiel-Menüpunkt.gif');
-     MenueObjekt[5].BildLaden(ExtractFilePath(ParamStr(0)) + 'Bilder/Titel.gif');
-     MenueObjekt[5].Titel := true;
+     MenueObjekt[5].BildLaden(ExtractFilePath(ParamStr(0)) + 'Bilder/Lehrermodus-Menüpunkt.gif');
+     MenueObjekt[6].Titel := true;
+     MenueObjekt[6].BildLaden(ExtractFilePath(ParamStr(0)) + 'Bilder/Titel.gif');
 
-     SchliessenShape := TShapeSchliessen.Create(self);    // Erstellen des Schließen-Komponente
+     SchliessenShape := TShapeSchliessen.Create(self);    // Erstellen der Schließen-Komponente
      SchliessenShape.Parent := self;
      SchliessenShape.Themenfarbe1 := Themenfarbe1;        // die Themenfarben werden übergeben
      SchliessenShape.Themenfarbe2 := Themenfarbe2;
      SchliessenShape.Fenster := Menue;           // Wichtig! Das Fenster wird übergeben, damit die Komponente weiß
                                                  // welches Fenster geschlossen werden soll.
 end;
-
-
 
 
 procedure TMenue.MenueEffektTimer(Sender: TObject);
@@ -257,24 +275,24 @@ var i : integer;
     Anzahl:integer;
 begin
      ButtonBreite := (3*Radius)div 4;                       // Buttonbreite wird in Abhängigkeit der Bildschrimgröße bestimmt
-     for i := 1 to 4 do
+     for i := 1 to 5 do
      begin
           MenueObjekt[i].Width := ButtonBreite;
           MenueObjekt[i].Height:= ButtonBreite;
      end;
 
-     MenueObjekt[5].Width := (ButtonBreite*5) div 2;
-     MenueObjekt[5].Height:= ButtonBreite;
+     MenueObjekt[6].Width := (ButtonBreite*5) div 2;
+     MenueObjekt[6].Height:= ButtonBreite;
                                                                       // im Folgenden werden die Menüpunkte im Kreis(Ellipse) angeordnet:
      Radius_x := Radius*(Screen.Width / Screen.Height);               // Radius in x-Richtung
      Radius_y := Radius;                                              // Radius in y-Richtung
-     Anzahl := 5;
-     for i := 1 to 5 do
+     Anzahl := 6;
+     for i := 1 to 6 do
      begin
           x := Kreisposition_x(i,Anzahl,ScreenMitte,Radius_x);        // x- und y-Koordinate für das i-te Objekt wird ermittelt
           y := Kreisposition_y(i,Anzahl,ScreenMitte,Radius_y);        // dabei werden oben bestimmte Parameter übergeben
 
-          if i <> 5 then
+          if i <> 6 then
           begin
                MenueObjekt[i].Left := x - ButtonBreite div 2;         // jeder Komponente wird ihre Position übergeben.
                MenueObjekt[i].Top  := y - ButtonBreite div 2;
@@ -309,11 +327,9 @@ begin
 end;
 
 procedure TMenue.ZoomenTimer(Sender: TObject);       // Ein permanenter Timer...
-var i,k,l :integer;
+var i :integer;
 begin
-     k := round(3*((Screen.Height / 3)) / 4);        // (normale Größe)
-     l := round(15*((Screen.Height / 3)) / 18);      // (zoom Größe)
-     for i := 1 to 4 do                       // 1-4: Titel wird nicht gezoomt!!!
+     for i := 1 to 5 do                       // 1-5: Titel wird nicht gezoomt!!!
      begin
           if (MenueObjekt[i].Zoom = true) and         // prüft ob, ein Menüobjekt im Zoom-Modus ist
              (MenueObjekt[i].Height < l) then         // und kleiner als die Zoom-End-Größe ist
@@ -340,7 +356,7 @@ begin
           SchliessenShape.Repaint;              // und es zeichnet sich neu.
      end;
 
-     for i := 1 to 4 do
+     for i := 1 to 5 do
      begin
           If MenueObjekt[i].Zoom = true          // Sicherheitsverkleinern: Wenn die Maus wieder auf der Form ist
           then MenueObjekt[i].Zoom := false;     // und das Menüobjekt noch nicht am Verkleinrn ist.
@@ -402,6 +418,11 @@ begin
              Orte_Finden.BringToFront;
              Orte_Finden.ShowModal;
         end;
+     5: begin
+             Application.CreateForm(TLehrer,Lehrer);
+             Lehrer.BringToFront;
+             Lehrer.ShowModal;
+        end;
      end;
 end;
 
@@ -417,8 +438,11 @@ begin
     if GBAnmeldung.Top < Screen.Height div 2 - GBAnmeldung.Height div 2 then
     begin
          GBAnmeldung.Top := GBAnmeldung.Top + 30;
-         ShpAnmeldung.Top := ShpAnmeldung.Top + 30;
-    end else Anmeldungstimer.Enabled := false;
+    end else
+    begin
+         Anmeldungstimer.Enabled := false;
+         GBAnmeldung.Enabled := true;
+    end;
 end;
 
 
@@ -696,21 +720,27 @@ begin
      Benutzername := Verschluesseln(EdtBenutzername.Text);
      Passwort := Verschluesseln(EdtPasswort.Text);
 
-     if not FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\index.txt') then
-        exit;   // !!!
+     if not FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\index.dat') then
+     begin
+          RegistrierungsTimer.Enabled := true;
+          exit;   // !!!
+     end;
 
-     MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.txt');
+     MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.dat');
      index := MDatei.Lines.IndexOf(Benutzername);
 
-     if FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt') then
+     if FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat') then
      begin
-          MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt');
+          MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat');
           if Passwort = MDatei.Lines[0] then
           begin
-               MDatei.Lines[5] := 'online';
-               MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt');
+               MDatei.Lines[7] := 'online';
+               MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat');
                ZurueckATimer.Enabled := true;
                angemeldet := true;
+               Themenfarbe1 := StringToColor(MDatei.Lines[5]);
+               Themenfarbe2 := StringToColor(MDatei.Lines[6]);
+               FarbenWechseln;
           end else
              Showmessage('Falsches Passwort');
      end else
@@ -792,64 +822,31 @@ end;
 procedure TMenue.LblBestaetigenMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var Benutzername, Vorname, Nachname,
-    Geschlecht, Passwort, Klasse: String;
+    Passwort: String;
     index:integer;
 begin
      LblBestaetigen.Top := LblBestaetigen.Top - 2;
      ShpBestaetigen.Top := ShpBestaetigen.Top - 2;
 
-     if (EdtVorname.Font.Color = clGray) then
-     begin
-          EdtVorname.Font.Color := clRed;
-          exit;
-     end;
-     if (EdtName.Font.Color = clGray) then
-     begin
-          EdtName.Font.Color := clRed;
-          exit;
-     end;
-     if (EdtRPasswort.Font.Color = clGray) then
-     begin
-          EdtRPasswort.Font.Color := clRed;
-          exit;
-     end;
-     if (EdtBenutzernameR.Font.Color = clGray) then
+     if (EdtBenutzernameR.Font.Color = clGray) or (EdtBenutzernameR.Font.Color = clRed) then
      begin
           EdtBenutzernameR.Font.Color := clRed;
           exit;
      end;
-     if RgGeschlecht.ItemIndex = -1 then
+     if (EdtVorname.Font.Color = clGray) or (EdtVorname.Font.Color = clRed) then
      begin
-          RgGeschlecht.Font.Color := clRed;
+          EdtVorname.Font.Color := clRed;
           exit;
      end;
-     if RgStufe.ItemIndex = -1 then
+     if (EdtName.Font.Color = clGray) or (EdtName.Font.Color = clRed) then
      begin
-          RgStufe.Font.Color := clRed;
+          EdtName.Font.Color := clRed;
           exit;
      end;
-     if RgKlasse.ItemIndex = -1 then
+     if (EdtRPasswort.Font.Color = clGray) or (EdtRPAsswort.Font.Color = clRed) then
      begin
-          RgKlasse.Font.Color := clRed;
+          EdtRPasswort.Font.Color := clRed;
           exit;
-     end;
-
-     case RgGeschlecht.ItemIndex of
-          0 : Geschlecht := 'Mädchen';
-          1 : Geschlecht := 'Junge';
-     end;
-     case RgStufe.ItemIndex of
-          0 : Klasse := '5';
-          1 : Klasse := '6';
-          2 : Klasse := '7';
-     end;
-     case RGKlasse.ItemIndex of
-          0 : Klasse := Klasse + 'a';
-          1 : Klasse := Klasse + 'b';
-          2 : Klasse := Klasse + 'c';
-          3 : Klasse := Klasse + 'd';
-          4 : Klasse := Klasse + 'e';
-          5 : Klasse := Klasse + 'f';
      end;
 
      Benutzername := EdtBenutzernameR.Text;
@@ -858,13 +855,13 @@ begin
      Passwort := EdtRPasswort.Text;
 
      Mdatei.Clear;
-     if not FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\index.txt') then
-        MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.txt');
+     if not FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\index.dat') then
+        MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.dat');
 
-     MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.txt');
+     MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.dat');
      MDatei.Lines.Add(Verschluesseln(Benutzername));
      index := MDatei.Lines.IndexOf(Verschluesseln(Benutzername));
-     MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.txt');
+     MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.dat');
 
 
      MDatei.Lines.Clear;
@@ -872,51 +869,16 @@ begin
      MDatei.Lines.Add(Verschluesseln(Benutzername));  //1
      MDatei.Lines.Add(Verschluesseln(Vorname));       //2
      MDatei.Lines.Add(Verschluesseln(Nachname));      //3
-     MDatei.Lines.Add(Verschluesseln(Geschlecht));    //4
-     MDatei.Lines.Add(Verschluesseln(Klasse));        //5
+     MDatei.Lines.Add('index');                       //4
+     MDAtei.Lines.Add(ColorToString(Themenfarbe1));   //5
+     MDatei.Lines.Add(ColorToString(Themenfarbe2));   //6
 
-     MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt');
+     MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat');
 
 
      ZurueckRTimer.Enabled := true;
 
-    { //Passwort := EdtRPasswort.Text;
-     Try
-      With CSRegistrierung do
-       begin
-          Port := 23; //Festlegung des Ports
-          Host := Adresse; //IP des Zielrechners
-          Active := True; //Aufbau der Verbindung
-          Socket.SendText ('1' + Vorname);
-          Socket.SendText ('2' + Nachname);
-          Socket.SendText ('3' + Geschlecht);
-          //Socket.SendText ('4' + Passwort);
-       end;
-     Except
-       showmessage('Fehler bei der Verbindung');
-      end; }
 
-end;
-
-procedure TMenue.RgGeschlechtClick(Sender: TObject);
-begin
-     RgGeschlecht.Font.Color := clBlack;
-end;
-
-procedure TMenue.CSRegistrierungError(Sender: TObject;
-  Socket: TCustomWinSocket; ErrorEvent: TErrorEvent;
-  var ErrorCode: Integer);
-begin
-     showmessage ('Fehler bei der Verbindung!' + #13#10 +
-                  'Fehler: ' + IntToStr(ErrorCode));;  //Gibt den FehlerCode aus!
-end;
-
-procedure TMenue.CSRegistrierungRead(Sender: TObject;
-  Socket: TCustomWinSocket);
-begin
-     {MIndex.Lines.Add (Socket.ReceiveText);
-     MIndex.Lines.SaveToFile('SchülerIndex.txt');
-     CSRegistrierung.Active := False; }
 end;
 
 procedure TMenue.LblZurueckMouseDown(Sender: TObject; Button: TMouseButton;
@@ -949,7 +911,6 @@ begin
      if GBAnmeldung.Top > -GBAnmeldung.Height then
      begin
           GBAnmeldung.Top := GBAnmeldung.Top - 30;
-          ShpAnmeldung.Top := ShpAnmeldung.Top - 30;
      end else
      begin
           ZurueckATimer.Enabled := false;
@@ -957,8 +918,9 @@ begin
           MenueObjekt[2].Enabled := true;
           MenueObjekt[3].Enabled := true;
           MenueObjekt[4].Enabled := true;
-
+          MenueObjekt[5].Enabled := true;
           Zoomen.Enabled := true;
+          TMaskottchen.Enabled := true;
      end;
 end;
 
@@ -1030,6 +992,13 @@ begin
           ShpZurueck.Left := ShpZurueck.Left - 10;
           ShpZurueck.Width := ShpZurueck.Width + 20;
      end;
+     if ShpBestaetigen.Brush.Color = clBlack then
+     begin
+          LblBestaetigen.Font.Color := clBlack;
+          ShpBestaetigen.Brush.Color := clWhite;
+          ShpBestaetigen.Left := ShpBestaetigen.Left + 10;
+          ShpBestaetigen.Width := ShpBestaetigen.Width - 20;
+     end;
 end;
 
 procedure TMenue.GBRegistrierungMouseMove(Sender: TObject;
@@ -1060,6 +1029,13 @@ begin
           ShpBestaetigen.Brush.Color := clBlack;
           ShpBestaetigen.Left := ShpBestaetigen.Left - 10;
           ShpBestaetigen.Width := ShpBestaetigen.Width + 20;
+     end;
+     if ShpZurueck.Brush.Color = clBlack then
+     begin
+          LblZurueck.Font.Color := clBlack;
+          ShpZurueck.Brush.Color := clWhite;
+          ShpZurueck.Left := ShpZurueck.Left + 10;
+          ShpZurueck.Width := ShpZurueck.Width - 20;
      end;
 end;
 
@@ -1166,23 +1142,83 @@ procedure TMenue.addition (x: integer);
             + copy (ga, 1, p2-1);
   end;
 
-procedure TMenue.RGStufeClick(Sender: TObject);
-begin
-     RgStufe.Font.Color := clBlack;
-end;
-
-procedure TMenue.RGKlasseClick(Sender: TObject);
-begin
-     RgKlasse.Font.Color := clBlack;
-end;
-
 procedure TMenue.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
      if angemeldet then
      begin
-          MDatei.Lines[5] := 'offline';
-          MDAtei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.txt');
+          MDatei.Lines[7] := 'offline';
+          MDAtei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat');
           angemeldet := false;
+     end;
+end;
+
+procedure TMenue.EdtPasswortKeyDown(Sender: TObject; var Key: Word;
+ Shift: TShiftState);
+ var Benutzername, Passwort: String;
+  begin
+     If (Key = VK_RETURN) then
+       begin
+          Benutzername := Verschluesseln(EdtBenutzername.Text);
+          Passwort := Verschluesseln(EdtPasswort.Text);
+
+          If not FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\index.dat') then
+           Exit;   // !!!
+
+     MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.dat');
+     Index := MDatei.Lines.IndexOf(Benutzername);
+
+     If FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat') then
+       begin
+          MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat');
+          if Passwort = MDatei.Lines[0] then
+          begin
+               MDatei.Lines[7] := 'online';
+               MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat');
+               ZurueckATimer.Enabled := true;
+               angemeldet := true;
+               Themenfarbe1 := StringToColor(MDatei.Lines[5]);
+               Themenfarbe2 := StringToColor(MDatei.Lines[6]);
+               FarbenWechseln;
+          end else
+             Showmessage('Falsches Passwort');
+       end else
+     begin
+          Showmessage('Falscher Benutzername');
+          exit;
+     end;
+       end;
+  end;
+
+
+procedure TMenue.TMaskottchenTimer(Sender: TObject);
+begin
+     with Maskottchen do
+     begin
+          if Normalzustand = true then
+          begin
+               inc(aktuellesBild);
+               if aktuellesBild <= laenge then
+                  BildLaden('Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif')
+
+          else
+          begin
+               aktuellesBild := 0;
+          end;
+          end else
+          begin
+
+               if aktuellesBild <= laenge then
+               begin
+                    inc(aktuellesBild);
+                    BildLaden('Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif');
+               end else
+               begin
+                    Zustand := 'Normal';
+                    Normalzustand := true;
+                    laenge := 27;
+                    aktuellesBild := 0;
+               end;
+          end;
      end;
 end;
 

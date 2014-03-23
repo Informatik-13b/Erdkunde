@@ -66,7 +66,7 @@ begin
      REdtKopie.Lines.LoadfromFile('Lexikon.txt');  // Lexikondatei wird ins REdtKopie geladen
 
      Schluessel := 'abcd';
-     Entschluesseln;                                // und entschlüsselt.
+     //Entschluesseln;                                // und entschlüsselt.
      
      Menge := StrToInt(REdtKopie.Lines[0]);         // in der ersten Linie is die menge der Datensätze hintelegt
      Label4.Caption := IntToStr(Menge);
@@ -315,7 +315,7 @@ procedure TForm1.addition (x: integer);
 
 procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-     Verschluesseln;                             // Das RichEdit REdtKopie wird verschlüsslt und
+     //Verschluesseln;                             // Das RichEdit REdtKopie wird verschlüsslt und
      REdtKopie.Lines.SaveToFile('Lexikon.txt');  // so in die Datei gespeichert.
 end;
 

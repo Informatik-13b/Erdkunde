@@ -1,8 +1,8 @@
 object Form1: TForm1
   Left = 193
   Top = 120
-  Width = 882
-  Height = 527
+  Width = 1215
+  Height = 680
   Caption = 'Form1'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -118,11 +118,10 @@ object Form1: TForm1
   object REdtKopie: TRichEdit
     Left = 544
     Top = 32
-    Width = 313
+    Width = 617
     Height = 449
     Lines.Strings = (
       'RichEdit1')
-    ReadOnly = True
     ScrollBars = ssBoth
     TabOrder = 8
     WordWrap = False

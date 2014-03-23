@@ -1,12 +1,12 @@
 object FLexikon: TFLexikon
-  Left = 229
-  Top = 139
+  Left = 201
+  Top = 236
   VertScrollBar.Smooth = True
   VertScrollBar.Size = 10
   Align = alClient
   BorderStyle = bsNone
   Caption = 'FLexikon'
-  ClientHeight = 525
+  ClientHeight = 524
   ClientWidth = 1008
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -15,6 +15,7 @@ object FLexikon: TFLexikon
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  OnClose = FormClose
   OnCreate = FormCreate
   OnMouseMove = FormMouseMove
   PixelsPerInch = 96
@@ -28,36 +29,34 @@ object FLexikon: TFLexikon
     OnMouseMove = FormMouseMove
   end
   object ShpHintergrund1: TShape
-    Left = 72
-    Top = 72
+    Left = 96
+    Top = 144
     Width = 65
     Height = 65
     Pen.Style = psClear
     OnMouseMove = FormMouseMove
   end
-  object Maskottchen: TLabel
-    Left = 216
-    Top = 144
-    Width = 413
+  object LblStichwort: TLabel
+    Left = 88
+    Top = 64
+    Width = 166
     Height = 38
-    Caption = 'Platzhalter für das Maskottchen'
-    Color = clGrayText
+    Caption = 'LblStichwort'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -27
     Font.Name = 'Comic Sans MS'
     Font.Style = []
-    ParentColor = False
     ParentFont = False
-    OnMouseMove = FormMouseMove
   end
   object LBStichwoerter: TListBox
     Left = 312
     Top = 200
     Width = 121
     Height = 97
+    Cursor = crHandPoint
     TabStop = False
-    Columns = 3
+    Columns = 2
     Ctl3D = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -97,8 +96,6 @@ object FLexikon: TFLexikon
     Font.Height = -20
     Font.Name = 'Comic Sans MS'
     Font.Style = []
-    Lines.Strings = (
-      'MText')
     ParentCtl3D = False
     ParentFont = False
     PlainText = True
@@ -106,5 +103,11 @@ object FLexikon: TFLexikon
     ScrollBars = ssVertical
     TabOrder = 2
     WantReturns = False
+  end
+  object TMaskottchen: TTimer
+    Interval = 200
+    OnTimer = TMaskottchenTimer
+    Left = 32
+    Top = 40
   end
 end

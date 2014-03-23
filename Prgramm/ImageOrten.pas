@@ -26,7 +26,6 @@ type
     { Public-Deklarationen }
     ROrte : TOrte;
     geklickt:boolean;
-    Punkte : integer;
     Entfernung : integer;
     constructor Create(AOwner:TComponent); override;
     function SatzLadenAnzeigen(index:integer) : string;
@@ -48,14 +47,9 @@ constructor TImageOrten.Create(AOwner:TComponent);
 begin
      inherited Create(AOwner);
 
-     Height := (Screen.Height*14) div 15;          // Die Komponente platziert sich auf dem Formular.
-     Width := (Height*19) div 26;
-     Top := Screen.Height div 30;
-     Left := Screen.Width - Width - Top;
      Cursor := crCross;                            // Ein Zielkreuz wird als Cursor eingestellt.
      Stretch := true;
      geklickt := true;
-     Punkte := 2000;
 end;
 
 function TImageOrten.SatzLadenAnzeigen(index:integer): string;
@@ -100,7 +94,6 @@ procedure TImageOrten.MouseUp(Button: TMouseButton;                             
 var
 dif_x, dif_y : real;
 dif_hoch:real;
-a : integer;
 EntfernungTemp:real;
 begin
      if geklickt = false then
@@ -122,11 +115,6 @@ begin
 
      Entfernung := round(EntfernungTemp * ( 613 / 1791 ));        // Der Bildspezifische Maﬂstab wird in die Entfernung mit einbezogen
 
-
-     if ROrte.Schwierigkeit = 'schwer' then a := 1;               // In der Datei sind neben den Ortsnamen und den Koordinaten auch die schwierigkeiten hinterlegt
-     if ROrte.Schwierigkeit = 'mittel' then a := 2;
-     if ROrte.Schwierigkeit = 'leicht' then a := 3;
-     Punkte := Punkte - a*Entfernung;
 
      Canvas.Brush.Style := bsClear;
      Canvas.Pen.Width := 6;

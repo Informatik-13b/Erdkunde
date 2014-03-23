@@ -4,25 +4,27 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  ShapeSchliessen, StdCtrls, ExtCtrls, ComCtrls;
+  ShapeSchliessen, StdCtrls, ExtCtrls, ComCtrls, ImageMaskottchen;
 
 type
   TFLexikon = class(TForm)
-    Maskottchen: TLabel;
     ShpHintergrund1: TShape;
     ShpHintergrund2: TShape;
     LBStichwoerter: TListBox;
     REdtDatei: TRichEdit;
     MText: TRichEdit;
+    LblStichwort: TLabel;
+    TMaskottchen: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
-    procedure DateiLadenEntschluesseln;
-    procedure ErzeugeGa;
-    procedure addition(x:integer);
+    procedure DateiLaden;
     procedure StichwoerterAuflisten;
     procedure AbsaetzeLaden(Stichwort:string);
     procedure LBStichwoerterClick(Sender: TObject);
+    procedure StichwortAnpassen;
+    procedure TMaskottchenTimer(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private-Deklarationen }
   public
@@ -31,20 +33,12 @@ type
     Themenfarbe2: TColor;
   end;
 
-Const ka = ',-./0123456789:;Ô?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz';
-
 var
   FLexikon: TFLexikon;
   SchliessenShape : TShapeSchliessen;
+  Rand:integer;
+  Maskottchen:TImageMaskottchen;
 
-  ga, ga2: string;
-  lenA : integer;
-  kt, gt : string;
-  lenT, p : integer;
-  c : char;
-  schl: string;
-  LenSchl: integer;
-  Schluessel: String;
 
 implementation
 
@@ -53,7 +47,6 @@ uses Struktur;
 {$R *.DFM}
 
 procedure TFLexikon.FormCreate(Sender: TObject);
-var Rand:integer;
 begin
      Themenfarbe1 := Menue.Themenfarbe1;                   //Übergabe der Themenfarbe
      Themenfarbe2 := Menue.Themenfarbe2;
@@ -68,10 +61,8 @@ begin
      SchliessenShape.Fenster := FLexikon;           // Wichtig! Das Fenster wird übergeben, damit die Komponente weiß
                                                  // welches Fenster geschlossen werden soll.
      Rand := Screen.Height div 30;
-     Maskottchen.Top := 17*Rand;
-     Maskottchen.Left := 2*Rand;                                                    // Platzvergabe der Objekte in Abhängigkeit der Auflösung
-     Maskottchen.Width := Screen.Width - 8*Rand - ((Screen.Height*133)div 195);     //   |
-     Maskottchen.Height := 11*Rand;                                                 //   |
+
+     self.DoubleBuffered := true;                                                //   |
                                                                                     //   |
      ShpHintergrund1.Left := Rand;                                                  //   V
      ShpHintergrund1.Top  := Rand;
@@ -85,73 +76,56 @@ begin
      ShpHintergrund2.Height:= Screen.Height - 2*Rand;
      ShpHintergrund2.Brush.Color := Themenfarbe2;
 
-     MText.Left := ShpHintergrund2.Left + Rand;
-     MText.Top  := 2*Rand;
-     MText.Width := ShpHintergrund2.Width - 2*Rand;
-     MText.Height := ShpHintergrund2.Height - 2*Rand;
-     MText.Color := Themenfarbe1;
+     Maskottchen := TImageMaskottchen.Create(self);
+     Maskottchen.Height := 15*Rand;
+     Maskottchen.Parent := self;
+     Maskottchen.Width := (Maskottchen.Height * 225) div 300;
+     Maskottchen.Left := Rand + ShpHintergrund1.Width div 2 - Maskottchen.Width div 2;
+     Maskottchen.Top := 16*Rand;
+     Maskottchen.Zustand := 'Normal';
+     Maskottchen.aktuellesBild := 0;
+     Maskottchen.Normalzustand := true;
+     Maskottchen.Laenge := 27;
 
-     LBStichwoerter.Left := 2*Rand;
-     LBStichwoerter.Top := 2*Rand;
-     LBStichwoerter.Width := ShpHintergrund1.Width - 2*Rand;
-     LBStichwoerter.Height := ShpHintergrund1.Height - Maskottchen.Height - 3* Rand;
+     LBStichwoerter.Left := ShpHintergrund2.Left + Rand;
+     LBStichwoerter.Top  := 2*Rand;
+     LBStichwoerter.Width := ShpHintergrund2.Width - 2*Rand;
+     LBStichwoerter.Height := ShpHintergrund2.Height - 2*Rand;
      LBStichwoerter.Color := Themenfarbe1;
+     LBStichwoerter.Font.Color := Themenfarbe2;
+
+     MText.Left := 2*Rand;
+     MText.Top := 5*Rand;
+     MText.Width := ShpHintergrund1.Width - 2*Rand;
+     MText.Height := ShpHintergrund1.Height - Maskottchen.Height - 3* Rand;
+     MText.Color := Themenfarbe1;
+     MText.Font.Color := Themenfarbe2;
+
+     LblStichwort.Top := 2*Rand;
+     LblStichwort.Left := 2*Rand;
+     LblStichwort.Color := Themenfarbe2;
+     LblStichwort.Font.Color := Themenfarbe1;
+     LblStichwort.Font.Size := Rand;
+     LblStichwort.Caption := 'Wähle ein Stichwort';
+     StichwortAnpassen;
                                                                                        // Lexikondatei wird geladen und entschlüsselt
-     DateiLadenEntschluesseln;                                                         // die Sitchwörter werden gelistet
+     DateiLaden;                                                         // die Sitchwörter werden gelistet
      StichwoerterAuflisten;
 end;
 
-procedure TFLexikon.DateiLadenEntschluesseln;
-
-var i : integer;
+procedure TFLexikon.StichwortAnpassen;
 begin
-     REdtDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Lexikon/Lexikon.txt');   // Ins UNSICHTBARE REditDatei wird die Lixikondatei geladen
-                                                                                           //
-     Schluessel := 'abcd';                                                                 // entschlüsselt
-
-     gt := REdtDatei.Text;
-     lenT := length(gt);
-     kt := '';
-     for i := 1 to lenT do
-     begin
-          ErzeugeGa;
-          addition(i);
-          c := gt[i];
-          p := pos(c,ga2);
-          if p <> 0 then kt := kt + copy(ka,p,1)
-          else kt := kt + c;;
-     end;
-     REdtDatei.Text := kt;                                                               // und wieder ins UNSICHTBARE REdtDate geschrieben
+     LblStichwort.Font.Size := 30;
+     if LblStichwort.Width > ShpHintergrund1.Width - 2*Rand then
+     while LblStichwort.Width > ShpHintergrund1.Width - 2*Rand do
+       LblStichwort.Font.Size := LblStichwort.Font.Size - 1;
 end;
 
-procedure TFLexikon.ErzeugeGa;
-var Wert1, Wert2: integer;
-     i: integer;
-     schlZahl: integer;
+procedure TFLexikon.DateiLaden;
 begin
-    ga := '';
-    schlZahl := ord(schluessel[1]);
-    lenA := length(ka);
-    For i := 1 to lenA do
-     begin
-        c := ka[i];
-        Wert1 := ord(c);
-        Wert2 := ((Wert1-44)*schlZahl mod 79)+44;
-        ga := ga + chr(Wert2);
-     end;
+     REdtDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Lexikon/Lexikon.txt');   // Ins UNSICHTBARE REditDatei wird die Lexikondatei geladen
 end;
 
-procedure TFLexikon.addition (x: integer);
-var c2: char;
-    p2, zaehler: integer;
-begin
-     lenSchl := length (schluessel);
-     zaehler := x mod lenSchl +1;
-     c2 := schluessel[zaehler];
-     p2 := pos (c2, ga);
-     ga2 := copy (ga, p2, lenA -p2+1)
-            + copy (ga, 1, p2-1);
-end;
 
 procedure TFLexikon.StichwoerterAuflisten;
 var i,Linie: integer;
@@ -187,6 +161,8 @@ var Stichwort:string;                                                     // das
 begin
      Stichwort := LbStichwoerter.Items.Strings[LbStichwoerter.ItemIndex]; // Das angeklickte Stichwort wird ermittelt
      AbsaetzeLaden(Stichwort);                                            // und die dazugehörigen Absätze werden geladen
+     LblStichwort.Caption := Stichwort;
+     StichwortAnpassen;
 end;
 
 procedure TFLexikon.AbsaetzeLaden(Stichwort:string);
@@ -210,6 +186,41 @@ begin                                                                     // MTe
                          MText.Lines.Add(tmp);
                end;
      until length(tmp) < 4;                                               // bis ein neuer Datensatz erreicht wird
+end;
+
+procedure TFLexikon.TMaskottchenTimer(Sender: TObject);
+begin
+     with Maskottchen do
+     begin
+          if Normalzustand = true then
+          begin
+               inc(aktuellesBild);
+               if aktuellesBild <= laenge then
+                  BildLaden('Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif')
+
+          else aktuellesBild := 0;
+          end else
+          begin
+
+               if aktuellesBild <= laenge then
+               begin
+                    inc(aktuellesBild);
+                    BildLaden('Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif');
+               end else
+               begin
+                    Zustand := 'Normal';
+                    Normalzustand := true;
+                    laenge := 27;
+                    aktuellesBild := 0;
+               end;
+          end;
+     end;
+end;
+
+procedure TFLexikon.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+     TMaskottchen.Enabled := false;
+     Maskottchen.Free;
 end;
 
 end.

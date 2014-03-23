@@ -1,11 +1,11 @@
 object Karten: TKarten
-  Left = 232
-  Top = 268
+  Left = 442
+  Top = 208
   Align = alClient
   BorderStyle = bsNone
   Caption = 'Karten'
   ClientHeight = 525
-  ClientWidth = 1008
+  ClientWidth = 784
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,6 +13,7 @@ object Karten: TKarten
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  OnClose = FormClose
   OnCreate = FormCreate
   OnMouseMove = FormMouseMove
   PixelsPerInch = 96
@@ -33,21 +34,6 @@ object Karten: TKarten
     Pen.Style = psClear
     OnMouseMove = FormMouseMove
   end
-  object Maskottchen: TLabel
-    Left = 80
-    Top = 408
-    Width = 413
-    Height = 38
-    Caption = 'Platzhalter für das Maskottchen'
-    Color = clGrayText
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -27
-    Font.Name = 'Comic Sans MS'
-    Font.Style = []
-    ParentColor = False
-    ParentFont = False
-  end
   object LblUeberschrift: TLabel
     Left = 560
     Top = 56
@@ -66,6 +52,7 @@ object Karten: TKarten
     Top = 168
     Width = 105
     Height = 105
+    Cursor = crHandPoint
     Stretch = True
     OnClick = ImgKarteClick
     OnMouseMove = FormMouseMove
@@ -75,7 +62,6 @@ object Karten: TKarten
     Top = 104
     Width = 121
     Height = 97
-    Columns = 2
     Ctl3D = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -84,9 +70,13 @@ object Karten: TKarten
     Font.Style = []
     ItemHeight = 28
     Items.Strings = (
-      'Amerika'
+      'Afrika'
+      'Asien'
+      'Australien'
       'Deutschland'
-      'Europa')
+      'Europa'
+      'Nordamerika'
+      'Südamerika')
     ParentCtl3D = False
     ParentFont = False
     Sorted = True
@@ -107,14 +97,20 @@ object Karten: TKarten
     Font.Style = []
     ItemHeight = 28
     Items.Strings = (
-      'Geografie'
-      'Klima'
-      'Ressourcen')
+      'Politik'
+      'Relief'
+      'Satellit')
     ParentCtl3D = False
     ParentFont = False
     Sorted = True
     TabOrder = 1
     OnClick = LBKartenTypClick
     OnMouseMove = FormMouseMove
+  end
+  object TMaskottchen: TTimer
+    Interval = 200
+    OnTimer = TMaskottchenTimer
+    Left = 32
+    Top = 40
   end
 end

@@ -1,10 +1,10 @@
 object Menue: TMenue
-  Left = 354
-  Top = 195
+  Left = 357
+  Top = 138
   Align = alClient
   BorderStyle = bsNone
-  ClientHeight = 621
-  ClientWidth = 1075
+  ClientHeight = 537
+  ClientWidth = 874
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -18,23 +18,16 @@ object Menue: TMenue
   OnPaint = FormPaint
   PixelsPerInch = 96
   TextHeight = 15
-  object ShpAnmeldung: TShape
-    Left = 20
-    Top = 20
-    Width = 440
-    Height = 340
-    Pen.Color = clWhite
-    Shape = stRoundRect
-  end
   object GBAnmeldung: TGroupBox
     Left = 40
     Top = 40
     Width = 400
-    Height = 300
+    Height = 257
     BiDiMode = bdLeftToRight
     Caption = '               Anmeldung                '
     Color = clWhite
     Ctl3D = False
+    Enabled = False
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -27
@@ -47,9 +40,9 @@ object Menue: TMenue
     TabOrder = 0
     OnMouseMove = GBAnmeldungMouseMove
     object ShpAnmelden: TShape
-      Left = 104
+      Left = 208
       Top = 200
-      Width = 193
+      Width = 177
       Height = 41
       Cursor = crHandPoint
       Shape = stRoundRect
@@ -58,9 +51,9 @@ object Menue: TMenue
       OnMouseUp = LblAnmeldenMouseUp
     end
     object ShpNeu: TShape
-      Left = 104
-      Top = 248
-      Width = 193
+      Left = 16
+      Top = 200
+      Width = 177
       Height = 41
       Cursor = crHandPoint
       Shape = stRoundRect
@@ -69,8 +62,8 @@ object Menue: TMenue
       OnMouseUp = LbLNeuMouseUp
     end
     object LbLNeu: TLabel
-      Left = 112
-      Top = 248
+      Left = 17
+      Top = 200
       Width = 171
       Height = 38
       Cursor = crHandPoint
@@ -82,7 +75,7 @@ object Menue: TMenue
       OnMouseUp = LbLNeuMouseUp
     end
     object LblAnmelden: TLabel
-      Left = 136
+      Left = 233
       Top = 200
       Width = 122
       Height = 38
@@ -1456,19 +1449,20 @@ object Menue: TMenue
       Text = 'Passwort'
       OnChange = EdtPasswortChange
       OnClick = EdtPasswortClick
+      OnKeyDown = EdtPasswortKeyDown
       OnMouseMove = GBAnmeldungMouseMove
     end
     object StLoescheB: TStaticText
       Left = 362
-      Top = 82
+      Top = 83
       Width = 25
-      Height = 39
+      Height = 38
       Cursor = crHandPoint
       AutoSize = False
       Caption = 'X'
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -29
+      Font.Height = -31
       Font.Name = 'Comic Sans MS'
       Font.Style = [fsBold]
       ParentFont = False
@@ -1487,7 +1481,7 @@ object Menue: TMenue
       Caption = 'X'
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -29
+      Font.Height = -31
       Font.Name = 'Comic Sans MS'
       Font.Style = [fsBold]
       ParentFont = False
@@ -1498,12 +1492,12 @@ object Menue: TMenue
     end
   end
   object GBRegistrierung: TGroupBox
-    Left = 480
-    Top = 160
-    Width = 577
-    Height = 385
+    Left = 392
+    Top = 200
+    Width = 426
+    Height = 321
     BiDiMode = bdLeftToRight
-    Caption = '                         Registrierung                        '
+    Caption = '               Registrierung               '
     Color = clWhite
     Ctl3D = False
     Font.Charset = ANSI_CHARSET
@@ -1519,8 +1513,8 @@ object Menue: TMenue
     OnMouseMove = GBRegistrierungMouseMove
     object ShpZurueck: TShape
       Left = 16
-      Top = 328
-      Width = 225
+      Top = 264
+      Width = 185
       Height = 41
       Cursor = crHandPoint
       Shape = stRoundRect
@@ -1529,19 +1523,19 @@ object Menue: TMenue
       OnMouseUp = LblZurueckMouseUp
     end
     object ShpBestaetigen: TShape
-      Left = 336
-      Top = 328
-      Width = 225
+      Left = 216
+      Top = 264
+      Width = 193
       Height = 41
       Cursor = crHandPoint
       Shape = stRoundRect
-      OnMouseDown = LblBestaetigenMouseUp
+      OnMouseDown = LblBestaetigenMouseDown
       OnMouseMove = LblBestaetigenMouseMove
       OnMouseUp = LblBestaetigenMouseUp
     end
     object LblBestaetigen: TLabel
-      Left = 381
-      Top = 328
+      Left = 245
+      Top = 264
       Width = 135
       Height = 38
       Cursor = crHandPoint
@@ -2877,8 +2871,8 @@ object Menue: TMenue
       OnMouseUp = ImgSichtbarRPMouseUp
     end
     object LblZurueck: TLabel
-      Left = 85
-      Top = 328
+      Left = 61
+      Top = 264
       Width = 89
       Height = 38
       Cursor = crHandPoint
@@ -2930,18 +2924,18 @@ object Menue: TMenue
     object STLoescheV: TStaticText
       Left = 282
       Top = 130
-      Width = 25
+      Width = 26
       Height = 39
       Cursor = crHandPoint
       AutoSize = False
       Caption = 'X'
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -29
+      Font.Height = -31
       Font.Name = 'Comic Sans MS'
       Font.Style = [fsBold]
       ParentFont = False
-      TabOrder = 5
+      TabOrder = 4
       OnClick = STLoescheVClick
       OnMouseDown = STLoescheVMouseDown
       OnMouseUp = STLoescheVMouseUp
@@ -2949,54 +2943,21 @@ object Menue: TMenue
     object StLoescheN: TStaticText
       Left = 282
       Top = 170
-      Width = 25
+      Width = 26
       Height = 39
       Cursor = crHandPoint
       AutoSize = False
       Caption = 'X'
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -29
+      Font.Height = -31
       Font.Name = 'Comic Sans MS'
       Font.Style = [fsBold]
       ParentFont = False
-      TabOrder = 6
+      TabOrder = 5
       OnClick = StLoescheNClick
       OnMouseDown = StLoescheNMouseDown
       OnMouseUp = StLoescheNMouseUp
-    end
-    object RgGeschlecht: TRadioGroup
-      Left = 8
-      Top = 256
-      Width = 265
-      Height = 57
-      Cursor = crHandPoint
-      Caption = '             Geschlecht             '
-      Color = clWhite
-      Columns = 2
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -19
-      Font.Name = 'Comic Sans MS'
-      Font.Style = []
-      Items.Strings = (
-        'weiblich'
-        'männlich')
-      ParentColor = False
-      ParentFont = False
-      TabOrder = 4
-      OnClick = RgGeschlechtClick
-    end
-    object MDatei: TMemo
-      Left = 8
-      Top = 40
-      Width = 225
-      Height = 41
-      TabStop = False
-      Lines.Strings = (
-        'MDatei')
-      TabOrder = 7
-      Visible = False
     end
     object EdtRPasswort: TEdit
       Left = 8
@@ -3020,18 +2981,18 @@ object Menue: TMenue
     object StLoescheRP: TStaticText
       Left = 282
       Top = 210
-      Width = 25
+      Width = 26
       Height = 39
       Cursor = crHandPoint
       AutoSize = False
       Caption = 'X'
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -29
+      Font.Height = -31
       Font.Name = 'Comic Sans MS'
       Font.Style = [fsBold]
       ParentFont = False
-      TabOrder = 8
+      TabOrder = 6
       OnClick = StLoescheRPClick
       OnMouseDown = StLoescheRPMouseDown
       OnMouseUp = StLoescheRPMouseUp
@@ -3059,78 +3020,51 @@ object Menue: TMenue
     object STLoescheRB: TStaticText
       Left = 282
       Top = 90
-      Width = 25
+      Width = 26
       Height = 39
       Cursor = crHandPoint
       AutoSize = False
       Caption = 'X'
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -29
+      Font.Height = -31
       Font.Name = 'Comic Sans MS'
       Font.Style = [fsBold]
       ParentFont = False
-      TabOrder = 9
+      TabOrder = 7
       OnClick = STLoescheRBClick
       OnMouseDown = STLoescheRBMouseDown
       OnMouseUp = STLoescheRBMouseUp
     end
-    object RGKlasse: TRadioGroup
-      Left = 336
-      Top = 120
-      Width = 225
-      Height = 73
-      Caption = '                                   '
-      Columns = 3
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -19
-      Font.Name = 'Comic Sans MS'
-      Font.Style = []
-      Items.Strings = (
-        'a'
-        'b'
-        'c'
-        'd'
-        'e'
-        'f')
-      ParentFont = False
-      TabOrder = 11
-      OnClick = RGKlasseClick
-    end
-    object RGStufe: TRadioGroup
-      Left = 336
-      Top = 88
-      Width = 225
-      Height = 57
-      Caption = '              Klasse            '
-      Columns = 3
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -19
-      Font.Name = 'Comic Sans MS'
-      Font.Style = []
-      Items.Strings = (
-        '5'
-        '6'
-        '7')
-      ParentFont = False
-      TabOrder = 10
-      OnClick = RGStufeClick
-    end
+  end
+  object MDatei: TMemo
+    Left = 448
+    Top = 15
+    Width = 130
+    Height = 33
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Comic Sans MS'
+    Font.Style = []
+    Lines.Strings = (
+      'MDatei')
+    ParentFont = False
+    TabOrder = 2
+    Visible = False
   end
   object MenueEffekt: TTimer
     Interval = 1
     OnTimer = MenueEffektTimer
-    Left = 888
-    Top = 64
+    Left = 824
+    Top = 40
   end
   object Zoomen: TTimer
     Enabled = False
     Interval = 1
     OnTimer = ZoomenTimer
-    Left = 848
-    Top = 64
+    Left = 792
+    Top = 40
   end
   object Anmeldungstimer: TTimer
     Enabled = False
@@ -3139,28 +3073,19 @@ object Menue: TMenue
     Left = 376
     Top = 56
   end
-  object CSRegistrierung: TClientSocket
-    Active = False
-    ClientType = ctNonBlocking
-    Port = 0
-    OnRead = CSRegistrierungRead
-    OnError = CSRegistrierungError
-    Left = 976
-    Top = 184
-  end
   object Registrierungstimer: TTimer
     Enabled = False
     Interval = 1
     OnTimer = RegistrierungstimerTimer
-    Left = 920
-    Top = 168
+    Left = 784
+    Top = 192
   end
   object ZurueckRTimer: TTimer
     Enabled = False
     Interval = 1
     OnTimer = ZurueckRTimerTimer
-    Left = 888
-    Top = 168
+    Left = 752
+    Top = 192
   end
   object ZurueckATimer: TTimer
     Enabled = False
@@ -3168,5 +3093,12 @@ object Menue: TMenue
     OnTimer = ZurueckATimerTimer
     Left = 344
     Top = 56
+  end
+  object TMaskottchen: TTimer
+    Enabled = False
+    Interval = 200
+    OnTimer = TMaskottchenTimer
+    Left = 24
+    Top = 320
   end
 end

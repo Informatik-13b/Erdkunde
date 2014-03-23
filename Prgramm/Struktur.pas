@@ -438,7 +438,11 @@ begin
     if GBAnmeldung.Top < Screen.Height div 2 - GBAnmeldung.Height div 2 then
     begin
          GBAnmeldung.Top := GBAnmeldung.Top + 30;
-    end else Anmeldungstimer.Enabled := false;
+    end else
+    begin
+         Anmeldungstimer.Enabled := false;
+         GBAnmeldung.Enabled := true;
+    end;
 end;
 
 

@@ -1,6 +1,7 @@
 object Vollbild: TVollbild
   Left = 324
   Top = 264
+  Cursor = crHandPoint
   Align = alClient
   BorderStyle = bsNone
   Caption = 'Vollbild'
@@ -22,6 +23,7 @@ object Vollbild: TVollbild
     Top = 120
     Width = 120
     Height = 157
+    Cursor = crHandPoint
     AutoSize = True
     Stretch = True
     OnClick = FormClick

@@ -27,6 +27,7 @@ object Menue: TMenue
     Caption = '               Anmeldung                '
     Color = clWhite
     Ctl3D = False
+    Enabled = False
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -27

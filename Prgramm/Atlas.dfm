@@ -52,6 +52,7 @@ object Karten: TKarten
     Top = 168
     Width = 105
     Height = 105
+    Cursor = crHandPoint
     Stretch = True
     OnClick = ImgKarteClick
     OnMouseMove = FormMouseMove
@@ -69,9 +70,13 @@ object Karten: TKarten
     Font.Style = []
     ItemHeight = 28
     Items.Strings = (
-      'Amerika'
+      'Afrika'
+      'Asien'
+      'Australien'
       'Deutschland'
-      'Europa')
+      'Europa'
+      'Nordamerika'
+      'Südamerika')
     ParentCtl3D = False
     ParentFont = False
     Sorted = True
@@ -92,9 +97,9 @@ object Karten: TKarten
     Font.Style = []
     ItemHeight = 28
     Items.Strings = (
-      'Geografie'
-      'Klima'
-      'Ressourcen')
+      'Politik'
+      'Relief'
+      'Satellit')
     ParentCtl3D = False
     ParentFont = False
     Sorted = True

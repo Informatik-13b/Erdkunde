@@ -130,13 +130,13 @@ begin
      begin
           ImgKarte.AutoSize := false;
           ImgKarte.Height := round(ImgKarte.Height * ShpHintergrund2.Width / ImgKarte.Width);  //wird die Höhe angepasst
-          ImgKarte.Width := ShpHintergrund2.Width;    //und die Breite
+          ImgKarte.Width := ShpHintergrund2.Width-1;    //und die Breite
           ImgKarte.Stretch := true;                   // und schließlich ImgKarte.Picture angepasst
      end;
      if ImgKarte.Height > ShpHintergrund2.Width then    // wenn die Höhe... s.o.
      begin
           ImgKarte.Width := round(ImgKarte.Width*ShpHintergrund2.Height / Imgkarte.Height);
-          ImgKarte.Height:= ShpHintergrund2.Height;
+          ImgKarte.Height:= ShpHintergrund2.Height-1;
 
           ImgKarte.Left := ShpHintergrund2.Left + round((ShpHintergrund2.Width-ImgKarte.Width)/ 2);
           ImgKarte.Top := 5*Rand;

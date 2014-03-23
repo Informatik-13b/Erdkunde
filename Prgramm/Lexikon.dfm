@@ -1,6 +1,6 @@
 object FLexikon: TFLexikon
-  Left = 426
-  Top = 228
+  Left = 201
+  Top = 236
   VertScrollBar.Smooth = True
   VertScrollBar.Size = 10
   Align = alClient
@@ -15,8 +15,8 @@ object FLexikon: TFLexikon
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  OnClose = FormClose
   OnCreate = FormCreate
-  OnDestroy = FormDestroy
   OnMouseMove = FormMouseMove
   PixelsPerInch = 96
   TextHeight = 13

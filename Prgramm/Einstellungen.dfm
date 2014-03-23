@@ -1,11 +1,11 @@
 object Profil: TProfil
-  Left = 283
-  Top = 298
+  Left = 0
+  Top = 240
   Align = alClient
   BorderStyle = bsNone
   Caption = 'Profil'
   ClientHeight = 525
-  ClientWidth = 1072
+  ClientWidth = 1008
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,6 +13,7 @@ object Profil: TProfil
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  OnClose = FormClose
   OnCreate = FormCreate
   OnMouseMove = FormMouseMove
   PixelsPerInch = 96
@@ -24,21 +25,6 @@ object Profil: TProfil
     Height = 65
     Pen.Style = psClear
     OnMouseMove = FormMouseMove
-  end
-  object Maskottchen: TLabel
-    Left = 80
-    Top = 408
-    Width = 413
-    Height = 38
-    Caption = 'Platzhalter für das Maskottchen'
-    Color = clGrayText
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -27
-    Font.Name = 'Comic Sans MS'
-    Font.Style = []
-    ParentColor = False
-    ParentFont = False
   end
   object ShpHintergrund2: TShape
     Left = 88
@@ -38497,5 +38483,11 @@ object Profil: TProfil
     RowHeights = (
       24
       24)
+  end
+  object TMaskottchen: TTimer
+    Interval = 200
+    OnTimer = TMaskottchenTimer
+    Left = 32
+    Top = 32
   end
 end

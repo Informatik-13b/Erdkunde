@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  ImageOrten, ShapeSchliessen, OleCtrls, SHDocVw, StdCtrls, ExtCtrls, Grids;
+  ImageOrten, ShapeSchliessen, OleCtrls, SHDocVw, StdCtrls, ExtCtrls, Grids,
+  ImageMaskottchen;
 
 type
     TOrte = record
@@ -16,7 +17,6 @@ type
   TOrte_Finden = class(TForm)
     ShpHintergrund1: TShape;
     LblUeberschrift: TLabel;
-    Maskottchen: TLabel;
     LblStadt: TLabel;
     LblSchwierigkeit: TLabel;
     pruefenTimer: TTimer;
@@ -24,6 +24,7 @@ type
     StrGrdOrte: TStringGrid;
     LblWeiter: TLabel;
     ShpWeiter: TShape;
+    TMaskottchen: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
@@ -38,6 +39,8 @@ type
     procedure LblWeiterClick(Sender: TObject);
     procedure ShpWeiterMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure TMaskottchenTimer(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private-Deklarationen }
     procedure weiter;
@@ -56,6 +59,7 @@ var
   Rand:integer;
   Ort:integer;
   Orteanzahl:integer;
+  Maskottchen:TImageMaskottchen;
 
 implementation
 
@@ -96,6 +100,17 @@ begin
      ShpHintergrund1.Height:= Screen.Height - 2*Rand;
      ShpHintergrund1.Brush.Color := Themenfarbe2;
 
+     Maskottchen := TImageMaskottchen.Create(self);
+     Maskottchen.Height := 15*Rand;
+     Maskottchen.Parent := self;
+     Maskottchen.Width := (Maskottchen.Height * 225) div 300;
+     Maskottchen.Left := Rand + ShpHintergrund1.Width div 2 - Maskottchen.Width div 2;
+     Maskottchen.Top := 16*Rand;
+     Maskottchen.Zustand := 'Normal';
+     Maskottchen.aktuellesBild := 0;
+     Maskottchen.Normalzustand := true;
+     Maskottchen.Laenge := 27;
+
      LblUeberschrift.Font.Size := Screen.Height div 30;
      LblUeberschrift.Top := 2*Rand;
      LblUeberschrift.Font.Color := Themenfarbe1;
@@ -105,11 +120,6 @@ begin
      end;
      LblUeberschrift.Left := ((ShpHintergrund1.Width + 2*Rand) div 2)
                               - LblUeberschrift.Width div 2;
-
-     Maskottchen.Top := 17*Rand;
-     Maskottchen.Left := 2*Rand;
-     Maskottchen.Width := Screen.Width - 5*Rand - ((Screen.Height*133)div 195);
-     Maskottchen.Height := 11*Rand;
 
      LblStadt.Font.Size := Screen.Height div 20;
      LblStadt.Top := 5*Rand;
@@ -306,6 +316,42 @@ procedure TOrte_Finden.ShpWeiterMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
      weiter;
+end;
+
+procedure TOrte_Finden.TMaskottchenTimer(Sender: TObject);
+begin
+     with Maskottchen do
+     begin
+          if Normalzustand = true then
+          begin
+               inc(aktuellesBild);
+               if aktuellesBild <= laenge then
+                  BildLaden('Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif')
+
+          else aktuellesBild := 0;
+          end else
+          begin
+
+               if aktuellesBild <= laenge then
+               begin
+                    inc(aktuellesBild);
+                    BildLaden('Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif');
+               end else
+               begin
+                    Zustand := 'Normal';
+                    Normalzustand := true;
+                    laenge := 27;
+                    aktuellesBild := 0;
+               end;
+          end;
+     end;
+end;
+
+procedure TOrte_Finden.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+     TMaskottchen.Enabled := false;
+     Maskottchen.Free;
 end;
 
 end.

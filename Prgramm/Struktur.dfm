@@ -1,10 +1,10 @@
 object Menue: TMenue
-  Left = 0
-  Top = 11
+  Left = 357
+  Top = 138
   Align = alClient
   BorderStyle = bsNone
-  ClientHeight = 555
-  ClientWidth = 784
+  ClientHeight = 537
+  ClientWidth = 874
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -3076,15 +3076,15 @@ object Menue: TMenue
     Enabled = False
     Interval = 1
     OnTimer = RegistrierungstimerTimer
-    Left = 824
-    Top = 104
+    Left = 784
+    Top = 192
   end
   object ZurueckRTimer: TTimer
     Enabled = False
     Interval = 1
     OnTimer = ZurueckRTimerTimer
-    Left = 792
-    Top = 104
+    Left = 752
+    Top = 192
   end
   object ZurueckATimer: TTimer
     Enabled = False
@@ -3092,5 +3092,12 @@ object Menue: TMenue
     OnTimer = ZurueckATimerTimer
     Left = 344
     Top = 56
+  end
+  object TMaskottchen: TTimer
+    Enabled = False
+    Interval = 200
+    OnTimer = TMaskottchenTimer
+    Left = 24
+    Top = 320
   end
 end

@@ -24,7 +24,7 @@ type
     procedure LBStichwoerterClick(Sender: TObject);
     procedure StichwortAnpassen;
     procedure TMaskottchenTimer(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private-Deklarationen }
   public
@@ -62,17 +62,6 @@ begin
                                                  // welches Fenster geschlossen werden soll.
      Rand := Screen.Height div 30;
 
-     Maskottchen := TImageMaskottchen.Create(self);
-     Maskottchen.Parent := self;
-     Maskottchen.Left := 8*Rand;
-     Maskottchen.Top := 15*Rand;
-     Maskottchen.Height := 14*Rand;
-     Maskottchen.Width := (Maskottchen.Height * 225) div 300;
-     Maskottchen.Zustand := 'Normal';
-     Maskottchen.aktuellesBild := 0;
-     Maskottchen.Normalzustand := true;
-     Maskottchen.Laenge := 27;
-
      self.DoubleBuffered := true;                                                //   |
                                                                                     //   |
      ShpHintergrund1.Left := Rand;                                                  //   V
@@ -87,6 +76,17 @@ begin
      ShpHintergrund2.Height:= Screen.Height - 2*Rand;
      ShpHintergrund2.Brush.Color := Themenfarbe2;
 
+     Maskottchen := TImageMaskottchen.Create(self);
+     Maskottchen.Height := 15*Rand;
+     Maskottchen.Parent := self;
+     Maskottchen.Width := (Maskottchen.Height * 225) div 300;
+     Maskottchen.Left := Rand + ShpHintergrund1.Width div 2 - Maskottchen.Width div 2;
+     Maskottchen.Top := 16*Rand;
+     Maskottchen.Zustand := 'Normal';
+     Maskottchen.aktuellesBild := 0;
+     Maskottchen.Normalzustand := true;
+     Maskottchen.Laenge := 27;
+
      LBStichwoerter.Left := ShpHintergrund2.Left + Rand;
      LBStichwoerter.Top  := 2*Rand;
      LBStichwoerter.Width := ShpHintergrund2.Width - 2*Rand;
@@ -97,7 +97,7 @@ begin
      MText.Left := 2*Rand;
      MText.Top := 5*Rand;
      MText.Width := ShpHintergrund1.Width - 2*Rand;
-     MText.Height := ShpHintergrund1.Height - Maskottchen.Height - 6* Rand;
+     MText.Height := ShpHintergrund1.Height - Maskottchen.Height - 3* Rand;
      MText.Color := Themenfarbe1;
      MText.Font.Color := Themenfarbe2;
 
@@ -196,7 +196,8 @@ begin
           begin
                inc(aktuellesBild);
                if aktuellesBild <= laenge then
-                  BildLaden(ExtractFilePath(ParamStr(0)) + 'Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif')
+                  BildLaden('Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif')
+
           else aktuellesBild := 0;
           end else
           begin
@@ -204,7 +205,7 @@ begin
                if aktuellesBild <= laenge then
                begin
                     inc(aktuellesBild);
-                    BildLaden(ExtractFilePath(ParamStr(0)) + 'Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif');
+                    BildLaden('Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif');
                end else
                begin
                     Zustand := 'Normal';
@@ -216,9 +217,10 @@ begin
      end;
 end;
 
-procedure TFLexikon.FormDestroy(Sender: TObject);
+procedure TFLexikon.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
      TMaskottchen.Enabled := false;
+     Maskottchen.Free;
 end;
 
 end.

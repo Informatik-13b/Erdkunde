@@ -24,6 +24,8 @@ type
     { Published-Deklarationen }
   end;
 
+var Pfad :string;
+
 
 procedure Register;
 
@@ -33,6 +35,7 @@ constructor TImageMaskottchen.Create(AOwner:TComponent);
 begin
      inherited Create(AOwner);
      Stretch := true;
+     Pfad := ExtractFilePath(ParamStr(0));
 end;
 
 procedure TImageMaskottchen.BildLaden(Datei: string);
@@ -41,7 +44,7 @@ var
    OLEBild : TOleGraphic;
 begin
      OLEBild := TOleGraphic.Create;
-     FStream := TFileStream.Create(Datei, fmOpenRead or fmShareDenyNone);
+     FStream := TFileStream.Create(Pfad + '\' + Datei, fmOpenRead or fmShareDenyNone);
      try
         OLEBild.LoadFromStream(FStream);
         Picture.Assign(OLEBild);

@@ -31,7 +31,7 @@ procedure TVollbild.FormCreate(Sender: TObject);
 begin
      Bild.Stretch := false;
      Bild.Autosize := true;
-     Bild.Picture.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder/Atlas/' + Atlas.Region + Atlas.Typ + '.jpg');
+     Bild.Picture.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder\Atlas\' + Atlas.Region + '\'  + Atlas.Typ + '.jpg');
      ImageAusrichten;
 end;
 

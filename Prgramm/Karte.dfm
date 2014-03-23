@@ -1,6 +1,6 @@
 object Orte_Finden: TOrte_Finden
-  Left = 0
-  Top = 56
+  Left = 205
+  Top = 276
   Align = alClient
   BorderStyle = bsNone
   Caption = 'Orte_Finden'
@@ -13,6 +13,7 @@ object Orte_Finden: TOrte_Finden
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  OnClose = FormClose
   OnCreate = FormCreate
   OnMouseMove = FormMouseMove
   PixelsPerInch = 96
@@ -81,21 +82,6 @@ object Orte_Finden: TOrte_Finden
     ParentFont = False
     Transparent = True
   end
-  object Maskottchen: TLabel
-    Left = 200
-    Top = 288
-    Width = 413
-    Height = 38
-    Caption = 'Platzhalter für das Maskottchen'
-    Color = clAppWorkSpace
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -27
-    Font.Name = 'Comic Sans MS'
-    Font.Style = []
-    ParentColor = False
-    ParentFont = False
-  end
   object ShpWeiter: TShape
     Left = 56
     Top = 200
@@ -154,5 +140,11 @@ object Orte_Finden: TOrte_Finden
     OnTimer = pruefenTimerTimer
     Left = 704
     Top = 24
+  end
+  object TMaskottchen: TTimer
+    Interval = 200
+    OnTimer = TMaskottchenTimer
+    Left = 32
+    Top = 40
   end
 end

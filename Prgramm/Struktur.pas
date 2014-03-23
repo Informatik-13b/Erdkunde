@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, Math, jpeg, ImageButton, ShapeSchliessen, ScktComp;
+  StdCtrls, ExtCtrls, Math, jpeg, ImageButton, ShapeSchliessen, ImageMaskottchen;
 
 type
   TMenue = class(TForm)
@@ -39,6 +39,7 @@ type
     EdtBenutzernameR: TEdit;
     STLoescheRB: TStaticText;
     MDatei: TMemo;
+    TMaskottchen: TTimer;
     procedure FormPaint(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -138,6 +139,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure EdtPasswortKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure TMaskottchenTimer(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -159,6 +161,8 @@ var
   ScreenZaehler: Integer;
   MenueObjekt : array[1..6] of TImageButton;
   SchliessenShape : TShapeSchliessen;
+  Maskottchen:TImageMaskottchen;
+  k,l:integer;
 
   ga, ga2: string;
   lenA : integer;
@@ -199,6 +203,21 @@ end;
 procedure TMenue.FormCreate(Sender: TObject);
 var i : integer;
 begin
+     k := round(3*((Screen.Height / 3)) / 4);        // (normale Größe)
+     l := round(15*((Screen.Height / 3)) / 18);      // (zoom Größe)
+
+     Rand := Screen.Height div 30;
+     Maskottchen := TImageMaskottchen.Create(self);
+     Maskottchen.Height := 17*Rand;
+     Maskottchen.Parent := self;
+     Maskottchen.Width := (Maskottchen.Height * 225) div 300;
+     Maskottchen.Left := Screen.Width div 2 - Maskottchen.Width div 2;
+     Maskottchen.Top := Screen.Height div 2 - Maskottchen.Height div 2 + Rand;
+     Maskottchen.Zustand := 'Normal';
+     Maskottchen.aktuellesBild := 0;
+     Maskottchen.Normalzustand := true;
+     Maskottchen.Laenge := 27;
+
      GBAnmeldung.Top := -GBAnmeldung.Height;
      GBAnmeldung.Left := Screen.Width div 2 - GBAnmeldung.Width div 2;
      GBRegistrierung.Top := -GBRegistrierung.Height;
@@ -308,10 +327,8 @@ begin
 end;
 
 procedure TMenue.ZoomenTimer(Sender: TObject);       // Ein permanenter Timer...
-var i,k,l :integer;
+var i :integer;
 begin
-     k := round(3*((Screen.Height / 3)) / 4);        // (normale Größe)
-     l := round(15*((Screen.Height / 3)) / 18);      // (zoom Größe)
      for i := 1 to 5 do                       // 1-5: Titel wird nicht gezoomt!!!
      begin
           if (MenueObjekt[i].Zoom = true) and         // prüft ob, ein Menüobjekt im Zoom-Modus ist
@@ -899,6 +916,7 @@ begin
           MenueObjekt[4].Enabled := true;
           MenueObjekt[5].Enabled := true;
           Zoomen.Enabled := true;
+          TMaskottchen.Enabled := true;
      end;
 end;
 
@@ -1167,5 +1185,37 @@ procedure TMenue.EdtPasswortKeyDown(Sender: TObject; var Key: Word;
        end;
   end;
 
+
+procedure TMenue.TMaskottchenTimer(Sender: TObject);
+begin
+     with Maskottchen do
+     begin
+          if Normalzustand = true then
+          begin
+               inc(aktuellesBild);
+               if aktuellesBild <= laenge then
+                  BildLaden('Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif')
+
+          else
+          begin
+               aktuellesBild := 0;
+          end;
+          end else
+          begin
+
+               if aktuellesBild <= laenge then
+               begin
+                    inc(aktuellesBild);
+                    BildLaden('Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif');
+               end else
+               begin
+                    Zustand := 'Normal';
+                    Normalzustand := true;
+                    laenge := 27;
+                    aktuellesBild := 0;
+               end;
+          end;
+     end;
+end;
 
 end.

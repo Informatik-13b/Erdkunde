@@ -1,6 +1,6 @@
 object Karten: TKarten
-  Left = 158
-  Top = 232
+  Left = 442
+  Top = 208
   Align = alClient
   BorderStyle = bsNone
   Caption = 'Karten'
@@ -13,6 +13,7 @@ object Karten: TKarten
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  OnClose = FormClose
   OnCreate = FormCreate
   OnMouseMove = FormMouseMove
   PixelsPerInch = 96
@@ -32,21 +33,6 @@ object Karten: TKarten
     Height = 65
     Pen.Style = psClear
     OnMouseMove = FormMouseMove
-  end
-  object Maskottchen: TLabel
-    Left = 80
-    Top = 408
-    Width = 413
-    Height = 38
-    Caption = 'Platzhalter für das Maskottchen'
-    Color = clGrayText
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -27
-    Font.Name = 'Comic Sans MS'
-    Font.Style = []
-    ParentColor = False
-    ParentFont = False
   end
   object LblUeberschrift: TLabel
     Left = 560
@@ -115,5 +101,11 @@ object Karten: TKarten
     TabOrder = 1
     OnClick = LBKartenTypClick
     OnMouseMove = FormMouseMove
+  end
+  object TMaskottchen: TTimer
+    Interval = 200
+    OnTimer = TMaskottchenTimer
+    Left = 32
+    Top = 40
   end
 end

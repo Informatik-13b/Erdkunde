@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ShapeSchliessen, ExtCtrls, Grids, ColorGrd, jpeg;
+  StdCtrls, ShapeSchliessen, ExtCtrls, Grids, ColorGrd, jpeg, ImageMaskottchen;
 
 type
     TOrte = record
@@ -14,12 +14,12 @@ type
      KoSy_x, KoSy_y : integer;
     end;
   TProfil = class(TForm)
-    Maskottchen: TLabel;
     ShpHintergrund1: TShape;
     ShpHintergrund2: TShape;
     ImgFarbe: TImage;
     LblFarbe: TLabel;
     StrGrdOrte: TStringGrid;
+    TMaskottchen: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
@@ -29,6 +29,8 @@ type
     procedure OrteLaden;
     procedure GridSpeichern;
     procedure GridLaden;
+    procedure TMaskottchenTimer(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private-Deklarationen }
   public
@@ -41,7 +43,7 @@ var
   Themenfarbe2: TColor;
   SchliessenShape:TShapeSchliessen;
   Rand:integer;  // Maßeinheit abhängig von der Bildschirmauflösung
-  Farbe1:boolean=true;
+  Maskottchen:TImageMaskottchen;
 
 implementation
 
@@ -65,10 +67,6 @@ begin
      SchliessenShape.Fenster := Profil;           // Wichtig! Das Fenster wird übergeben, damit die Komponente weiß
                                                        // welches Fenster geschlossen werden soll.
      Rand := Screen.Height div 30;
-     Maskottchen.Top := 17*Rand;
-     Maskottchen.Left := 2*Rand;                                                    // Platzvergabe der Objekte in Abhängigkeit der Auflösung
-     Maskottchen.Width := Screen.Width - 8*Rand - ((Screen.Height*133)div 195);     //   |
-     Maskottchen.Height := 11*Rand;
 
      ShpHintergrund1.Left := Rand;                                                  //   V
      ShpHintergrund1.Top  := Rand;
@@ -82,9 +80,20 @@ begin
      ShpHintergrund2.Height:= Screen.Height - 2*Rand;
      ShpHintergrund2.Brush.Color := Themenfarbe2;
 
+     Maskottchen := TImageMaskottchen.Create(self);
+     Maskottchen.Height := 15*Rand;
+     Maskottchen.Parent := self;
+     Maskottchen.Width := (Maskottchen.Height * 225) div 300;
+     Maskottchen.Left := Rand + ShpHintergrund1.Width div 2 - Maskottchen.Width div 2;
+     Maskottchen.Top := 16*Rand;
+     Maskottchen.Zustand := 'Normal';
+     Maskottchen.aktuellesBild := 0;
+     Maskottchen.Normalzustand := true;
+     Maskottchen.Laenge := 27;
+
      ImgFarbe.Left := 2*Rand;
      ImgFarbe.Top := 3*Rand;
-     ImgFarbe.Height := 10*Rand;
+     ImgFarbe.Height := 12*Rand;
      ImgFarbe.Width := ShpHintergrund1.Width - 2*Rand;
 
      LblFarbe.Left := 2*Rand;
@@ -246,5 +255,40 @@ begin
      end;
 end;
 
+
+procedure TProfil.TMaskottchenTimer(Sender: TObject);
+begin
+     with Maskottchen do
+     begin
+          if Normalzustand = true then
+          begin
+               inc(aktuellesBild);
+               if aktuellesBild <= laenge then
+                  BildLaden('Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif')
+
+          else aktuellesBild := 0;
+          end else
+          begin
+
+               if aktuellesBild <= laenge then
+               begin
+                    inc(aktuellesBild);
+                    BildLaden('Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif');
+               end else
+               begin
+                    Zustand := 'Normal';
+                    Normalzustand := true;
+                    laenge := 27;
+                    aktuellesBild := 0;
+               end;
+          end;
+     end;
+end;
+
+procedure TProfil.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+     TMaskottchen.Enabled := false;
+     Maskottchen.Free;
+end;
 
 end.

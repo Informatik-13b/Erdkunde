@@ -4,23 +4,25 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  ShapeSchliessen, ExtCtrls, StdCtrls;
+  ShapeSchliessen, ExtCtrls, StdCtrls, ImageMaskottchen;
 
 type
   TKarten = class(TForm)
     LBRegion: TListBox;
     ShpHintergrund2: TShape;
     ShpHintergrund1: TShape;
-    Maskottchen: TLabel;
     LBKartenTyp: TListBox;
     LblUeberschrift: TLabel;
     ImgKarte: TImage;
+    TMaskottchen: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure LBKartenTypClick(Sender: TObject);
     procedure ImageAusrichten;
     procedure ImgKarteClick(Sender: TObject);
+    procedure TMaskottchenTimer(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private-Deklarationen }
   public
@@ -34,6 +36,7 @@ var
   SchliessenShape:TShapeSchliessen;
   Rand:integer;  // Maßeinheit abhängig von der Bildschirmauflösung
   Region,Typ:string;
+  Maskottchen:TImageMaskottchen;
 
 implementation
 
@@ -57,10 +60,6 @@ begin
      SchliessenShape.Fenster := Karten;           // Wichtig! Das Fenster wird übergeben, damit die Komponente weiß
                                                        // welches Fenster geschlossen werden soll.
      Rand := Screen.Height div 30;
-     Maskottchen.Top := 17*Rand;
-     Maskottchen.Left := 2*Rand;                                                    // Platzvergabe der Objekte in Abhängigkeit der Auflösung
-     Maskottchen.Width := Screen.Width - 8*Rand - ((Screen.Height*133)div 195);     //   |
-     Maskottchen.Height := 11*Rand;
 
      ShpHintergrund1.Left := Rand;                                                  //   V
      ShpHintergrund1.Top  := Rand;
@@ -74,6 +73,17 @@ begin
      ShpHintergrund2.Height:= Screen.Height - 6*Rand;
      ShpHintergrund2.Brush.Color := Themenfarbe2;
 
+     Maskottchen := TImageMaskottchen.Create(self);
+     Maskottchen.Height := 15*Rand;
+     Maskottchen.Parent := self;
+     Maskottchen.Width := (Maskottchen.Height * 225) div 300;
+     Maskottchen.Left := Rand + ShpHintergrund1.Width div 2 - Maskottchen.Width div 2;
+     Maskottchen.Top := 16*Rand;
+     Maskottchen.Zustand := 'Normal';
+     Maskottchen.aktuellesBild := 0;
+     Maskottchen.Normalzustand := true;
+     Maskottchen.Laenge := 27;
+
      ImgKarte.Left :=  2*Rand + ShpHintergrund1.Width;
      ImgKarte.Top := 5*Rand;
 
@@ -86,14 +96,14 @@ begin
      LBRegion.Left := 2*Rand;
      LBRegion.Top := 2*Rand;
      LBRegion.Width := ShpHintergrund1.Width - 9*Rand;
-     LBRegion.Height := ShpHintergrund1.Height - Maskottchen.Height - 3* Rand;
+     LBRegion.Height := ShpHintergrund1.Height - Maskottchen.Height;
      LBRegion.Color := Themenfarbe1;
      LbRegion.Font.Color := Themenfarbe2;
 
      LBKartenTyp.Left := 2*Rand + LBRegion.Width;
      LBKartenTyp.Top := 2*Rand;
      LBKartenTyp.Width := ShpHintergrund1.Width - 2*Rand - LBRegion.Width;
-     LBKartenTyp.Height := ShpHintergrund1.Height - Maskottchen.Height - 3* Rand;
+     LBKartenTyp.Height := ShpHintergrund1.Height - Maskottchen.Height;
      LBKartenTyp.Color := Themenfarbe1;
      LbKartenTyp.Font.Color := Themenfarbe2;
 
@@ -110,7 +120,7 @@ begin
      LblUeberschrift.Caption := Region + ' - ' + Typ;   //Überschrift wird gesetzt
      ImgKarte.Stretch := false;
      ImgKarte.Autosize := true;
-     ImgKarte.Picture.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder\Atlas\' + Region + Typ + '.jpg');
+     ImgKarte.Picture.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder\Atlas\' + Region + '\' + Typ + '.jpg');
      ImageAusrichten;                        // Karte wird ausgerichtet
 end;
 
@@ -155,6 +165,39 @@ begin
 end;
 
 
+procedure TKarten.TMaskottchenTimer(Sender: TObject);
+begin
+     with Maskottchen do
+     begin
+          if Normalzustand = true then
+          begin
+               inc(aktuellesBild);
+               if aktuellesBild <= laenge then
+                  BildLaden('Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif')
 
+          else aktuellesBild := 0;
+          end else
+          begin
+
+               if aktuellesBild <= laenge then
+               begin
+                    inc(aktuellesBild);
+                    BildLaden('Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif');
+               end else
+               begin
+                    Zustand := 'Normal';
+                    Normalzustand := true;
+                    laenge := 27;
+                    aktuellesBild := 0;
+               end;
+          end;
+     end;
+end;
+
+procedure TKarten.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+     TMaskottchen.Enabled := false;
+     Maskottchen.Free;
+end;
 
 end.

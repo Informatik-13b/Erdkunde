@@ -25,12 +25,12 @@ Karlsruhe,97
 Mannheim,76
 Augsburg,85
 Wiesbaden,8
-Gelsenkirchen,76
-Mönchengladbach,51
+Gelsenkirchen,69
+Mönchengladbach,42
 Braunschweig,66
 Chemnitz,49
 Aachen,20
-Kiel,465
+Kiel,429
 "Halle (Saale)",360
 Magdeburg,258
 Krefeld,32
@@ -52,9 +52,9 @@ Oldenburg,5
 Osnabrück,171
 Solingen,10
 Herne,5
-Neuss,74
+Neuss,36
 Heidelberg,21
-Darmstadt,165
+Darmstadt,134
 Paderborn,96
 Regensburg,220
 Ingolstadt,84
@@ -63,7 +63,7 @@ Wolfsburg,350
 Fürth,10
 Ulm,293
 Heilbronn,54
-"Offenbach am Main",171
+"Offenbach am Main",140
 Göttingen,18
 Bottrop,78
 Pforzheim,2
@@ -76,6 +76,6 @@ Bremerhaven,326
 Jena,70
 Trier,24
 Erlangen,186
-Moers,72
-Geesthacht,402
-Durchschnitt,98
+Moers,71
+Geesthacht,392
+Durchschnitt,96

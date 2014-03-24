@@ -95,14 +95,14 @@ begin
 
      LBRegion.Left := 2*Rand;
      LBRegion.Top := 2*Rand;
-     LBRegion.Width := ShpHintergrund1.Width - 9*Rand;
+     LBRegion.Width := (ShpHintergrund1.Width - 2*Rand) div 2;
      LBRegion.Height := ShpHintergrund1.Height - Maskottchen.Height;
      LBRegion.Color := Themenfarbe1;
      LbRegion.Font.Color := Themenfarbe2;
 
      LBKartenTyp.Left := 2*Rand + LBRegion.Width;
      LBKartenTyp.Top := 2*Rand;
-     LBKartenTyp.Width := ShpHintergrund1.Width - 2*Rand - LBRegion.Width;
+     LBKartenTyp.Width := LBRegion.Width;
      LBKartenTyp.Height := ShpHintergrund1.Height - Maskottchen.Height;
      LBKartenTyp.Color := Themenfarbe1;
      LbKartenTyp.Font.Color := Themenfarbe2;

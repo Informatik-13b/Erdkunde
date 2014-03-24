@@ -242,6 +242,9 @@ begin
           EdtIP.Visible := true;
           EdtIP.Enabled := true;
           EdtIP.Text := EdtIPV.Text;
+          EdtIP.Font.Color := clWhite;
+          EdtIP.Left := Screen.Width div 2 - EdtIP.Width div 2;
+          EdtIP.Top := Screen.Height div 2 - EdtIP.Height div 2;
      end;
 end;
 

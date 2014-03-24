@@ -15,6 +15,8 @@ uses
 
 begin
   Application.Initialize;
+  Application.HelpFile := 'C:\Users\Arne\Documents\Schule\13\Informatik\Info-13b\Erdkunde\README.md';
+  Application.Title := 'GEOWELT';
   Application.CreateForm(TMenue, Menue);
   Application.Run;
 end.

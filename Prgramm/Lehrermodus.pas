@@ -74,6 +74,8 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure StatusAnpassen;
+    procedure CSSendenDisconnect(Sender: TObject;
+      Socket: TCustomWinSocket);
   private
     { Private-Deklarationen }
     function IPpruefen(Text:string):boolean;
@@ -219,11 +221,11 @@ begin
           sleep(1000);
           LblStatus.Caption := SuchKarte.SatzLadenAnzeigen(stadt)+ '?';
           StatusAnpassen;
-          Spielzeit.Enabled := true;
-          pruefenTimer.Enabled := true;
           SuchKarte.geklickt := false;
           SuchKarte.Enabled := true;
           LblSpielzeit.Caption := IntToStr(Zeit);
+          pruefenTimer.Enabled := true;
+          Spielzeit.Enabled := true;
      end;
      if Nachricht = 'close' then close;
 
@@ -237,14 +239,11 @@ begin
      end else
      begin                  // während der Erstanmeldung wird die Empfangende Index beim Schüler gespeichert
           Menue.MDatei.Lines[4] := Nachricht;
+          Menue.MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(Menue.index) + '.dat');
+          index := StrToInt(Nachricht);
           CSSenden.Active := false;
-          GBLehreranmeldung.Visible := false;
-          EdtIP.Visible := true;
-          EdtIP.Enabled := true;
-          EdtIP.Text := EdtIPV.Text;
-          EdtIP.Font.Color := clWhite;
-          EdtIP.Left := Screen.Width div 2 - EdtIP.Width div 2;
-          EdtIP.Top := Screen.Height div 2 - EdtIP.Height div 2;
+          ShowMessage('Du hast dich erfolgreich angemeldet!');
+          close;
      end;
 end;
 
@@ -335,7 +334,7 @@ begin
                CSSenden.Host := EdtIP.Text;
                CSSenden.Active := true;
                sleep(100);
-          end;
+          end else ShowMessage('IP-Adresse überprüfen!');
      end;
 end;
 
@@ -358,8 +357,9 @@ procedure TLehrer.CSSendenError(Sender: TObject; Socket: TCustomWinSocket;
   ErrorEvent: TErrorEvent; var ErrorCode: Integer);
 begin
      ErrorCode := 0;
-     Showmessage('Server nicht erreichbar!' + #13 + 'Ip-Adresse überprüfen');
+     Showmessage('Server nicht erreichbar!' + #13 + 'Ip-Adresse überprüfen!');
      if Erstanmeldung = true then LblSenden.Enabled := true;
+     CSSenden.Active := false;
 end;
 
 procedure TLehrer.EdtVornameLChange(Sender: TObject);
@@ -628,6 +628,13 @@ end;
 procedure TLehrer.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
      CSSenden.Close;
+end;
+
+procedure TLehrer.CSSendenDisconnect(Sender: TObject;
+  Socket: TCustomWinSocket);
+begin
+     CSSenden.Close;
+     Close;
 end;
 
 end.

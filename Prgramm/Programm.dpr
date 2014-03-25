@@ -9,7 +9,8 @@ uses
   Atlas in 'Atlas.pas' {Karten},
   Grossbild in 'Grossbild.pas' {Vollbild},
   Einstellungen in 'Einstellungen.pas' {Profil},
-  Lehrermodus in 'Lehrermodus.pas' {Lehrer};
+  Lehrermodus in 'Lehrermodus.pas' {Lehrer},
+  Impressum in 'Impressum.pas' {Autor};
 
 {$R *.RES}
 

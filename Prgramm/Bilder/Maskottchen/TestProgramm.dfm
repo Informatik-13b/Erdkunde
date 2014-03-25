@@ -1,8 +1,8 @@
 object Form1: TForm1
-  Left = 372
-  Top = 0
-  Width = 983
-  Height = 728
+  Left = 266
+  Top = 126
+  Width = 544
+  Height = 585
   Caption = 'Form1'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -14,45 +14,45 @@ object Form1: TForm1
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object Button1: TButton
+  object BtnSchlafen: TButton
     Left = 56
     Top = 16
     Width = 75
     Height = 25
-    Caption = 'Button1'
+    Caption = 'Schlafen'
     TabOrder = 0
-    OnClick = Button1Click
+    OnClick = BtnSchlafenClick
   end
-  object Button2: TButton
+  object BtnFreuen: TButton
     Left = 160
     Top = 16
     Width = 75
     Height = 25
-    Caption = 'Button2'
+    Caption = 'Freuen'
     TabOrder = 1
-    OnClick = Button2Click
+    OnClick = BtnFreuenClick
   end
-  object Button3: TButton
+  object BtnTraurig: TButton
     Left = 264
     Top = 16
     Width = 75
     Height = 25
-    Caption = 'Button3'
+    Caption = 'Traurig'
     TabOrder = 2
-    OnClick = Button3Click
+    OnClick = BtnTraurigClick
   end
-  object Button4: TButton
+  object BtnWeinen: TButton
     Left = 368
     Top = 16
     Width = 75
     Height = 25
-    Caption = 'Button4'
+    Caption = 'Weinen'
     TabOrder = 3
-    OnClick = Button4Click
+    OnClick = BtnWeinenClick
   end
-  object Timer1: TTimer
-    Interval = 1
-    OnTimer = Timer1Timer
+  object TMaskottchen: TTimer
+    Interval = 200
+    OnTimer = TMaskottchenTimer
     Left = 480
     Top = 24
   end

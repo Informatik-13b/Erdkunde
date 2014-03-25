@@ -177,7 +177,7 @@ var
 
 implementation
 
-uses Karte,Lexikon,Atlas,Einstellungen,Lehrermodus;
+uses Karte,Lexikon,Atlas,Einstellungen,Lehrermodus,Impressum;
 
 {$R *.DFM}
 
@@ -216,7 +216,7 @@ begin
      Maskottchen.Zustand := 'Normal';
      Maskottchen.aktuellesBild := 0;
      Maskottchen.Normalzustand := true;
-     Maskottchen.Laenge := 27;
+     Maskottchen.Laenge := 81;
 
      GBAnmeldung.Top := -GBAnmeldung.Height;
      GBAnmeldung.Left := Screen.Width div 2 - GBAnmeldung.Width div 2;
@@ -1151,6 +1151,11 @@ begin
           MDAtei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat');
           angemeldet := false;
      end;
+     Maskottchen.free;
+     TMaskottchen.Enabled := false;
+     Application.CreateForm(TAutor,Autor);
+     Autor.BringToFront;
+     Autor.ShowModal;
 end;
 
 procedure TMenue.EdtPasswortKeyDown(Sender: TObject; var Key: Word;
@@ -1199,25 +1204,25 @@ begin
           begin
                inc(aktuellesBild);
                if aktuellesBild <= laenge then
-                  BildLaden('Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif')
-
+                  BildLaden('Bilder\Maskottchen\' + Zustand + '\('+ IntToStr(aktuellesBild) + ').gif')
           else
           begin
-               aktuellesBild := 0;
+               GehSchlafen;
+               TMaskottchen.Interval := 500;
           end;
           end else
           begin
-
                if aktuellesBild <= laenge then
                begin
                     inc(aktuellesBild);
-                    BildLaden('Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif');
+                    BildLaden('Bilder\Maskottchen\' + Zustand + '\'+ '(' + IntToStr(aktuellesBild) + ').gif');
                end else
                begin
                     Zustand := 'Normal';
                     Normalzustand := true;
-                    laenge := 27;
+                    laenge := 81;
                     aktuellesBild := 0;
+                    TMaskottchen.Interval := 200;
                end;
           end;
      end;

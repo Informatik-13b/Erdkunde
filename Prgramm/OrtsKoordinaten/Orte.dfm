@@ -63,7 +63,6 @@ object Form1: TForm1
     Width = 33
     Height = 21
     TabStop = False
-    ReadOnly = True
     TabOrder = 0
     Text = '1'
   end

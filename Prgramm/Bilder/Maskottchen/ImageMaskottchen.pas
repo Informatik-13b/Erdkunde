@@ -12,6 +12,7 @@ type
     { Private-Deklarationen }
   protected
     { Protected-Deklarationen }
+    procedure Click; override;
   public
     { Public-Deklarationen }
     Zustand:string;
@@ -20,25 +21,55 @@ type
     Normalzustand:boolean;
     constructor Create(AOwner:TComponent);override;
     procedure BildLaden(Datei: string);
-    procedure Ausfuehren(Emotion:string);
+    procedure GehSchlafen;
+    procedure FreuDich;
+    procedure SeiTraurig;
+    procedure Weine;
   published
     { Published-Deklarationen }
   end;
+
+var Pfad :string;
 
 
 procedure Register;
 
 implementation
 
+uses TestProgramm;
+
 constructor TImageMaskottchen.Create(AOwner:TComponent);
-var i,k:integer;
 begin
      inherited Create(AOwner);
-     Height := 200;
-     Width := 150;
-     Top := 100;
-     Left := -100;
      Stretch := true;
+     Pfad := ExtractFilePath(ParamStr(0));
+end;
+
+procedure TImageMaskottchen.Click;
+var i:byte;
+begin
+     inherited Click;
+     randomize;
+     i := random(4);
+     case i of
+     0: begin
+             SeiTraurig;
+             Form1.TMaskottchen.Interval := 200;
+        end;
+     1: begin
+             Weine;
+             Form1.TMaskottchen.Interval := 200;
+        end;
+     2: begin
+             GehSchlafen;
+             Form1.TMaskottchen.Interval := 500;
+        end;
+     3: begin
+             FreuDich;
+             Form1.TMaskottchen.Interval := 200;
+        end;
+     end;
+     
 end;
 
 procedure TImageMaskottchen.BildLaden(Datei: string);
@@ -47,7 +78,7 @@ var
    OLEBild : TOleGraphic;
 begin
      OLEBild := TOleGraphic.Create;
-     FStream := TFileStream.Create(Datei, fmOpenRead or fmShareDenyNone);
+     FStream := TFileStream.Create(Pfad + '\' + Datei, fmOpenRead or fmShareDenyNone);
      try
         OLEBild.LoadFromStream(FStream);
         Picture.Assign(OLEBild);
@@ -57,56 +88,38 @@ begin
      end;
 end;
 
-{procedure TImageMaskottchen.pause(zeit:longint);
-var zeit1 : longint;
+procedure TImageMaskottchen.GehSchlafen;
 begin
-     zeit1 := GetTickCount;
-     repeat
-           Application.ProcessMessages;
-     until (GetTickCount - zeit1 > zeit);
-end;  }
-
-procedure TImageMaskottchen.Ausfuehren(Emotion:string);
-var i : integer;
-begin
-   {  if Emotion = 'Gehen' then
-     begin
-          laenge := 64;
-          Zeit := 8;
-          Height := 200;
-          Width := 450;
-     end else
-     if Emotion = 'Weinen' then
-     begin
-          laenge := 24;
-          Zeit := 8;
-          left := 200;
-          Height := 300;
-          Width := 225;
-     end else
-     if Emotion = 'Schlafen' then
-     begin
-          laenge := 28;
-          Zeit := 8;
-          left := 200;
-          Height := 300;
-          Width := 225;
-     end else
-     if Emotion = 'TotalWeinen' then
-     begin
-          laenge := 18;
-          Zeit := 1;
-          left := 200;
-          Height := 300;
-          Width := 225;
-     end;     }
-
-{for i := 1 to laenge do
-begin
-     BildLaden(Emotion + '/'+ IntToStr(i) + '.gif');
-     pause(Zeit);
-end; }
+     aktuellesBild := 0;
+     Zustand := 'Schlafen';
+     Normalzustand := false;
+     laenge := 27;
 end;
+
+procedure TImageMaskottchen.Weine;
+begin
+     aktuellesBild := 0;
+     Zustand := 'TotalWeinen';
+     Normalzustand := false;
+     laenge := 17;
+end;
+
+procedure TImageMaskottchen.SeiTraurig;
+begin
+     aktuellesBild := 0;
+     Zustand := 'Weinen';
+     Normalzustand := false;
+     laenge := 23;
+end;
+
+procedure TImageMaskottchen.FreuDich;
+begin
+     aktuellesBild := 0;
+     Zustand := 'Lachen';
+     Normalzustand := false;
+     laenge := 20;
+end;
+
 
 procedure Register;
 begin

@@ -8,17 +8,17 @@ uses
 
 type
   TForm1 = class(TForm)
-    Button1: TButton;
-    Button2: TButton;
-    Button3: TButton;
-    Button4: TButton;
-    Timer1: TTimer;
+    BtnSchlafen: TButton;
+    BtnFreuen: TButton;
+    BtnTraurig: TButton;
+    BtnWeinen: TButton;
+    TMaskottchen: TTimer;
     procedure FormCreate(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
-    procedure Button3Click(Sender: TObject);
-    procedure Button4Click(Sender: TObject);
-    procedure Timer1Timer(Sender: TObject);
+    procedure BtnSchlafenClick(Sender: TObject);
+    procedure BtnFreuenClick(Sender: TObject);
+    procedure BtnTraurigClick(Sender: TObject);
+    procedure BtnWeinenClick(Sender: TObject);
+    procedure TMaskottchenTimer(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -38,65 +38,44 @@ implementation
 procedure TForm1.FormCreate(Sender: TObject);
 begin
      Maskottchen := TImageMaskottchen.Create(self);
+     Maskottchen.Height := 500;
      Maskottchen.Parent := self;
-     Maskottchen.Left := 100;
-     Maskottchen.Top := 100;
-     Maskottchen.Height := 300;
-     Maskottchen.Width := 225;
+     Maskottchen.Width := (Maskottchen.Height * 225) div 300;
+     Maskottchen.Left := Form1.Width div 2 - Maskottchen.Width div 2;
+     Maskottchen.Top := Form1.Height div 2 - Maskottchen.Height div 2;
      Maskottchen.Zustand := 'Normal';
      Maskottchen.aktuellesBild := 0;
      Maskottchen.Normalzustand := true;
-     Maskottchen.Laenge := 7;
+     Maskottchen.Laenge := 81;
 
      self.DoubleBuffered := true;
 end;
 
-procedure TForm1.Button1Click(Sender: TObject);
+procedure TForm1.BtnSchlafenClick(Sender: TObject);
 begin
-     with Maskottchen do
-    begin
-         Normalzustand := false;
-         Zustand := 'Lachen';
-         laenge := 20;
-         aktuellesBild := 0;
-    end;
-
+     Maskottchen.GehSchlafen;
+     TMaskottchen.Interval := 500;
 end;
 
-procedure TForm1.Button2Click(Sender: TObject);
+procedure TForm1.BtnFreuenClick(Sender: TObject);
 begin
-    with Maskottchen do
-    begin
-         Normalzustand := false;
-         Zustand := 'Weinen';
-         laenge := 23;
-         aktuellesBild := 0;
-    end;
+    Maskottchen.FreuDich;
+    TMaskottchen.Interval := 200;
 end;
 
-procedure TForm1.Button3Click(Sender: TObject);
+procedure TForm1.BtnTraurigClick(Sender: TObject);
 begin
-    with Maskottchen do
-    begin
-         Normalzustand := false;
-         Zustand := 'Schlafen';
-         laenge := 27;
-         aktuellesBild := 0;
-    end;
+    Maskottchen.SeiTraurig;
+    TMaskottchen.Interval := 200;
 end;
 
-procedure TForm1.Button4Click(Sender: TObject);
+procedure TForm1.BtnWeinenClick(Sender: TObject);
 begin
-      with Maskottchen do
-    begin
-         Normalzustand := false;
-         Zustand := 'TotalWeinen';
-         laenge := 17;
-         aktuellesBild := 0;
-    end;
+    Maskottchen.Weine;
+    TMaskottchen.Interval := 200;
 end;
 
-procedure TForm1.Timer1Timer(Sender: TObject);
+procedure TForm1.TMaskottchenTimer(Sender: TObject);
 begin
      with Maskottchen do
      begin
@@ -104,25 +83,28 @@ begin
           begin
                inc(aktuellesBild);
                if aktuellesBild <= laenge then
-                  BildLaden(Zustand + '/'+ IntToStr(aktuellesBild) + '.gif')
-               else aktuellesBild := 0;
+                  BildLaden(Zustand + '\('+ IntToStr(aktuellesBild) + ').gif')
+
+          else
+          begin
+               GehSchlafen;
+               TMaskottchen.Interval := 500;
+          end;
           end else
           begin
-          
                if aktuellesBild <= laenge then
                begin
                     inc(aktuellesBild);
-                    BildLaden(Zustand + '/'+ IntToStr(aktuellesBild) + '.gif');
+                    BildLaden(Zustand + '\('+ IntToStr(aktuellesBild) + ').gif');
                end else
                begin
                     Zustand := 'Normal';
                     Normalzustand := true;
-                    laenge := 7;
+                    laenge := 81;
                     aktuellesBild := 0;
+                    TMaskottchen.Interval := 200;
                end;
-
-     end;
-
+          end;
      end;
 end;
 

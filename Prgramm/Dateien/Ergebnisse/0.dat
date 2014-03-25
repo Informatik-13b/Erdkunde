@@ -6,7 +6,7 @@ Hamburg,2
 München,375
 Köln,2
 "Frankfurt am Main",77
-Stuttgart,50
+Stuttgart,27
 Düsseldorf,21
 Dortmund,18
 Essen,16
@@ -22,7 +22,7 @@ Bielefeld,154
 Bonn,14
 Münster,30
 Karlsruhe,97
-Mannheim,76
+Mannheim,23
 Augsburg,85
 Wiesbaden,8
 Gelsenkirchen,69
@@ -32,7 +32,7 @@ Chemnitz,49
 Aachen,20
 Kiel,429
 "Halle (Saale)",334
-Magdeburg,258
+Magdeburg,47
 Krefeld,32
 Freiburg,133
 Lübeck,401
@@ -76,6 +76,6 @@ Bremerhaven,326
 Jena,70
 Trier,24
 Erlangen,186
-Moers,71
-Geesthacht,392
-Durchschnitt,93
+Moers,50
+Geesthacht,35
+Durchschnitt,84

@@ -253,7 +253,7 @@ object Lehrer: TLehrer
     OnRead = CSSendenRead
     OnError = CSSendenError
     Left = 72
-    Top = 24
+    Top = 40
   end
   object Spielzeit: TTimer
     Enabled = False

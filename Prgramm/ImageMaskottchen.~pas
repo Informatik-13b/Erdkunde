@@ -41,7 +41,6 @@ begin
      inherited Create(AOwner);
      Stretch := true;
      Pfad := ExtractFilePath(ParamStr(0));
-     Cursor := crHandPoint;
 end;
 
 procedure TImageMaskottchen.Click;

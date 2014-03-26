@@ -153,11 +153,13 @@ begin
           Vorname := EdtVornameL.Text;   // Bei der Erstanmeldung werden der Lehrerkonsole
           Nachname := EdtNameL.Text;     // die Namen gesendet
 
-          sleep(100);
+          CSSenden.Socket.SendText(',' + Vorname + ',' + Nachname +',,'); // Eine Nachricht im Kommatextformat
+
+          {sleep(100);
           CSSenden.Socket.SendText ('1' + Vorname);
           sleep(100);
           CSSenden.Socket.SendText ('2' + Nachname);
-          sleep(100);
+          sleep(100); }
      end else                                    // ansonsten der index
      begin
           if index < 10 then IndexMessage := 'i0' + IntToStr(index)
@@ -172,7 +174,9 @@ begin
           SuchKarte.Top := 0;
           SuchKarte.Left := Screen.Width div 2 - SuchKarte.Width div 2;
           SuchKarte.Picture.Bitmap.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder/DKarte Ohne Städte.bmp'); // Die Deutschlandkarte wird geladen
-                                               //Die Karte wird geöffnet
+          SuchKarte.geklickt := true;                                     //Die Karte wird geöffnet
+          SuchKarte.Enabled := false;
+
           EdtIP.Visible := false;
           EdtIP.Enabled := false;
      end;
@@ -208,17 +212,6 @@ begin
           end;
           Zeit := sZeit;
           SuchKarte.Picture.Bitmap.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder/DKarte Ohne Städte.bmp'); // neu geladen
-          LblStatus.Caption := 'BEREIT!?';      // Countdown...
-          StatusAnpassen;
-          LblSpielzeit.Caption := '3';
-          repaint;
-          sleep(1000);
-          LblSpielzeit.Caption := '2';
-          repaint;
-          sleep(1000);
-          LblSpielzeit.Caption := '1';
-          repaint;
-          sleep(1000);
           LblStatus.Caption := SuchKarte.SatzLadenAnzeigen(stadt)+ '?';
           StatusAnpassen;
           SuchKarte.geklickt := false;
@@ -240,7 +233,6 @@ begin
      begin                  // während der Erstanmeldung wird die Empfangende Index beim Schüler gespeichert
           Menue.MDatei.Lines[4] := Nachricht;
           Menue.MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(Menue.index) + '.dat');
-          index := StrToInt(Nachricht);
           CSSenden.Active := false;
           ShowMessage('Du hast dich erfolgreich angemeldet!');
           close;
@@ -633,7 +625,6 @@ end;
 procedure TLehrer.CSSendenDisconnect(Sender: TObject;
   Socket: TCustomWinSocket);
 begin
-     CSSenden.Close;
      Close;
 end;
 

@@ -101,6 +101,7 @@ procedure TFormAnmeldung.DateiVerbindung ();
 
 procedure TFormAnmeldung.FormCreate(Sender: TObject);
   begin
+     Position:=poScreenCenter;
      BtnAnlegen.Caption := 'Benutzer anlegen';
      BtnBeenden.Caption := 'Beenden';
      BtnCopy.Caption := 'C';

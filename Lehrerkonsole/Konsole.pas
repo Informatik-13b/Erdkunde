@@ -111,6 +111,7 @@ procedure TFormKonsole.FormCreate(Sender: TObject);
            Cells[5,0] := 'J/M';
         end;
       ServerSocketLehrer.Port := 8080;
+      ServerSocketLehrer.Active := False;
       ComboBoxKlassenNamen.Sorted := True;  //Sortiert die Einträge in der CB
       ComboBoxKlassenNamen.Style := csDropDownList;
       ShapeServerStatus.Brush.Color := clYellow;
@@ -139,6 +140,7 @@ procedure TFormKonsole.FormCreate(Sender: TObject);
 
 procedure TFormKonsole.FormClose(Sender: TObject; var Action: TCloseAction);
  var LastClass_Liste: TStringList;
+     i: Integer;
   begin
      LastClass_Liste := TStringList.Create;
      Try
@@ -149,6 +151,10 @@ procedure TFormKonsole.FormClose(Sender: TObject; var Action: TCloseAction);
       Finally
         LastClass_Liste.Free;    //Speichert die zuletz geladene Klasse!
        end;
+      Try
+       For i := 0 to ServerSocketLehrer.Socket.ActiveConnections -1 do
+         ServerSocketLehrer.Socket.Connections[i].SendText('close');
+      Except end;
      FormAnmeldung.Close();
      FormSchuler_Add.Close();
   end;
@@ -190,6 +196,8 @@ procedure TFormKonsole.ServerSocketLehrerClientError(Sender: TObject;
      showmessage('Server-Fehler' + IntToStr(ErrorCode));
      ShapeServerStatus.Brush.Color := clRed;
      ErrorCode := 0;    //Fehlermeldung bei Server
+     FormStadt_Auswahl.EdtOnline.Text := '0';
+     FormStadt_Auswahl.EdtOnline.Brush.Color := clRed;
   end;
 
 function TFormKonsole.Entschluesseln(Text:String): String;
@@ -218,7 +226,7 @@ procedure TFormKonsole.Addition (x: integer);
      c2 := schluessel[zaehler];
      p2 := pos (c2, ga);
      ga2 := copy (ga, p2, lenA -p2+1)
-            + copy (ga, 1, p2-1);
+            + copy (ga, 1, p2-1);        //Verschlüsselungs-procedure
   end;
 
 Procedure TFormKonsole.ErzeugeGa();
@@ -358,7 +366,7 @@ procedure TFormKonsole.BtnServerAktionClick(Sender: TObject);
 
 procedure TFormKonsole.BtnKlasseChangeClick(Sender: TObject);
   begin
-     If ServerStatus = True then
+     If ServerStatus = True then      //Bedingungen werden geprüft...
       begin
        If Application.MessageBox('Wollen Sie den Server wirklich beenden?'
                                 +#10#13+
@@ -414,7 +422,7 @@ procedure TFormKonsole.Anleitungffnen1Click(Sender: TObject);
 
 procedure TFormKonsole.Bearbeiten1Click(Sender: TObject);
   begin
-     With FormSchuler_Add do
+     With FormSchuler_Add do    //Menü-Liste
        begin
           EdtName.Text := '...';
           EdtVorname.Text := '...';
@@ -430,7 +438,7 @@ procedure TFormKonsole.Bearbeiten1Click(Sender: TObject);
 
 procedure TFormKonsole.BtnModus_LehrerClick(Sender: TObject);
   begin
-     FormStadt_Auswahl.Show;
+     FormStadt_Auswahl.Show;   //Städte-Auswahl Form wird geöffnet
      FormStadt_Auswahl.BringToFront;
      FormStadt_Auswahl.OrteEintragen;
      FormStadt_Auswahl.EdtKlasse.Text := Geladene_Klasse;
@@ -450,6 +458,7 @@ procedure TFormKonsole.ServerSocketLehrerClientRead(Sender: TObject;
        begin                         // Nur wenn Verbindung hergestellt wird!!!
           EdtSchuelerOnline.TExt := IntToStr(ServerSocketLehrer.Socket.ActiveConnections);
           FormStadt_Auswahl.EdtOnline.Text := IntToStr(ServerSocketLehrer.Socket.ActiveConnections);
+          FormStadt_Auswahl.EdtOnline.Brush.Color := clLime;
           EdtNachricht.Text := Nachricht;
           x := EdtNachricht.Text;
           EdtNachricht.Clear;
@@ -485,20 +494,20 @@ procedure TFormKonsole.ServerSocketLehrerClientRead(Sender: TObject;
                          Gesamtpunkte := StrToInt (StringGridPunkte.Cells[2,m])
                                          + StrToInt(StringGridPunkte.Cells[3,m]);
                          StringGridPunkte.Cells[3,m] := IntToStr (Gesamtpunkte);
-                         If FormSpiel.Spielen = True then FormSpiel.InsertionSort();
-                      end;
+                      end;       //Eintragungen ins Punkte-StringGrid
                  end;
 
             end;
           Stat_Anzahl := Stat_Anzahl +1;
           FormSpiel.ProgressBarStand.Position :=Stat_Anzahl;
+          If FormSpiel.Spielen = True then FormSpiel.InsertionSort();
           If Stat_Anzahl = ServerSocketLehrer.Socket.ActiveConnections then
             begin
                FormSpiel.BtnAktion.Enabled := True;
                showmessage('Alle Schüler haben geantwortet!');  //Ende der Runde!
                FormSpiel.Spielen := False;
                FormSpiel.InsertionSort;
-            end;
+            end;         //Wenn alle Spieler geantwortet haben.
        end;
   end;
 
@@ -535,10 +544,15 @@ procedure TFormKonsole.ServerSocketLehrerClientDisconnect(Sender: TObject;
        begin
           StringGridUbersicht.Cells[3,k] := '';
        end;
-     For i := 0 to ServerSocketLehrer.Socket.ActiveConnections do
-       begin
+     For i := 0 to ServerSocketLehrer.Socket.ActiveConnections -1 do
+       begin                         //überprüft, wer noch online ist!
           ServerSocketLehrer.Socket.Connections[i].SendText('NewIndex');
        end;            //Es wird überprüft, wer noch online ist!
+     If ServerSocketLehrer.Socket.ActiveConnections >= 1 then
+       begin
+          FormStadt_Auswahl.EdtOnline.Brush.Color := clLime;
+       end
+      Else FormStadt_Auswahl.EdtOnline.Brush.Color := clRed; 
   end;
 
 

@@ -20,7 +20,7 @@ begin
   Application.CreateForm(TFormAnlegen, FormAnlegen);
   Application.CreateForm(TFormKonsole, FormKonsole);
   Application.CreateForm(TFormKlasseAnlegen, FormKlasseAnlegen);
-  Application.CreateForm(TFormKlasseVerbinden, FormKlasseVerbinden);
+ // Application.CreateForm(TFormKlasseVerbinden, FormKlasseVerbinden);
   Application.CreateForm(TFormKlasseLoschen, FormKlasseLoschen);
   Application.CreateForm(TFormSchuler_Add, FormSchuler_Add);
   Application.CreateForm(TFormStadt_Auswahl, FormStadt_Auswahl);

@@ -53,7 +53,7 @@ var
   FormStadt_Auswahl: TFormStadt_Auswahl;
   aktueller_record : integer;
   ROrte : TOrte;
-  Orte_Datei : file of TOrte;
+  Orte_Datei : file of TOrte;  //Orte-Datei
   Zeit :Integer;
 implementation
 
@@ -76,7 +76,7 @@ procedure TFormStadt_Auswahl.FormCreate(Sender: TObject);
      FormStadt_Auswahl.Visible := False;
      RemoveMenu(GetSystemMenu(handle, false), SC_MOVE, MF_BYCOMMAND);
      RemoveMenu(GetSystemMenu(handle, false),SC_SIZE, MF_BYCOMMAND);
-     With StringGridStadt do
+     With StringGridStadt do      //verhindern, dass die Form verschoben wird!
        begin
           Cells[0,0] := 'Nr.';
           Cells[1,0] := 'Stadt-Name';
@@ -91,6 +91,7 @@ procedure TFormStadt_Auswahl.FormCreate(Sender: TObject);
      BtnStart.Enabled := False;
      EdtIp.Text := GetLocalIPAddress;
      EdtOnline.Enabled := False;
+     EdtOnline.Brush.Color := clRed;
   end;
 
 
@@ -103,7 +104,7 @@ procedure TFormStadt_Auswahl.OrteEintragen();
         begin
            Reset(Orte_Datei);
            SatzLadenAnzeigen;                 // erster Datensatz wird geladen
-           StringGridStadt.RowCount := FileSize(Orte_Datei);  //Grid wird initialisiert
+           StringGridStadt.RowCount := FileSize(Orte_Datei)+2;  //Grid wird initialisiert
 
            While aktueller_record < FileSize(Orte_Datei) do
              begin                            //gesamtes Grid wird gefüllt
@@ -112,7 +113,7 @@ procedure TFormStadt_Auswahl.OrteEintragen();
              end;
         end
        Else Rewrite(Orte_Datei);
-       SetLength(Zellen_Farbe, FileSize(Orte_Datei));  //legt die Länge des Arrays fest
+       SetLength(Zellen_Farbe, FileSize(Orte_Datei)+1);  //legt die Länge des Arrays fest
            For i := 1 to High(Zellen_Farbe) do Zellen_Farbe[i] := 0;
   end;
 
@@ -134,7 +135,7 @@ procedure TFormStadt_Auswahl.SatzLadenAnzeigen;
 
 
 procedure TFormStadt_Auswahl.FormClose(Sender: TObject;
- var Action: TCloseAction);
+ var Action: TCloseAction);                //die Form wird geschlossen
   begin
      CloseFile(Orte_Datei);
      FormKonsole.Visible := True;
@@ -143,21 +144,23 @@ procedure TFormStadt_Auswahl.FormClose(Sender: TObject;
   end;
 
 procedure TFormStadt_Auswahl.StringGridStadtDblClick(Sender: TObject);
- var i,k: Integer;
+ var i,k: Integer;             //nur bei Doppelklick auf das Grid
   begin
+     If StringGridStadt.Row +1 < StringGridStadt.RowCount then
+     begin
      k := 0;
      With StringGridStadt do
       begin
        If Zellen_Farbe[Row] = 1 then Zellen_Farbe[Row] := 0
         Else Zellen_Farbe[Row] := 1;
-       Row := StringGridStadt.Row +1;
+       Row :=  StringGridStadt.Row +1;      //zellenfarbe wird festgelegt!
       end;
      For i := 1 to High(Zellen_Farbe) do
       If Zellen_Farbe[i] = 1 then Inc(k);
      EdtAnzahl.Text := IntToStr(k);
      EdtSpielzeit.Text := (IntToStr(k*Zeit) + ' Sekunden');
      If k = 0 then BtnStart.Enabled := False Else BtnStart.Enabled := True;
-  end;
+  end; end;
 
 procedure TFormStadt_Auswahl.StringGridStadtDrawCell(Sender: TObject; ACol,
   ARow: Integer; Rect: TRect; State: TGridDrawState);
@@ -189,6 +192,7 @@ procedure TFormStadt_Auswahl.BtnStartClick(Sender: TObject);
        end;
     With FormSpiel do            // Zugriff auf die nächste Form
       begin
+         Gespielt := 0;
          ProgressBarStand.Max := Anzahl_Verbindungen; //initiallisiert die ProgressBar
          GridEinlesen();
          BtnAktion.Caption := 'Starten';
@@ -212,7 +216,7 @@ procedure TFormStadt_Auswahl.BtnStartClick(Sender: TObject);
   end;
 
 procedure TFormStadt_Auswahl.ComboBoxZeitChange(Sender: TObject);
- var Anzahl: Integer;
+ var Anzahl: Integer;     //Die Zeit wird geändert!
   begin
      Zeit := StrToInt (ComboBoxZeit.Items [ComboBoxZeit.ItemIndex]);
      Anzahl := StrToInt(EdtAnzahl.Text);

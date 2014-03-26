@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ScktComp, WinSock, ExtCtrls;
+  StdCtrls, ScktComp, WinSock, ExtCtrls, Grids;
 
 type
   TFormSchuler_Add = class(TForm)
@@ -25,6 +25,7 @@ type
     Label6: TLabel;
     EdtPos: TEdit;
     EdtAuswahl: TEdit;
+    StringGridName: TStringGrid;
     procedure FormCreate(Sender: TObject);
     function GetLocalIpAddress : String;
     procedure ServerSocketSchuler_AddClientError(Sender: TObject;
@@ -81,6 +82,7 @@ procedure TFormSchuler_Add.FormCreate(Sender: TObject);
      BtnAbbrechen.Caption := 'Anmeldung Abbrechen';
      ShapeServerStatus.Brush.Color := clYellow;
      ServerSocketSchuler_Add.Port := 8080;
+     ServerSocketSchuler_Add.Active := False;
      EdtName.Enabled := False;
      EdtVorname.Enabled := False;
      RemoveMenu(GetSystemMenu(handle, false), SC_MOVE, MF_BYCOMMAND);
@@ -179,44 +181,32 @@ procedure TFormSchuler_Add.KlassenNamen_Finden();
 procedure TFormSchuler_Add.ServerSocketSchuler_AddClientRead(
  Sender: TObject; Socket: TCustomWinSocket);
  var Nachricht: String;
-     x: String;
-     i: integer;
   begin
     Try
       Nachricht := Socket.ReceiveText;  //Empfangene Nachricht wird eingelesen!
       BtnAdd.Enabled := True; //Lehrer kann fortfahren
-      If Nachricht[1] = '1' then
-        begin
-           EdtVorname.Text := Nachricht;
-           x := EdtVorname.Text;
-           EdtVorname.Clear;
-           For i := 2 to Length(x) do
-             EdtVorname.Text := EdtVorname.Text + x[i];
-        end;     //Das 1.Zeichen muss gelöscht werden, da es sich um eine Zahl handelt
-      If Nachricht[1] = '2' then
-        begin
-           EdtNAme.Text := Nachricht;
-           x := EdtName.Text;
-           EdtName.Clear;
-           For i := 2 to Length(x) do
-             EdtName.Text := EdtName.Text + x[i];
-        end;   //Das 1.Zeichen muss gelöscht werden, da es sich um den Server-Index handelt
-      If Nachricht[1] = '3' then Geschlecht := Nachricht[2];
+      StringGridName.Rows[1].CommaText := Nachricht;
+      EdtVorname.Text := StringGridName.Cells[1,1];
+      EdtName.Text := StringGridName.Cells[2,1];
+      Geschlecht := 'J';
+      
       EdtPos.Text := IntToStr (Index);
-      //ServerSocketSchuler_Add.Socket.Connections[0].SendText(EdtPos.Text);  //Sendet den Index
+      ServerSocketSchuler_Add.Socket.Connections[0].SendText(EdtPos.Text);  //Sendet den Index
      Except showmessage('Fehler bei Datenempfang');
      end;
   end;
-  
+
 
 procedure TFormSchuler_Add.BtnAddClick(Sender: TObject);
+ var i: Integer;
   begin
      With FormKonsole.StringGridUbersicht do
        begin
           RowCount := RowCount +1;
           Cells[1,RowCount-1] := EdtName.Text;
           Cells[2,RowCount-1] := EdtVorname.Text;
-          Cells[4,RowCount-1] := Geschlecht;
+          Cells[4,RowCount-1] := Klassen_Auswahl;
+          Cells[6,RowCount-1] := IntToStr (Index);
        end;
      SchreibeKlassenDatei();
      Showmessage('Der Schüler: ' + #10#13 +
@@ -229,11 +219,12 @@ procedure TFormSchuler_Add.BtnAddClick(Sender: TObject);
      FormKonsole.GridEinlesen;
      With FormKonsole.StringGridUbersicht do
         begin
+           For i := 1 to RowCount -1 do Cells[0,i] := IntToStr(i);
            Cells[0,0] := 'Nr.';
            Cells[2,0] := 'Vorname';
            Cells[1,0] := 'Name';
-           Cells[3,0] := 'Klasse';
-           Cells[4,0] := 'K';   //Trägt die Bezeichnungen ins Grid ein
+           Cells[3,0] := 'ON';
+           Cells[4,0] := 'Klasse';   //Trägt die Bezeichnungen ins Grid ein
         end;
   end;
 

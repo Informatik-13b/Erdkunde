@@ -1,6 +1,6 @@
 object FormKlasseVerbinden: TFormKlasseVerbinden
-  Left = 473
-  Top = 175
+  Left = 379
+  Top = 200
   Width = 645
   Height = 558
   BorderIcons = [biSystemMenu, biMinimize]
@@ -250,9 +250,11 @@ object FormKlasseVerbinden: TFormKlasseVerbinden
   object StringGridKlassenNamen: TStringGrid
     Left = 88
     Top = 96
-    Width = 289
+    Width = 457
     Height = 33
+    Enabled = False
     TabOrder = 9
+    Visible = False
   end
   object Memo: TMemo
     Left = 560
@@ -271,6 +273,15 @@ object FormKlasseVerbinden: TFormKlasseVerbinden
     Height = 21
     TabOrder = 11
     Text = 'EdtPos'
+    Visible = False
+  end
+  object StringGridSpeicher: TStringGrid
+    Left = 88
+    Top = 136
+    Width = 449
+    Height = 25
+    Enabled = False
+    TabOrder = 12
     Visible = False
   end
   object ServerSocketAnmeldung: TServerSocket

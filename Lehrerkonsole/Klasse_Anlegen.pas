@@ -74,7 +74,7 @@ procedure TFormKlasseAnlegen.FormCreate(Sender: TObject);
      EdtAnzahl.Text := '';
      BtnServerOffnen.Enabled := False;
      EdtKlassenName.Text := '';
-     RemoveMenu(GetSystemMenu(handle, false), SC_MOVE, MF_BYCOMMAND);
+     //RemoveMenu(GetSystemMenu(handle, false), SC_MOVE, MF_BYCOMMAND);
     // RemoveMenu(GetSystemMenu(handle, false),SC_SIZE, MF_BYCOMMAND);
   end;        //verhindert das verschieben er Form!
 
@@ -102,18 +102,21 @@ procedure TFormKlasseAnlegen.BtnServerOffnenClick(Sender: TObject);
         ClickForm.ServerSocketAnmeldung.Active := True;
         ClickForm.ShapeServerStatus.Brush.Color := clLime;
         ClickForm.PositionGrid := 0;
+        ClickForm.Meldungen := 0;
         ClickForm.IP_DateiSchreiben ();
         ClickForm.ProgressBarFortschritt.Max := StrToInt (EdtAnzahl.Text);
-        ClickForm.ProgressBarFortschritt.Position := 0; 
+        ClickForm.ProgressBarFortschritt.Position := 0;
         ClickForm.DateiVerbindung; //Stellt die Verbindung zur Textdatei her!
         ClickForm.ShowModal;
+        //ClickForm.Visible := True;
+        //ClickForm.BringToFront;
        Finally
-        ClickForm.Free;
-        Self.Hide;
-       end;
-      end;
+         ClickForm.Free;
+         Self.Hide;
+        end;
+     end;
  end;
- 
+
 
 procedure TFormKlasseAnlegen.BtnAbbrechenClick(Sender: TObject);
   begin

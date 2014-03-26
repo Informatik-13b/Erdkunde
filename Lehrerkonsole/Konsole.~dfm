@@ -1,10 +1,10 @@
 object FormKonsole: TFormKonsole
-  Left = 335
-  Top = 190
+  Left = 422
+  Top = 218
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Konsole'
-  ClientHeight = 531
+  ClientHeight = 560
   ClientWidth = 788
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -126,7 +126,7 @@ object FormKonsole: TFormKonsole
     DefaultColWidth = 50
     DefaultRowHeight = 30
     RowCount = 14
-    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSelect]
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine]
     ScrollBars = ssVertical
     TabOrder = 0
     OnDblClick = StringGridUbersichtDblClick

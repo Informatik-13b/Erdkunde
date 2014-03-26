@@ -255,10 +255,11 @@ object FormStadt_Auswahl: TFormStadt_Auswahl
     Left = 264
     Top = 240
     Width = 121
-    Height = 23
+    Height = 26
+    Enabled = False
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -13
+    Font.Height = -15
     Font.Name = 'Calibri'
     Font.Style = [fsBold]
     ParentFont = False

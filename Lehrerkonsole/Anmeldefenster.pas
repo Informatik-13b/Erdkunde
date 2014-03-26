@@ -203,7 +203,7 @@ procedure TFormAnmeldung.BtnAnmeldungClick(Sender: TObject);
                          FormKonsole.KlassenNamen_Finden;
                          FormKonsole.GridEinlesen ();
                          FormKonsole.ComboBoxKlassenNamen.SetFocus;
-                         FormKonsole.BtnServerAktion.Click; //aktiviert den Server
+                         //FormKonsole.BtnServerAktion.Click; //aktiviert den Server
                       end         //initialisiert die Konsolen-Form
                      Else FormKlasseAnlegen.Visible := True;    
                   Finally

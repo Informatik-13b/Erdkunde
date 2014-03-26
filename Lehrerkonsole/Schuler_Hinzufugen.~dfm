@@ -207,6 +207,15 @@ object FormSchuler_Add: TFormSchuler_Add
     TabOrder = 8
     Text = 'EdtAuswahl'
   end
+  object StringGridName: TStringGrid
+    Left = 72
+    Top = 56
+    Width = 41
+    Height = 17
+    Enabled = False
+    TabOrder = 9
+    Visible = False
+  end
   object ServerSocketSchuler_Add: TServerSocket
     Active = False
     Port = 8080

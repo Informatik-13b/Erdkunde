@@ -48,6 +48,7 @@ type
     Sortier_Modus: Integer;
     Wert : array of Integer;
     Spielen: Boolean;
+    Gespielt: Integer;
   end;
 
 var
@@ -64,7 +65,7 @@ uses Konsole, Stadt_Auswahl;
 {$R *.DFM}
 
 procedure TFormSpiel.FormCreate(Sender: TObject);
-  begin
+  begin                             //Form wird initialisiert!
      EdtText.Visible := False;
      Spielen := False;
      Position := poScreenCenter;
@@ -80,14 +81,14 @@ procedure TFormSpiel.FormCreate(Sender: TObject);
           Cells[0,0] := 'Nr.';
           Cells[1,0] := 'Vorname';
           Cells[2,0] := 'Entfernung-Stadt';
-          Cells[3,0] := 'Gesamt-Entfernung';
+          Cells[3,0] := 'Gesamt-Entfernung';       //Grid wird beschriftet
        end;
      With StringGridAuswahl do
        begin
           Cells[0,0] := 'Nr.';
           Cells[1,0] := 'Stadtname';
        end;
-     Auswahl_Einlesen();
+     Auswahl_Einlesen();     //ausgewählte Städte werden eingelesen!
      BtnCopy.Caption := 'Admin';
      BtnAbbrechen.Caption := 'Abbrechen';
      BtnPrint.Caption := 'Drucken';
@@ -116,34 +117,44 @@ procedure TFormSpiel.BtnCopyClick(Sender: TObject);
   end;
 
 procedure TFormSpiel.BtnAktionClick(Sender: TObject);
- var Anzahl_Verbindungen,i,k,Pos: Integer;
+ var Anzahl_Verbindungen,i,k,Pos,Zahl: Integer;
   begin
-     If StringGridAuswahl.RowCount = StringGridAuswahl.Row then
+     Inc (Gespielt);
+
+     If StringGridAuswahl.RowCount = Gespielt then
        begin
           FormSpiel.Close;
+          FormKonsole.BringToFront;
+          Zahl := FormKonsole.ServerSocketLehrer.Socket.ActiveConnections;
+          For i := 0 to Zahl -1 do
+            FormKonsole.ServerSocketLehrer.Socket.Connections[i].SendText('close');
           Exit;  //verlässt die Procedure!!
        end;
-     ProgressBarStand.Position := 0;
-     Spielen := True;
-     FormKonsole.Stat_Anzahl := 0;
-     BtnAktion.Enabled := False;
-     BtnAktion.Caption := 'Weiter';
-     If Position1 < (StringGridAuswahl.RowCount -1) then Inc(Position1);
-     StringGridAuswahl.Row := Position1;
-     Zellen_Position[Position1 -1] := 1;
-     Pos := Position1; //"Position" ist ein bereits definierter Bezeichner!
-     For k := 1 to (StringGridPunkte.RowCount -1) do
+     If StringGridAuswahl.RowCount -1 >= Gespielt then
        begin
-           StringGridPunkte.Cells[2,k]:= 'warten ...';
-       end;
-     With FormKonsole do
-       begin
-          Anzahl_Verbindungen := ServerSocketLehrer.Socket.ActiveConnections;
-          For i := 0 to Anzahl_Verbindungen -1 do
-          ServerSocketLehrer.Socket.Connections[i].SendText('S'
+         ProgressBarStand.Position := 0;
+         Spielen := True;
+         FormKonsole.Stat_Anzahl := 0;
+         BtnAktion.Enabled := False;
+         BtnAktion.Caption := 'Weiter';
+         If Position1 < (StringGridAuswahl.RowCount -1) then Inc(Position1);
+         StringGridAuswahl.Row := Position1;
+         Zellen_Position[Position1 -1] := 1;
+         Pos := Position1; //"Position" ist ein bereits definierter Bezeichner!
+         For k := 1 to (StringGridPunkte.RowCount -1) do
+          begin
+             StringGridPunkte.Cells[2,k]:= 'warten ...';
+          end;
+         With FormKonsole do
+          begin
+            Anzahl_Verbindungen := ServerSocketLehrer.Socket.ActiveConnections;
+            For i := 0 to Anzahl_Verbindungen -1 do
+            ServerSocketLehrer.Socket.Connections[i].SendText('S'
                                              +StringGridAuswahl.Cells[2,Pos]);
-       end;               //sendet den Index der Stadt !!!
-     StringGridAuswahl.Row := Position1;
+           end;               //sendet den Index der Stadt !!!
+          StringGridAuswahl.Row := Position1;
+       end;
+      If Gespielt = StringGridAuswahl.RowCount -1 then BtnAktion.Caption := 'Beenden';
   end;
 
 procedure TFormSpiel.StringGridAuswahlDrawCell(Sender: TObject; ACol,
@@ -171,7 +182,7 @@ procedure TFormSpiel.BtnAbbrechenClick(Sender: TObject);
                         Zahl := FormKonsole.ServerSocketLehrer.Socket.ActiveConnections;
                         For i := 0 to Zahl -1 do
                           FormKonsole.ServerSocketLehrer.Socket.Connections[i].SendText('close');
-                      end;
+                      end;   //Alle Clients bekommen den Befehl zum Schließen!
   end;
 
 procedure TFormSpiel.GridEinlesen();
@@ -195,7 +206,7 @@ procedure TFormSpiel.GridEinlesen();
                     StringGridPunkte.Cells[4,i] := StringGridUbersicht.Cells[6,i];
                     StringGridPunkte.Cells[2,i] := '0';
                     StringGridPunkte.Cells[3,i] := '0';
-                 end;
+                 end;           //Grid wird gefüllt!
             end;
        end;
   end;
@@ -228,23 +239,23 @@ procedure TFormSpiel.InsertionSort();
              begin
                 Zelle := StringGridPunkte.Rows[i-1].CommaText;
                 StringGridPunkte.Rows[i].CommaText := Zelle;
-                Dec(i);
+                Dec(i);                  //Die Werte werden sortiert!
              end;
            StringGridPunkte.Rows[i].CommaText := Zelle_Merke;
-        end;
+        end;                     //Die gelöschte Zeile wird ersetzt!
       For k := 1 to StringGridPunkte.RowCount -1 do
       begin
          StringGridPunkte.Cells[0,k]:= IntToStr(k);
       end;
-     Finally end; 
+     Except end; 
   end;
 
 procedure TFormSpiel.BtnPrintClick(Sender: TObject);
- var i,lg: Integer;
+ var i,lg: Integer;          //Druckfunktion
   begin
      If PrintDialog.Execute then
        begin
-          RichEditPrint.Clear;
+          RichEditPrint.Clear;     //REdit wird geleert
           RichEditPrint.Lines.Add ('');
           RichEditPrint.Lines.Add ('  Erdkundelernprogramm' + '   '
                                    + 'OHG  '
@@ -258,13 +269,13 @@ procedure TFormSpiel.BtnPrintClick(Sender: TObject);
                                     + IntToStr (StringGridAuswahl.RowCount -1));
           RichEditPrint.Lines.Add ('');
           RichEditPrint.Lines.Add ('  Platz   ' + 'Vorname   '
-                                   + 'Gesamt-Entfernung');
+                                   + 'Gesamt-Entfernung');  //Design des Drucks
           For i := 1 to StringGridPunkte.RowCount -1 do
             begin
                EdtText.Text := ('    ' + StringGridPunkte.Cells[0,i]
-                                + '     ' +StringGridPunkte.Cells[1,i]);
+                                + '      ' +StringGridPunkte.Cells[1,i]);
                lg := length(EdtText.Text);
-               While lg < 23 do
+               While lg < 21 do   //Die genaue Position der Punkte wird berechnet
                  begin
                     Inc(lg);
                     EdtText.Text := EdtText.Text + ' ';
@@ -276,7 +287,7 @@ procedure TFormSpiel.BtnPrintClick(Sender: TObject);
           RichEditPrint.Lines.Add ('');
           RichEditPrint.Lines.Add ('   '
                                    +'OHG-Geesthacht Informatikprojekt 13b 2014');  
-          RichEditPrint.Print('Delphi_RichEdit');
+          RichEditPrint.Print('Delphi_RichEdit');    //letzte Zeile des Zettels
        end;
   end;
 

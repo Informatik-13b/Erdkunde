@@ -1,6 +1,6 @@
 object FormSpiel: TFormSpiel
-  Left = 294
-  Top = 154
+  Left = 173
+  Top = 176
   Width = 910
   Height = 625
   VertScrollBar.Visible = False
@@ -110,13 +110,11 @@ object FormSpiel: TFormSpiel
     Height = 489
     DefaultColWidth = 40
     DefaultRowHeight = 32
-    Enabled = False
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -16
     Font.Name = 'Calibri'
     Font.Style = [fsBold]
-    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goRowSelect]
     ParentFont = False
     ScrollBars = ssVertical
     TabOrder = 1
@@ -178,6 +176,7 @@ object FormSpiel: TFormSpiel
     Top = 224
     Width = 129
     Height = 23
+    Enabled = False
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -13

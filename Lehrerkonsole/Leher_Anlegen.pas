@@ -145,7 +145,7 @@ procedure TFormAnlegen.SchreibeDatei(NameLehrer: String; Passwort: String);
  var i,k,z,L: Integer;
      PasswortDateiV: TStringList;
   begin
-     With FormAnmeldung do
+     With FormAnmeldung do     //Die Datei wird neu geschrieben
       begin
          StringGridPasswort.RowCount := StringGridPasswort.RowCount +1;
          StringGridPasswort.Cells[0,StringGridPasswort.RowCount-1] := NameLehrer;
@@ -161,7 +161,7 @@ procedure TFormAnlegen.SchreibeDatei(NameLehrer: String; Passwort: String);
                 ErzeugeGa();
                 addition(z);
                 c := kt [z];
-                p := pos (c, ka);
+                p := pos (c, ka);            //Verschlüsselung
                 If p <> 0 then gt := gt +copy (ga2, p, 1)
                  Else gt := gt +c;              //Hier wird verschlüsselt
                end;
@@ -203,7 +203,7 @@ procedure TFormAnlegen.EdtLehrerNameExit(Sender: TObject);
   end;
 
 procedure TFormAnlegen.Erzeuge_Ordner();
- var Liste: TStringList;
+ var Liste: TStringList;    //Ordner für den Lehrer werdne erzeugt!
   begin
      If DirectoryExists('TransportOrdner\LehrerOrdner' + EdtLehrerName.Text) = False
        then CreateDir('TransportOrdner\LehrerOrdner\' +EdtLehrerName.Text);

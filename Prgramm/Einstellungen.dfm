@@ -38480,6 +38480,7 @@ object Profil: TProfil
     ParentCtl3D = False
     ParentFont = False
     TabOrder = 0
+    OnClick = StrGrdOrteClick
     RowHeights = (
       24
       24)

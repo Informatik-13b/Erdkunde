@@ -9,12 +9,15 @@ uses
   Atlas in 'Atlas.pas' {Karten},
   Grossbild in 'Grossbild.pas' {Vollbild},
   Einstellungen in 'Einstellungen.pas' {Profil},
-  Lehrermodus in 'Lehrermodus.pas' {Lehrer};
+  Lehrermodus in 'Lehrermodus.pas' {Lehrer},
+  Impressum in 'Impressum.pas' {Autor};
 
 {$R *.RES}
 
 begin
   Application.Initialize;
+  Application.HelpFile := 'C:\Users\Arne\Documents\Schule\13\Informatik\Info-13b\Erdkunde\README.md';
+  Application.Title := 'GEOWELT';
   Application.CreateForm(TMenue, Menue);
   Application.Run;
 end.

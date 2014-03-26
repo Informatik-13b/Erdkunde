@@ -12,6 +12,7 @@ type
     { Private-Deklarationen }
   protected
     { Protected-Deklarationen }
+    procedure Click; override;
   public
     { Public-Deklarationen }
     Zustand:string;
@@ -20,6 +21,10 @@ type
     Normalzustand:boolean;
     constructor Create(AOwner:TComponent);override;
     procedure BildLaden(Datei: string);
+    procedure GehSchlafen;
+    procedure FreuDich;
+    procedure SeiTraurig;
+    procedure Weine;
   published
     { Published-Deklarationen }
   end;
@@ -36,6 +41,21 @@ begin
      inherited Create(AOwner);
      Stretch := true;
      Pfad := ExtractFilePath(ParamStr(0));
+     Cursor := crHandPoint;
+end;
+
+procedure TImageMaskottchen.Click;
+var i:byte;
+begin
+     inherited Click;
+     randomize;
+     i := random(4);
+     case i of
+     0: SeiTraurig;
+     1: Weine;
+     2: GehSchlafen;
+     3: FreuDich;
+     end;
 end;
 
 procedure TImageMaskottchen.BildLaden(Datei: string);
@@ -52,6 +72,38 @@ begin
             FStream.Free;
             OLEBild.Free;
      end;
+end;
+
+procedure TImageMaskottchen.GehSchlafen;
+begin
+     aktuellesBild := 0;
+     Zustand := 'Schlafen';
+     Normalzustand := false;
+     laenge := 27;
+end;
+
+procedure TImageMaskottchen.Weine;
+begin
+     aktuellesBild := 0;
+     Zustand := 'TotalWeinen';
+     Normalzustand := false;
+     laenge := 17;
+end;
+
+procedure TImageMaskottchen.SeiTraurig;
+begin
+     aktuellesBild := 0;
+     Zustand := 'Weinen';
+     Normalzustand := false;
+     laenge := 23;
+end;
+
+procedure TImageMaskottchen.FreuDich;
+begin
+     aktuellesBild := 0;
+     Zustand := 'Lachen';
+     Normalzustand := false;
+     laenge := 20;
 end;
 
 

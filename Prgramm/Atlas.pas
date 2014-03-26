@@ -82,7 +82,7 @@ begin
      Maskottchen.Zustand := 'Normal';
      Maskottchen.aktuellesBild := 0;
      Maskottchen.Normalzustand := true;
-     Maskottchen.Laenge := 27;
+     Maskottchen.Laenge := 81;
 
      ImgKarte.Left :=  2*Rand + ShpHintergrund1.Width;
      ImgKarte.Top := 5*Rand;
@@ -95,14 +95,14 @@ begin
 
      LBRegion.Left := 2*Rand;
      LBRegion.Top := 2*Rand;
-     LBRegion.Width := ShpHintergrund1.Width - 9*Rand;
+     LBRegion.Width := (ShpHintergrund1.Width - 2*Rand) div 2;
      LBRegion.Height := ShpHintergrund1.Height - Maskottchen.Height;
      LBRegion.Color := Themenfarbe1;
      LbRegion.Font.Color := Themenfarbe2;
 
      LBKartenTyp.Left := 2*Rand + LBRegion.Width;
      LBKartenTyp.Top := 2*Rand;
-     LBKartenTyp.Width := ShpHintergrund1.Width - 2*Rand - LBRegion.Width;
+     LBKartenTyp.Width := LBRegion.Width;
      LBKartenTyp.Height := ShpHintergrund1.Height - Maskottchen.Height;
      LBKartenTyp.Color := Themenfarbe1;
      LbKartenTyp.Font.Color := Themenfarbe2;
@@ -122,6 +122,8 @@ begin
      ImgKarte.Autosize := true;
      ImgKarte.Picture.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder\Atlas\' + Region + '\' + Typ + '.jpg');
      ImageAusrichten;                        // Karte wird ausgerichtet
+     Maskottchen.FreuDich;                                                //Maskottchen Lacht
+     TMaskottchen.Interval := 200;
 end;
 
 procedure TKarten.ImageAusrichten;
@@ -173,22 +175,27 @@ begin
           begin
                inc(aktuellesBild);
                if aktuellesBild <= laenge then
-                  BildLaden('Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif')
+                  BildLaden('Bilder\Maskottchen\' + Zustand + '\('+ IntToStr(aktuellesBild) + ').gif')
 
-          else aktuellesBild := 0;
+          else
+          begin
+               GehSchlafen;
+               TMaskottchen.Interval := 500;
+          end;
           end else
           begin
 
                if aktuellesBild <= laenge then
                begin
                     inc(aktuellesBild);
-                    BildLaden('Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif');
+                    BildLaden('Bilder\Maskottchen\' + Zustand + '\('+ IntToStr(aktuellesBild) + ').gif');
                end else
                begin
                     Zustand := 'Normal';
                     Normalzustand := true;
-                    laenge := 27;
+                    laenge := 81;
                     aktuellesBild := 0;
+                    TMaskottchen.Interval := 200;
                end;
           end;
      end;

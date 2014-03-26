@@ -74,6 +74,8 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure StatusAnpassen;
+    procedure CSSendenDisconnect(Sender: TObject;
+      Socket: TCustomWinSocket);
   private
     { Private-Deklarationen }
     function IPpruefen(Text:string):boolean;
@@ -151,11 +153,13 @@ begin
           Vorname := EdtVornameL.Text;   // Bei der Erstanmeldung werden der Lehrerkonsole
           Nachname := EdtNameL.Text;     // die Namen gesendet
 
-          sleep(100);
+          CSSenden.Socket.SendText(',' + Vorname + ',' + Nachname +',,'); // Eine Nachricht im Kommatextformat
+
+          {sleep(100);
           CSSenden.Socket.SendText ('1' + Vorname);
           sleep(100);
           CSSenden.Socket.SendText ('2' + Nachname);
-          sleep(100);
+          sleep(100); }
      end else                                    // ansonsten der index
      begin
           if index < 10 then IndexMessage := 'i0' + IntToStr(index)
@@ -170,7 +174,9 @@ begin
           SuchKarte.Top := 0;
           SuchKarte.Left := Screen.Width div 2 - SuchKarte.Width div 2;
           SuchKarte.Picture.Bitmap.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder/DKarte Ohne Städte.bmp'); // Die Deutschlandkarte wird geladen
-                                               //Die Karte wird geöffnet
+          SuchKarte.geklickt := true;                                     //Die Karte wird geöffnet
+          SuchKarte.Enabled := false;
+
           EdtIP.Visible := false;
           EdtIP.Enabled := false;
      end;
@@ -206,24 +212,13 @@ begin
           end;
           Zeit := sZeit;
           SuchKarte.Picture.Bitmap.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Bilder/DKarte Ohne Städte.bmp'); // neu geladen
-          LblStatus.Caption := 'BEREIT!?';      // Countdown...
-          StatusAnpassen;
-          LblSpielzeit.Caption := '3';
-          repaint;
-          sleep(1000);
-          LblSpielzeit.Caption := '2';
-          repaint;
-          sleep(1000);
-          LblSpielzeit.Caption := '1';
-          repaint;
-          sleep(1000);
           LblStatus.Caption := SuchKarte.SatzLadenAnzeigen(stadt)+ '?';
           StatusAnpassen;
-          Spielzeit.Enabled := true;
-          pruefenTimer.Enabled := true;
           SuchKarte.geklickt := false;
           SuchKarte.Enabled := true;
           LblSpielzeit.Caption := IntToStr(Zeit);
+          pruefenTimer.Enabled := true;
+          Spielzeit.Enabled := true;
      end;
      if Nachricht = 'close' then close;
 
@@ -237,11 +232,10 @@ begin
      end else
      begin                  // während der Erstanmeldung wird die Empfangende Index beim Schüler gespeichert
           Menue.MDatei.Lines[4] := Nachricht;
+          Menue.MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(Menue.index) + '.dat');
           CSSenden.Active := false;
-          GBLehreranmeldung.Visible := false;
-          EdtIP.Visible := true;
-          EdtIP.Enabled := true;
-          EdtIP.Text := EdtIPV.Text;
+          ShowMessage('Du hast dich erfolgreich angemeldet!');
+          close;
      end;
 end;
 
@@ -332,7 +326,7 @@ begin
                CSSenden.Host := EdtIP.Text;
                CSSenden.Active := true;
                sleep(100);
-          end;
+          end else ShowMessage('IP-Adresse überprüfen!');
      end;
 end;
 
@@ -355,8 +349,9 @@ procedure TLehrer.CSSendenError(Sender: TObject; Socket: TCustomWinSocket;
   ErrorEvent: TErrorEvent; var ErrorCode: Integer);
 begin
      ErrorCode := 0;
-     Showmessage('Server nicht erreichbar!' + #13 + 'Ip-Adresse überprüfen');
+     Showmessage('Server nicht erreichbar!' + #13 + 'Ip-Adresse überprüfen!');
      if Erstanmeldung = true then LblSenden.Enabled := true;
+     CSSenden.Active := false;
 end;
 
 procedure TLehrer.EdtVornameLChange(Sender: TObject);
@@ -625,6 +620,12 @@ end;
 procedure TLehrer.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
      CSSenden.Close;
+end;
+
+procedure TLehrer.CSSendenDisconnect(Sender: TObject;
+  Socket: TCustomWinSocket);
+begin
+     Close;
 end;
 
 end.

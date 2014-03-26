@@ -109,7 +109,7 @@ begin
      Maskottchen.Zustand := 'Normal';
      Maskottchen.aktuellesBild := 0;
      Maskottchen.Normalzustand := true;
-     Maskottchen.Laenge := 27;
+     Maskottchen.Laenge := 81;
 
      LblUeberschrift.Font.Size := Screen.Height div 30;
      LblUeberschrift.Top := 2*Rand;
@@ -275,6 +275,23 @@ begin
           LblWeiter.Enabled := true;
           pruefenTimer.Enabled := false;
           EntfernungSpeichern;
+          case SuchKarte.Entfernung of
+          0..50:
+          begin
+               Maskottchen.FreuDich;
+               TMaskottchen.Interval := 200;
+          end;
+          51..100:
+          begin
+               Maskottchen.SeiTraurig;
+               TMaskottchen.Interval := 200;
+          end;
+          101..999:
+          begin
+               Maskottchen.Weine;
+               TMaskottchen.Interval := 50;
+          end;
+          end;
      end;
 end;
 
@@ -326,22 +343,27 @@ begin
           begin
                inc(aktuellesBild);
                if aktuellesBild <= laenge then
-                  BildLaden('Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif')
+                  BildLaden('Bilder\Maskottchen\' + Zustand + '\('+ IntToStr(aktuellesBild) + ').gif')
 
-          else aktuellesBild := 0;
+          else
+          begin
+               GehSchlafen;
+               TMaskottchen.Interval := 500;
+          end;
           end else
           begin
 
                if aktuellesBild <= laenge then
                begin
                     inc(aktuellesBild);
-                    BildLaden('Bilder\Maskottchen\' + Zustand + '\'+ IntToStr(aktuellesBild) + '.gif');
+                    BildLaden('Bilder\Maskottchen\' + Zustand + '\('+ IntToStr(aktuellesBild) + ').gif');
                end else
                begin
                     Zustand := 'Normal';
                     Normalzustand := true;
-                    laenge := 27;
+                    laenge := 81;
                     aktuellesBild := 0;
+                    TMaskottchen.Interval := 200;
                end;
           end;
      end;

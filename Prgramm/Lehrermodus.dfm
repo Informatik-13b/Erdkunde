@@ -19,8 +19,8 @@ object Lehrer: TLehrer
   PixelsPerInch = 96
   TextHeight = 13
   object LblSpielzeit: TLabel
-    Left = 72
-    Top = 288
+    Left = 24
+    Top = 96
     Width = 224
     Height = 55
     Caption = 'LblSpielzeit'
@@ -35,8 +35,8 @@ object Lehrer: TLehrer
     Transparent = True
   end
   object LblStatus: TLabel
-    Left = 72
-    Top = 168
+    Left = 32
+    Top = 192
     Width = 185
     Height = 55
     Caption = 'LblStauts'
@@ -249,6 +249,7 @@ object Lehrer: TLehrer
     ClientType = ctNonBlocking
     Port = 8080
     OnConnect = CSSendenConnect
+    OnDisconnect = CSSendenDisconnect
     OnRead = CSSendenRead
     OnError = CSSendenError
     Left = 72

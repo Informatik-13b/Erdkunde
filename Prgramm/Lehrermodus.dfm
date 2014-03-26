@@ -1,6 +1,6 @@
 object Lehrer: TLehrer
-  Left = 206
-  Top = 201
+  Left = 271
+  Top = 217
   Align = alClient
   BorderStyle = bsNone
   Caption = 'Lehrer'
@@ -150,6 +150,7 @@ object Lehrer: TLehrer
       Text = 'Vorname'
       OnChange = EdtVornameLChange
       OnClick = EdtVornameLClick
+      OnKeyPress = EdtVornameLKeyPress
     end
     object EdtNameL: TEdit
       Left = 16
@@ -169,6 +170,7 @@ object Lehrer: TLehrer
       Text = 'Name'
       OnChange = EdtNameLChange
       OnClick = EdtNameLClick
+      OnKeyPress = EdtNameLKeyPress
     end
     object STLoescheVornameL: TStaticText
       Left = 290

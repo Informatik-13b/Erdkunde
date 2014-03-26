@@ -53,6 +53,8 @@ object Karten: TKarten
     Width = 105
     Height = 105
     Cursor = crHandPoint
+    ParentShowHint = False
+    ShowHint = False
     Stretch = True
     OnClick = ImgKarteClick
     OnMouseMove = FormMouseMove

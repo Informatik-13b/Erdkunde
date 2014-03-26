@@ -111,6 +111,9 @@ begin
                                                                                        // Lexikondatei wird geladen und entschlüsselt
      DateiLaden;                                                         // die Sitchwörter werden gelistet
      StichwoerterAuflisten;
+
+     LBStichwoerter.ItemIndex := 0;
+     LBStichwoerter.OnClick(nil);
 end;
 
 procedure TFLexikon.StichwortAnpassen;

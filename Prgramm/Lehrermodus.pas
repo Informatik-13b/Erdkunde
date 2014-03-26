@@ -76,6 +76,8 @@ type
     procedure StatusAnpassen;
     procedure CSSendenDisconnect(Sender: TObject;
       Socket: TCustomWinSocket);
+    procedure EdtVornameLKeyPress(Sender: TObject; var Key: Char);
+    procedure EdtNameLKeyPress(Sender: TObject; var Key: Char);
   private
     { Private-Deklarationen }
     function IPpruefen(Text:string):boolean;
@@ -626,6 +628,16 @@ procedure TLehrer.CSSendenDisconnect(Sender: TObject;
   Socket: TCustomWinSocket);
 begin
      Close;
+end;
+
+procedure TLehrer.EdtVornameLKeyPress(Sender: TObject; var Key: Char);
+begin
+     if Key = ',' then Key := #0;
+end;
+
+procedure TLehrer.EdtNameLKeyPress(Sender: TObject; var Key: Char);
+begin
+     if Key = ',' then Key := #0;
 end;
 
 end.

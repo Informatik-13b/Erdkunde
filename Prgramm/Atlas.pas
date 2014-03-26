@@ -110,6 +110,8 @@ begin
      LBRegion.ItemIndex := 0;
      LBKartenTyp.ItemIndex := 0;
      LblUeberschrift.Caption := Region + ' - ' + Typ;
+
+     LBKartenTyp.OnClick(nil);
 end;
 
 

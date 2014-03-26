@@ -23,9 +23,10 @@ type
 
 var
   Autor: TAutor;
-  Sec:integer = 4;
-  x:integer = 10;
-  y:integer = -10;
+  Sec:integer = 5;
+  xR:integer;
+  yR:integer;
+  bewegen:boolean=false;
 
 implementation
 
@@ -41,14 +42,14 @@ procedure TAutor.EffektTimer(Sender: TObject);
 begin
      with Autor do
      begin
-          Width := Width - 8;
-          Height := Height - 8;
-          if Left <= 0 then x := 10;
-          if Left >= Screen.Width - Width then x := -10;
-          if Top <= 0 then y := 10;
-          if Top >= Screen.Height - Height then y := - 10;
-          Left := Left + 7*x;
-          Top := Top + 5*y;
+          Width := Width - 5;
+          Height := Height - 5;
+          if Left <= 0 then xR := xR*-1;
+          if Left >= Screen.Width - Width then xR := xR*-1;
+          if Top <= 0 then yR := yR*-1;
+          if Top >= Screen.Height - Height then yR := yR*-1;
+          Left := Left + 10*xR;
+          Top := Top + 10*yR;
           if Height <= 0 then close;
      end;
 end;
@@ -56,6 +57,9 @@ end;
 procedure TAutor.FormCreate(Sender: TObject);
 begin
      self.DoubleBuffered := true;
+     randomize;
+     xR := random(20)-10;
+     yR := random(20)-10;
 end;
 
 procedure TAutor.Image1Click(Sender: TObject);

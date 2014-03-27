@@ -64,6 +64,7 @@ object Karten: TKarten
     Top = 104
     Width = 121
     Height = 97
+    BorderStyle = bsNone
     Ctl3D = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -91,6 +92,7 @@ object Karten: TKarten
     Top = 112
     Width = 121
     Height = 97
+    BorderStyle = bsNone
     Ctl3D = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText

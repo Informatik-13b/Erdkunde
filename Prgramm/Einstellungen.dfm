@@ -1,6 +1,6 @@
 object Profil: TProfil
-  Left = 178
-  Top = 256
+  Left = 280
+  Top = 280
   Align = alClient
   BorderStyle = bsNone
   Caption = 'Profil'
@@ -38445,6 +38445,7 @@ object Profil: TProfil
       98A0}
     Stretch = True
     OnMouseDown = ImgFarbeMouseDown
+    OnMouseMove = FormMouseMove
   end
   object LblFarbe: TLabel
     Left = 208
@@ -38459,6 +38460,7 @@ object Profil: TProfil
     Font.Style = []
     ParentFont = False
     Transparent = True
+    OnMouseMove = FormMouseMove
   end
   object ShpResetE: TShape
     Left = 88
@@ -38565,6 +38567,7 @@ object Profil: TProfil
     ParentFont = False
     TabOrder = 0
     OnClick = StrGrdOrteClick
+    OnMouseMove = FormMouseMove
     RowHeights = (
       24
       24)

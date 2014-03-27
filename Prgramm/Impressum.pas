@@ -42,8 +42,8 @@ procedure TAutor.EffektTimer(Sender: TObject);
 begin
      with Autor do
      begin
-          Width := Width - 5;
-          Height := Height - 5;
+          Width := Width - 7;
+          Height := Height - 7;
           if Left <= 0 then xR := xR*-1;
           if Left >= Screen.Width - Width then xR := xR*-1;
           if Top <= 0 then yR := yR*-1;

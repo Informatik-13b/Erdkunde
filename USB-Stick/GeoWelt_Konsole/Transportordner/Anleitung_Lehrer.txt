@@ -1,1 +1,7 @@
-Hier wird die Hilfe für die Lehrerkonsole später stehen!!!
+
+Allgemeine Hinweise Lehrerkonsole
+Mehrere Schüler-Verbindungen am gleichen Computer funktionieren nicht, da die Eigenschaft des Servers „ActiveConnections“ benutzt wurde.
+ 
+Die IP-Adresse des Lehrers unter Windows 8 kann nicht richtig geladen werden! Alternative  zur Bestimmung: cmd: ipconfig
+
+Achten Sie während des Anlegens einer Klasse darauf, dass sich kein Schüler nach der Erstanmeldung direkt zum Spielen anmeldet. Das Anlegen muss erst beendet und der Spiele-Server geöffnet werden! 

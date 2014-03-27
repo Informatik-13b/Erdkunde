@@ -1,6 +1,6 @@
 object FLexikon: TFLexikon
-  Left = 201
-  Top = 236
+  Left = 178
+  Top = 249
   VertScrollBar.Smooth = True
   VertScrollBar.Size = 10
   Align = alClient

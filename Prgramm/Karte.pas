@@ -110,6 +110,7 @@ begin
      Maskottchen.aktuellesBild := 0;
      Maskottchen.Normalzustand := true;
      Maskottchen.Laenge := 81;
+     Maskottchen.Hintergrund := Themenfarbe2;
 
      LblUeberschrift.Font.Size := Screen.Height div 30;
      LblUeberschrift.Top := 2*Rand;

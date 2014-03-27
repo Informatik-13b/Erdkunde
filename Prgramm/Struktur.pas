@@ -24,10 +24,6 @@ type
     GBRegistrierung: TGroupBox;
     ShpBestaetigen: TShape;
     LblBestaetigen: TLabel;
-    EdtVorname: TEdit;
-    EdtName: TEdit;
-    STLoescheV: TStaticText;
-    StLoescheN: TStaticText;
     Registrierungstimer: TTimer;
     EdtRPasswort: TEdit;
     StLoescheRP: TStaticText;
@@ -67,18 +63,12 @@ type
     procedure ImgSichtbarPMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure RegistrierungstimerTimer(Sender: TObject);
-    procedure EdtVornameClick(Sender: TObject);
-    procedure EdtNameClick(Sender: TObject);
     procedure EdtRPasswortClick(Sender: TObject);
     procedure EdtRPasswortChange(Sender: TObject);
     procedure ImgSichtbarRPMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure ImgSichtbarRPMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure EdtVornameChange(Sender: TObject);
-    procedure EdtNameChange(Sender: TObject);
-    procedure STLoescheVClick(Sender: TObject);
-    procedure StLoescheNClick(Sender: TObject);
     procedure StLoescheRPClick(Sender: TObject);
     procedure LbLNeuMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -95,14 +85,6 @@ type
     procedure StLoescheBMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure StLoescheBMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure STLoescheVMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure STLoescheVMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure StLoescheNMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure StLoescheNMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure StLoescheRPMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -140,6 +122,10 @@ type
     procedure EdtPasswortKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure TMaskottchenTimer(Sender: TObject);
+    procedure EdtBenutzernameKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure EdtBenutzernameRKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private-Deklarationen }
   public
@@ -198,6 +184,7 @@ begin
           MenueObjekt[i].Themenfarbe1 := Themenfarbe1;                // und es wird ihnen die aktuellen Themenfarbe
           MenueObjekt[i].Themenfarbe2 := Themenfarbe2;                // übermittelt.
      end;
+     Maskottchen.Hintergrund := Themenfarbe1;
 end;
 
 procedure TMenue.FormCreate(Sender: TObject);
@@ -207,16 +194,6 @@ begin
      l := round(15*((Screen.Height / 3)) / 18);      // (zoom Größe)
 
      Rand := Screen.Height div 30;
-     Maskottchen := TImageMaskottchen.Create(self);
-     Maskottchen.Height := 17*Rand;
-     Maskottchen.Parent := self;
-     Maskottchen.Width := (Maskottchen.Height * 225) div 300;
-     Maskottchen.Left := Screen.Width div 2 - Maskottchen.Width div 2;
-     Maskottchen.Top := Screen.Height div 2 - Maskottchen.Height div 2 + Rand;
-     Maskottchen.Zustand := 'Normal';
-     Maskottchen.aktuellesBild := 0;
-     Maskottchen.Normalzustand := true;
-     Maskottchen.Laenge := 81;
 
      GBAnmeldung.Top := -GBAnmeldung.Height;
      GBAnmeldung.Left := Screen.Width div 2 - GBAnmeldung.Width div 2;
@@ -228,6 +205,17 @@ begin
      Themenfarbe2 := RGB(205,133,63);         //Programm ziehen... (sind noch nicht beschlossen)
      Self.DoubleBuffered := True;
      ScreenMitte := Point(Screen.Width div 2,Screen.Height div 2);    // Mitte des Screen wird ermittelt
+
+     Maskottchen := TImageMaskottchen.Create(self);
+     Maskottchen.Height := 17*Rand;
+     Maskottchen.Parent := self;
+     Maskottchen.Width := (Maskottchen.Height * 225) div 300;
+     Maskottchen.Left := Screen.Width div 2 - Maskottchen.Width div 2;
+     Maskottchen.Top := Screen.Height div 2 - Maskottchen.Height div 2 + Rand;
+     Maskottchen.Zustand := 'Normal';
+     Maskottchen.aktuellesBild := 0;
+     Maskottchen.Normalzustand := true;
+     Maskottchen.Laenge := 81;
 
      for i := 1 to 6 do
      begin                                                            // Die Menüobjekte werden vom Typ
@@ -544,25 +532,11 @@ begin
      if GBRegistrierung.Top < Screen.Height div 2 - GBRegistrierung.Height div 2 then
     begin
          GBRegistrierung.Top := GBRegistrierung.Top + 30;
-    end else Registrierungstimer.Enabled := false;
-end;
-
-procedure TMenue.EdtVornameClick(Sender: TObject);
-begin
-     if (EdtVorname.Font.Color = clGray) or (EdtVorname.Font.Color = clRed) then
-     begin
-          EdtVorname.SelStart := 0;
-          EdtVorname.Font.Color := clGray;
-     end;
-end;
-
-procedure TMenue.EdtNameClick(Sender: TObject);
-begin
-     if (EdtName.Font.Color = clGray) or (EdtName.Font.Color = clRed) then
-     begin
-          EdtName.SelStart := 0;
-          EdtName.Font.Color := clGray;
-     end;
+    end else
+    begin
+         Registrierungstimer.Enabled := false;
+         EdtBenutzernameR.SetFocus;
+    end;
 end;
 
 procedure TMenue.EdtRPasswortClick(Sender: TObject);
@@ -623,65 +597,6 @@ begin
      ImgSichtbarRP.Top := ImgSichtbarRP.Top - 2;
 end;
 
-procedure TMenue.EdtVornameChange(Sender: TObject);
-begin
-     with EdtVorname do
-     begin
-
-     if Text = '' then
-     begin
-          Text := 'Vorname';
-          Font.Color := clGray;
-     end;
-     if (Length(Text) = 8) and
-        (Font.Color = clGray) then
-     begin
-          Font.Color := clBlack;
-          Text := Text[1];
-          SelStart := 1;
-     end;
-     if (Font.Color = clGray) and
-        (Length(Text) < 7) then
-        Text := 'Vorname';
-
-     end;
-end;
-
-procedure TMenue.EdtNameChange(Sender: TObject);
-begin
-     with EdtName do
-     begin
-
-     if Text = '' then
-     begin
-          Text := 'Name';
-          Font.Color := clGray;
-     end;
-     if (Length(Text) = 5) and
-        (Font.Color = clGray) then
-     begin
-          Font.Color := clBlack;
-          Text := Text[1];
-          SelStart := 1;
-     end;
-     if (Font.Color = clGray) and
-        (Length(Text) < 4) then
-        Text := 'Name';
-
-     end;
-end;
-
-procedure TMenue.STLoescheVClick(Sender: TObject);
-begin
-     EdtVorname.Clear;
-end;
-
-
-procedure TMenue.StLoescheNClick(Sender: TObject);
-begin
-     EdtName.Clear;
-end;
-
 procedure TMenue.StLoescheRPClick(Sender: TObject);
 begin
      EdtRPasswort.Clear;
@@ -735,12 +650,12 @@ begin
           MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat');
           if Passwort = MDatei.Lines[0] then
           begin
-               MDatei.Lines[7] := 'online';
+               MDatei.Lines[5] := 'online';
                MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat');
                ZurueckATimer.Enabled := true;
                angemeldet := true;
-               Themenfarbe1 := StringToColor(MDatei.Lines[5]);
-               Themenfarbe2 := StringToColor(MDatei.Lines[6]);
+               Themenfarbe1 := StringToColor(MDatei.Lines[2]);
+               Themenfarbe2 := StringToColor(MDatei.Lines[3]);
                FarbenWechseln;
           end else
              Showmessage('Falsches Passwort');
@@ -777,30 +692,6 @@ begin
      STLoescheB.Top := STLoescheB.Top - 2;
 end;
 
-procedure TMenue.STLoescheVMouseDown(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
-begin
-     STLoescheV.Top := STLoescheV.Top + 2;
-end;
-
-procedure TMenue.STLoescheVMouseUp(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
-begin
-     STLoescheV.Top := STLoescheV.Top - 2;
-end;
-
-procedure TMenue.StLoescheNMouseDown(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
-begin
-     STLoescheN.Top := STLoescheN.Top + 2;
-end;
-
-procedure TMenue.StLoescheNMouseUp(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
-begin
-     STLoescheN.Top := STLoescheN.Top - 2;
-end;
-
 procedure TMenue.StLoescheRPMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
@@ -822,8 +713,7 @@ end;
 
 procedure TMenue.LblBestaetigenMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-var Benutzername, Vorname, Nachname,
-    Passwort: String;
+var Benutzername, Passwort: String;
     index:integer;
 begin
      LblBestaetigen.Top := LblBestaetigen.Top - 2;
@@ -834,16 +724,6 @@ begin
           EdtBenutzernameR.Font.Color := clRed;
           exit;
      end;
-     if (EdtVorname.Font.Color = clGray) or (EdtVorname.Font.Color = clRed) then
-     begin
-          EdtVorname.Font.Color := clRed;
-          exit;
-     end;
-     if (EdtName.Font.Color = clGray) or (EdtName.Font.Color = clRed) then
-     begin
-          EdtName.Font.Color := clRed;
-          exit;
-     end;
      if (EdtRPasswort.Font.Color = clGray) or (EdtRPAsswort.Font.Color = clRed) then
      begin
           EdtRPasswort.Font.Color := clRed;
@@ -851,8 +731,7 @@ begin
      end;
 
      Benutzername := EdtBenutzernameR.Text;
-     Vorname := EdtVorname.Text;
-     Nachname := EdtName.Text;
+
      Passwort := EdtRPasswort.Text;
 
      Mdatei.Clear;
@@ -868,18 +747,20 @@ begin
      MDatei.Lines.Clear;
      MDatei.Lines.Add(Verschluesseln(Passwort));      //0
      MDatei.Lines.Add(Verschluesseln(Benutzername));  //1
-     MDatei.Lines.Add(Verschluesseln(Vorname));       //2
-     MDatei.Lines.Add(Verschluesseln(Nachname));      //3
+     MDAtei.Lines.Add(ColorToString(Themenfarbe1));   //5->2
+     MDatei.Lines.Add(ColorToString(Themenfarbe2));   //6->3
      MDatei.Lines.Add('index');                       //4
-     MDAtei.Lines.Add(ColorToString(Themenfarbe1));   //5
-     MDatei.Lines.Add(ColorToString(Themenfarbe2));   //6
 
      MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat');
 
+     EdtBenutzername.Font.Color := clBlack;
+     EdtBenutzername.Text := Benutzername;
+     EdtPasswort.Font.Color := clBlack;
+     EdtPasswort.Text := Passwort;
+     EdtPasswort.PasswordChar := #7;
+     EdtPasswort.SetFocus;
 
      ZurueckRTimer.Enabled := true;
-
-
 end;
 
 procedure TMenue.LblZurueckMouseDown(Sender: TObject; Button: TMouseButton;
@@ -1147,7 +1028,7 @@ procedure TMenue.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
      if angemeldet then
      begin
-          MDatei.Lines[7] := 'offline';
+          MDatei.Lines[5] := 'offline';
           MDAtei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat');
           angemeldet := false;
      end;
@@ -1160,40 +1041,12 @@ end;
 
 procedure TMenue.EdtPasswortKeyDown(Sender: TObject; var Key: Word;
  Shift: TShiftState);
- var Benutzername, Passwort: String;
   begin
      If (Key = VK_RETURN) then
        begin
-          Benutzername := Verschluesseln(EdtBenutzername.Text);
-          Passwort := Verschluesseln(EdtPasswort.Text);
-
-          If not FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\index.dat') then
-           Exit;   // !!!
-
-     MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\index.dat');
-     Index := MDatei.Lines.IndexOf(Benutzername);
-
-     If FileExists(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat') then
-       begin
-          MDatei.Lines.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat');
-          if Passwort = MDatei.Lines[0] then
-          begin
-               MDatei.Lines[7] := 'online';
-               MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(index) + '.dat');
-               ZurueckATimer.Enabled := true;
-               angemeldet := true;
-               Themenfarbe1 := StringToColor(MDatei.Lines[5]);
-               Themenfarbe2 := StringToColor(MDatei.Lines[6]);
-               FarbenWechseln;
-          end else
-             Showmessage('Falsches Passwort');
-       end else
-     begin
-          Showmessage('Falscher Benutzername');
-          exit;
-     end;
+            LblAnmelden.OnMouseUp(nil,mbLeft,Shift,0,0);
        end;
-  end;
+ end;
 
 
 procedure TMenue.TMaskottchenTimer(Sender: TObject);
@@ -1226,6 +1079,24 @@ begin
                end;
           end;
      end;
+end;
+
+procedure TMenue.EdtBenutzernameKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+     If (Key = VK_RETURN) then
+       begin
+            LblAnmelden.OnMouseUp(nil,mbLeft,Shift,0,0);
+       end;
+end;
+
+procedure TMenue.EdtBenutzernameRKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+     If (Key = VK_RETURN) then
+       begin
+            LblBestaetigen.OnMouseUp(nil,mbLeft,Shift,0,0);
+       end;
 end;
 
 end.

@@ -1,6 +1,6 @@
 object Karten: TKarten
-  Left = 442
-  Top = 208
+  Left = 443
+  Top = 209
   Align = alClient
   BorderStyle = bsNone
   Caption = 'Karten'

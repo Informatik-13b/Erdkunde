@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ShapeSchliessen, ExtCtrls, Grids, ColorGrd, jpeg, ImageMaskottchen;
+  StdCtrls, ShapeSchliessen, ExtCtrls, Grids, ColorGrd, jpeg, ImageMaskottchen,
+  ShellAPI;
 
 type
     TOrte = record
@@ -20,6 +21,12 @@ type
     LblFarbe: TLabel;
     StrGrdOrte: TStringGrid;
     TMaskottchen: TTimer;
+    ShpResetE: TShape;
+    LblResetE: TLabel;
+    ShpResetF: TShape;
+    LblResetF: TLabel;
+    ShpResetL: TShape;
+    LblResetL: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
@@ -32,6 +39,19 @@ type
     procedure TMaskottchenTimer(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure StrGrdOrteClick(Sender: TObject);
+    procedure LblResetEMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    function DeleteFiles(const AFile: string): boolean;
+    procedure LblResetEMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure LblResetFMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure LblResetFMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure LblResetLMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure LblResetLMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private-Deklarationen }
   public
@@ -91,6 +111,7 @@ begin
      Maskottchen.aktuellesBild := 0;
      Maskottchen.Normalzustand := true;
      Maskottchen.Laenge := 81;
+     Maskottchen.Hintergrund := Themenfarbe2;
 
      ImgFarbe.Left := 2*Rand;
      ImgFarbe.Top := 3*Rand;
@@ -116,7 +137,7 @@ begin
           Left := ShpHintergrund2.Left + Rand;
           Width := ShpHintergrund2.Width - 2*Rand;
           Top := 2* Rand;
-          Height := ShpHintergrund2.Height - 2*Rand;
+          Height := ShpHintergrund2.Height - 4*Rand;
           DefaultColWidth := (Width-20) div 2;
           DefaultRowHeight := Height div 21;
           Font.Size := Rand div 2;
@@ -125,6 +146,52 @@ begin
           Font.Color := Themenfarbe1;
      end;
      OrteLaden;
+
+     ShpResetE.Top := 27*Rand;
+     ShpResetE.Height := 1*Rand;
+     ShpResetE.Left := ShpHintergrund2.Left + Rand;
+     ShpResetE.Width := (ShpHintergrund2.Width-4*Rand) div 3;
+     ShpResetE.Brush.Color := Themenfarbe1;
+     ShpResetE.Pen.Color := Themenfarbe2;
+
+     LblResetE.Font.Color := Themenfarbe2;
+     LblResetE.Font.Size := Screen.Height div 40;
+     LblResetE.Top := ShpResetE.Top + ShpResetE.Height div 2 - LblResetE.Height div 2;
+     LblResetE.Left := ShpResetE.Left + ShpResetE.Width div 2 - LblResetE.Width div 2;
+     while LblResetE.Width >= ShpResetE.Width do
+           LblResetE.Font.Size := LblResetE.Font.Size - 1;
+     LblResetE.Left := ShpResetE.Left + ShpResetE.Width div 2 - LblResetE.Width div 2;
+     LblResetE.Top := ShpResetE.Top + ShpResetE.Height div 2 - LblResetE.Height div 2;
+
+     ShpResetF.Top := 27*Rand;
+     ShpResetF.Height := 1*Rand;
+     ShpResetF.Left := ShpHintergrund2.Left+ ShpResetE.Width + 2*Rand;
+     ShpResetF.Width := (ShpHintergrund2.Width-4*Rand) div 3;
+     ShpResetF.Brush.Color := Themenfarbe1;
+     ShpResetF.Pen.Color := Themenfarbe2;
+
+     LblResetF.Font.Color := Themenfarbe2;
+     LblResetF.Font.Size := Screen.Height div 40;
+     LblResetF.Top := ShpResetF.Top + ShpResetF.Height div 2 - LblResetF.Height div 2;
+     LblResetF.Left := ShpResetF.Left + ShpResetF.Width div 2 - LblResetF.Width div 2;
+     LblResetF.Font.Size := LblResetE.Font.Size;
+     LblResetF.Left := ShpResetF.Left + ShpResetF.Width div 2 - LblResetF.Width div 2;
+     LblResetF.Top := ShpResetF.Top + ShpResetF.Height div 2 - LblResetF.Height div 2;
+
+     ShpResetL.Top := 27*Rand;
+     ShpResetL.Height := 1*Rand;
+     ShpResetL.Left := ShpHintergrund2.Left+ ShpResetE.Width + ShpResetF.Width + 3*Rand;
+     ShpResetL.Width := (ShpHintergrund2.Width-4*Rand) div 3;
+     ShpResetL.Brush.Color := Themenfarbe1;
+     ShpResetL.Pen.Color := Themenfarbe2;
+
+     LblResetL.Font.Color := Themenfarbe2;
+     LblResetL.Font.Size := Screen.Height div 40;
+     LblResetL.Top := ShpResetL.Top + ShpResetL.Height div 2 - LblResetL.Height div 2;
+     LblResetL.Left := ShpResetL.Left + ShpResetL.Width div 2 - LblResetL.Width div 2;
+     LblResetL.Font.Size := LblResetE.Font.Size;
+     LblResetL.Left := ShpResetL.Left + ShpResetL.Width div 2 - LblResetL.Width div 2;
+     LblResetL.Top := ShpResetL.Top + ShpResetL.Height div 2 - LblResetL.Height div 2;
 end;
 
 procedure TProfil.OrteLaden;
@@ -136,6 +203,7 @@ begin
      begin
           AssignFile(Orte_Datei,ExtractFilePath(ParamStr(0)) + 'OrtsKoordinaten\Orte_KoSy.dat');      // Datei wird geöffnetReset(Orte_Datei);
           Reset(Orte_Datei);
+          StrGrdOrte.RowCount := 2;
           for aktueller_record := 0 to FileSize(Orte_Datei)-1 do
           begin
                Seek(Orte_Datei,aktueller_record);
@@ -192,6 +260,24 @@ begin
           SchliessenShape.inaktiv := true;      // wird sein Status auf inaktiv gesetzt
           SchliessenShape.Repaint;              // und es zeichnet sich neu.
      end;
+     if ShpResetE.Brush.Color = Themenfarbe2 then
+     begin
+          ShpResetE.Brush.Color := Themenfarbe1;
+          LblResetE.Font.Color := Themenfarbe2;
+          ShpResetE.Pen.Color := Themenfarbe2;
+     end;
+     if ShpResetF.Brush.Color = Themenfarbe2 then
+     begin
+          ShpResetF.Brush.Color := Themenfarbe1;
+          LblResetF.Font.Color := Themenfarbe2;
+          ShpResetF.Pen.Color := Themenfarbe2;
+     end;
+     if ShpResetL.Brush.Color = Themenfarbe2 then
+     begin
+          ShpResetL.Brush.Color := Themenfarbe1;
+          LblResetL.Font.Color := Themenfarbe2;
+          ShpResetL.Pen.Color := Themenfarbe2;
+     end;
 end;
 
 
@@ -212,12 +298,22 @@ begin
      SchliessenShape.Themenfarbe1 := Themenfarbe1;
      SchliessenShape.Themenfarbe2 := Themenfarbe2;
      SchliessenShape.repaint;
+     ShpResetE.Brush.Color := Themenfarbe1;
+     ShpResetE.Pen.Color := Themenfarbe2;
+     LblResetE.Font.Color := Themenfarbe2;
+     ShpResetF.Brush.Color := Themenfarbe1;
+     ShpResetF.Pen.Color := Themenfarbe2;
+     LblResetF.Font.Color := Themenfarbe2;
+     ShpResetL.Brush.Color := Themenfarbe1;
+     ShpResetL.Pen.Color := Themenfarbe2;
+     LblResetL.Font.Color := Themenfarbe2;
+
      Menue.Themenfarbe1 := Themenfarbe1;
      Menue.Themenfarbe2 := Themenfarbe2;
      Menue.Farbenwechseln;
 
-     Menue.MDAtei.Lines[5] := ColorToString(Themenfarbe1);
-     Menue.MDatei.Lines[6] := ColorToString(Themenfarbe2);
+     Menue.MDAtei.Lines[2] := ColorToString(Themenfarbe1);
+     Menue.MDatei.Lines[3] := ColorToString(Themenfarbe2);
      Menue.MDatei.Lines.SaveTofile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(Menue.index) + '.dat');
 end;
 
@@ -302,6 +398,123 @@ procedure TProfil.StrGrdOrteClick(Sender: TObject);
 begin
       Maskottchen.FreuDich;                                                //Maskottchen Lacht
       TMaskottchen.Interval := 200;
+end;
+
+procedure TProfil.LblResetEMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+begin
+     if ShpResetE.Brush.Color = Themenfarbe1 then
+     begin
+          ShpResetE.Brush.Color := Themenfarbe2;
+          LblResetE.Font.Color := Themenfarbe1;
+          ShpResetE.Pen.Color := Themenfarbe1;
+     end;
+     if ShpResetF.Brush.Color = Themenfarbe2 then
+     begin
+          ShpResetF.Brush.Color := Themenfarbe1;
+          LblResetF.Font.Color := Themenfarbe2;
+          ShpResetF.Pen.Color := Themenfarbe2;
+     end;
+end;
+
+function TProfil.DeleteFiles(const AFile: string): boolean;
+var
+   sh: SHFileOpStruct;
+begin
+   ZeroMemory(@sh, SizeOf(sh));
+   with sh do
+   begin
+     Wnd := Application.Handle;
+     wFunc := FO_DELETE;
+     pFrom := PChar(AFile +#0);
+     fFlags := FOF_SILENT or FOF_NOCONFIRMATION;
+   end;
+   result := SHFileOperation(sh) = 0;
+
+end;
+
+procedure TProfil.LblResetEMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+var Text:string;
+begin
+     Text := 'Spielergebnisse wirklich zurücksetzen?' + #13 + #13 +
+             'Alle Spielfortschritte gehen verloren!';
+     if MessageDlg(Text,mtConfirmation,[mbYes,mbNo],0) = mrYes then
+
+     if DeleteFiles(ExtractFilePath(ParamStr(0)) + 'Dateien\Ergebnisse\' + IntToStr(Menue.index) + '.dat') then
+     begin
+          OrteLaden;
+     end;
+end;
+
+procedure TProfil.LblResetFMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+begin
+     if ShpResetF.Brush.Color = Themenfarbe1 then
+     begin
+          ShpResetF.Brush.Color := Themenfarbe2;
+          LblResetF.Font.Color := Themenfarbe1;
+          ShpResetF.Pen.Color := Themenfarbe1;
+     end;
+     if ShpResetE.Brush.Color = Themenfarbe2 then
+     begin
+          ShpResetE.Brush.Color := Themenfarbe1;
+          LblResetE.Font.Color := Themenfarbe2;
+          ShpResetE.Pen.Color := Themenfarbe2;
+     end;
+     if ShpResetL.Brush.Color = Themenfarbe2 then
+     begin
+          ShpResetL.Brush.Color := Themenfarbe1;
+          LblResetL.Font.Color := Themenfarbe2;
+          ShpResetL.Pen.Color := Themenfarbe2;
+     end;
+end;
+
+procedure TProfil.LblResetFMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+     if MessageDlg('Spielfarben wirklich zurücksetzen?',mtConfirmation,[mbYes,mbNo],0) = mrYes then
+     begin
+          Themenfarbe1 := RGB(244,164,96);
+          Themenfarbe2 := RGB(205,133,63);
+          FarbeWechseln;
+     end;
+end;
+
+procedure TProfil.LblResetLMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+begin
+     if ShpResetL.Brush.Color = Themenfarbe1 then
+     begin
+          ShpResetL.Brush.Color := Themenfarbe2;
+          LblResetL.Font.Color := Themenfarbe1;
+          ShpResetL.Pen.Color := Themenfarbe1;
+     end;
+     if ShpResetF.Brush.Color = Themenfarbe2 then
+     begin
+          ShpResetF.Brush.Color := Themenfarbe1;
+          LblResetF.Font.Color := Themenfarbe2;
+          ShpResetF.Pen.Color := Themenfarbe2;
+     end;
+end;
+
+procedure TProfil.LblResetLMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+var Text : string;
+begin
+     if Menue.MDatei.Lines[4] = 'index' then
+     begin
+          Showmessage('Dieser Benutzer ist noch keiner Klasse in der Leherkonsole '+
+                      'zugeordnet!');
+          exit;
+     end;
+     Text := 'Aktuelle Klasse wirklich verlassen?' + #13 + #13 +
+             'Dieser Benutzer muss sich für den Prüfmodus erneut an der Lehrerkonsole anmelden!';
+     if MessageDlg(Text,mtConfirmation,[mbYes,mbNo],0) = mrYes then
+     begin
+          Menue.MDatei.Lines[4] := 'index';
+          Menue.MDatei.Lines.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Dateien\' + IntToStr(Menue.index) + '.dat');
+     end;
 end;
 
 end.

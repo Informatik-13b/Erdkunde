@@ -1,6 +1,6 @@
 object Lehrer: TLehrer
-  Left = 271
-  Top = 217
+  Left = 272
+  Top = 218
   Align = alClient
   BorderStyle = bsNone
   Caption = 'Lehrer'
@@ -51,9 +51,9 @@ object Lehrer: TLehrer
     Transparent = True
   end
   object EdtIP: TEdit
-    Left = 600
-    Top = 208
-    Width = 241
+    Left = 344
+    Top = 96
+    Width = 337
     Height = 62
     AutoSelect = False
     Color = clBlack
@@ -64,6 +64,7 @@ object Lehrer: TLehrer
     Font.Name = 'Comic Sans MS'
     Font.Style = []
     HideSelection = False
+    MaxLength = 15
     ParentCtl3D = False
     ParentFont = False
     TabOrder = 0

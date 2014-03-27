@@ -83,6 +83,7 @@ begin
      Maskottchen.aktuellesBild := 0;
      Maskottchen.Normalzustand := true;
      Maskottchen.Laenge := 81;
+     Maskottchen.Hintergrund := Themenfarbe2;
 
      ImgKarte.Left :=  2*Rand + ShpHintergrund1.Width;
      ImgKarte.Top := 5*Rand;

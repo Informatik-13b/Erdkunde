@@ -22,6 +22,7 @@ type
       Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer); override;
+    procedure Click; override;
   public
     { Public-Deklarationen }
     constructor Create(AOwner:TComponent);override;
@@ -41,6 +42,7 @@ procedure Register;
 implementation
 
 var dif:integer;
+    geschlossen:boolean=false;
 
 constructor TShapeSchliessen.Create(AOwner:TComponent);
 begin
@@ -60,7 +62,6 @@ var Textposition:integer;
     Text:string;
 begin
      inherited Paint;
-     Text := 'zum Schließen, Fenster nach unten ziehen';
      if inaktiv = true then
      begin
           Brush.Style := bsClear;       // im inaktiven Modus macht sich das Shape unsichtbar
@@ -72,8 +73,18 @@ begin
           Font.Charset := Ansi_Charset;
           Font.Name := 'Comic Sans MS';
           Font.Size := (3*Height)div 5 ;
-          Textposition := TextWidth(Text) div 2;
-          TextOut((Screen.Width div 2)-Textposition,0,Text);
+          {if Fenster <> Menue then
+          begin
+               Text := 'zum Menü zurückkehren';
+               Textposition := Screen.Width div 2 - (TextWidth(Text) div 2);
+               TextOut(Textposition,0,Text);
+          end; }
+          Text := 'runterziehen';
+          Textposition := 10;
+          TextOut(Textposition,0,Text);
+          Text := 'X';
+          Textposition := Screen.Width - TextWidth(Text)-10;
+          TextOut(Textposition,0,Text);
      end;
      end else
      begin
@@ -87,10 +98,25 @@ begin
           Font.Charset := Ansi_Charset;
           Font.Name := 'Comic Sans MS';
           Font.Size := (3*Height)div 5 ;
-          Textposition := TextWidth(Text) div 2;
-          TextOut((Screen.Width div 2)-Textposition,0,Text);
+          {if Fenster <> Menue then
+          begin
+               Text := 'zum Menü zurückkehren';
+               Textposition := Screen.Width div 2 - (TextWidth(Text) div 2);
+               TextOut(Textposition,0,Text);
+          end; }
+          Text := 'runterziehen';
+          Textposition := 10;
+          TextOut(Textposition,0,Text);
+          Text := 'X';
+          Textposition := Screen.Width - TextWidth(Text)-10;
+          TextOut(Textposition,0,Text);
      end;
      end;
+end;
+
+procedure TShapeSchliessen.Click;
+begin
+    
 end;
 
 procedure TShapeSchliessen.MouseMove(Shift: TShiftState; X,
@@ -121,14 +147,23 @@ begin
      begin                                   // wird aus dem Vollbild "Normalbild".
           Fenster.Align := alNone;           // Dies muss geschehen, damit man das Fenster
      end;                                    // in Höhe und Breite verändern kann!
-
-
 end;
 
 procedure TShapeSchliessen.MouseUp(Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
+     if Fenster.Top < 10 then
+     begin
+     repeat;
+            Fenster.Top := Fenster.Top + 30;      // verschwindet das Fenster "langsam" nach unten
+            sleep(1);
+     until Fenster.Top > Screen.Height;
+     Fenster.Close;
+     geschlossen := true;
+     end;
+
      inherited MouseUp(Button,Shift,X,Y);
+     if geschlossen = true then exit;
 
      if Mouse.CursorPos.y > Screen.Height div 2 then   // Wenn die Maus (das Fenster)
      begin                                             // unter die Bildschirmmitte gezogen wurde,

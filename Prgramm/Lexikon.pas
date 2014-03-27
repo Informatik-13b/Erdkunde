@@ -86,6 +86,7 @@ begin
      Maskottchen.aktuellesBild := 0;
      Maskottchen.Normalzustand := true;
      Maskottchen.Laenge := 81;
+     Maskottchen.Hintergrund := Themenfarbe2;
 
      LBStichwoerter.Left := ShpHintergrund2.Left + Rand;
      LBStichwoerter.Top  := 2*Rand;
@@ -111,6 +112,9 @@ begin
                                                                                        // Lexikondatei wird geladen und entschlüsselt
      DateiLaden;                                                         // die Sitchwörter werden gelistet
      StichwoerterAuflisten;
+
+     LBStichwoerter.ItemIndex := 0;
+     LBStichwoerter.OnClick(nil);
 end;
 
 procedure TFLexikon.StichwortAnpassen;

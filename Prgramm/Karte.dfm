@@ -1,6 +1,6 @@
 object Orte_Finden: TOrte_Finden
-  Left = 205
-  Top = 276
+  Left = 207
+  Top = 277
   Align = alClient
   BorderStyle = bsNone
   Caption = 'Orte_Finden'
@@ -96,10 +96,10 @@ object Orte_Finden: TOrte_Finden
   object LblWeiter: TLabel
     Left = 72
     Top = 224
-    Width = 37
+    Width = 104
     Height = 15
     Cursor = crHandPoint
-    Caption = 'Weiter'
+    Caption = 'nächste Zufallsstadt'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11

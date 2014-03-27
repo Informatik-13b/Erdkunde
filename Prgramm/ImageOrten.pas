@@ -20,7 +20,7 @@ type
     Orte_Datei : file of TOrte;
   protected
     { Protected-Deklarationen }
-    procedure MouseUp(Button: TMouseButton;
+    procedure MouseDown(Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer); override;
   public
     { Public-Deklarationen }
@@ -89,14 +89,14 @@ begin
      CloseFile(Orte_Datei);                                                                  // die Datei wird wieder geschlossen
 end;
 
-procedure TImageOrten.MouseUp(Button: TMouseButton;                                          //MouseUp
+procedure TImageOrten.MouseDown(Button: TMouseButton;                                          //MouseUp
       Shift: TShiftState; X, Y: Integer);
 var
 dif_x, dif_y : real;
 dif_hoch:real;
 EntfernungTemp:real;
 begin
-     if geklickt = false then
+     if (geklickt = false) and (Enabled = true) then
      begin
 
      dif_hoch := (2600 / Height);     // Verhältniss zwischen der Bildgröße und der tatsächlichen Auflösung, die vom Bildschrimformat abhängt

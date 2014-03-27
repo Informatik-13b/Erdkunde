@@ -1,6 +1,6 @@
 object FLexikon: TFLexikon
-  Left = 201
-  Top = 236
+  Left = 318
+  Top = 188
   VertScrollBar.Smooth = True
   VertScrollBar.Size = 10
   Align = alClient
@@ -48,27 +48,32 @@ object FLexikon: TFLexikon
     Font.Name = 'Comic Sans MS'
     Font.Style = []
     ParentFont = False
+    OnMouseMove = FormMouseMove
   end
   object LBStichwoerter: TListBox
     Left = 312
     Top = 200
     Width = 121
-    Height = 97
+    Height = 84
     Cursor = crHandPoint
     TabStop = False
+    BorderStyle = bsNone
     Columns = 2
     Ctl3D = False
+    ExtendedSelect = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -20
     Font.Name = 'Comic Sans MS'
     Font.Style = []
+    IntegralHeight = True
     ItemHeight = 28
     ParentCtl3D = False
     ParentFont = False
     Sorted = True
     TabOrder = 0
     OnClick = LBStichwoerterClick
+    OnMouseMove = FormMouseMove
   end
   object REdtDatei: TRichEdit
     Left = 712
@@ -103,6 +108,7 @@ object FLexikon: TFLexikon
     ScrollBars = ssVertical
     TabOrder = 2
     WantReturns = False
+    OnMouseMove = FormMouseMove
   end
   object TMaskottchen: TTimer
     Interval = 200

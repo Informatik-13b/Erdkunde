@@ -1,6 +1,6 @@
 object Karten: TKarten
-  Left = 442
-  Top = 208
+  Left = 443
+  Top = 209
   Align = alClient
   BorderStyle = bsNone
   Caption = 'Karten'
@@ -53,6 +53,8 @@ object Karten: TKarten
     Width = 105
     Height = 105
     Cursor = crHandPoint
+    ParentShowHint = False
+    ShowHint = False
     Stretch = True
     OnClick = ImgKarteClick
     OnMouseMove = FormMouseMove
@@ -62,6 +64,7 @@ object Karten: TKarten
     Top = 104
     Width = 121
     Height = 97
+    BorderStyle = bsNone
     Ctl3D = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -89,6 +92,7 @@ object Karten: TKarten
     Top = 112
     Width = 121
     Height = 97
+    BorderStyle = bsNone
     Ctl3D = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText

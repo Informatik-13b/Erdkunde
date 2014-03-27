@@ -1,6 +1,6 @@
 object Autor: TAutor
-  Left = 320
-  Top = 174
+  Left = 419
+  Top = 208
   BorderStyle = bsNone
   Caption = 'Autor'
   ClientHeight = 500

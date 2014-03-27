@@ -13,12 +13,17 @@ type
   protected
     { Protected-Deklarationen }
     procedure Click; override;
+    procedure MouseMove(Shift: TShiftState; X,
+      Y: Integer); override;
+    function Pixelfarbe(const x,y:integer):TColor;
   public
     { Public-Deklarationen }
     Zustand:string;
     laenge:integer;
     aktuellesBild:integer;
     Normalzustand:boolean;
+    Hintergrund:TColor;
+    property OnMouseMove;
     constructor Create(AOwner:TComponent);override;
     procedure BildLaden(Datei: string);
     procedure GehSchlafen;
@@ -44,17 +49,40 @@ begin
      Cursor := crHandPoint;
 end;
 
+procedure TImageMaskottchen.MouseMove(Shift:TShiftState;X,Y:integer);
+begin
+     inherited MouseMove(Shift,X,Y);
+     if Pixelfarbe(x+Left,y+Top) = Hintergrund then
+     begin
+          Cursor := crDefault;
+     end else Cursor := crHandpoint;
+end;
+
+function TImageMaskottchen.Pixelfarbe(const x,y: integer): TColor;
+var
+   c:TCanvas;
+begin
+   c:=TCanvas.create;                                      // Diese Funktion gibt die Pixelfarbe
+   c.handle:= GetWindowDC(GetDesktopWindow);               // an der Stelle x,y zurück
+   result:=getpixel(c.handle,x,y);
+   c.free;
+end;
+
 procedure TImageMaskottchen.Click;
 var i:byte;
 begin
      inherited Click;
+     if Cursor = crHandpoint then
+     begin
+
      randomize;
-     i := random(4);
+     i := random(3);
      case i of
      0: SeiTraurig;
      1: Weine;
-     2: GehSchlafen;
-     3: FreuDich;
+     2: FreuDich;
+     end;
+
      end;
 end;
 

@@ -64,6 +64,7 @@ object Karten: TKarten
     Top = 104
     Width = 121
     Height = 97
+    Cursor = crHandPoint
     BorderStyle = bsNone
     Ctl3D = False
     Font.Charset = DEFAULT_CHARSET
@@ -92,6 +93,7 @@ object Karten: TKarten
     Top = 112
     Width = 121
     Height = 97
+    Cursor = crHandPoint
     BorderStyle = bsNone
     Ctl3D = False
     Font.Charset = DEFAULT_CHARSET

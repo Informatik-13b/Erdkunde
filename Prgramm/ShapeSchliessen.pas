@@ -73,13 +73,7 @@ begin
           Font.Charset := Ansi_Charset;
           Font.Name := 'Comic Sans MS';
           Font.Size := (3*Height)div 5 ;
-          {if Fenster <> Menue then
-          begin
-               Text := 'zum Menü zurückkehren';
-               Textposition := Screen.Width div 2 - (TextWidth(Text) div 2);
-               TextOut(Textposition,0,Text);
-          end; }
-          Text := 'runterziehen';
+          Text := 'runterziehen oder klicken';
           Textposition := 10;
           TextOut(Textposition,0,Text);
           Text := 'X';
@@ -98,13 +92,7 @@ begin
           Font.Charset := Ansi_Charset;
           Font.Name := 'Comic Sans MS';
           Font.Size := (3*Height)div 5 ;
-          {if Fenster <> Menue then
-          begin
-               Text := 'zum Menü zurückkehren';
-               Textposition := Screen.Width div 2 - (TextWidth(Text) div 2);
-               TextOut(Textposition,0,Text);
-          end; }
-          Text := 'runterziehen';
+          Text := 'runterziehen oder Klicken';
           Textposition := 10;
           TextOut(Textposition,0,Text);
           Text := 'X';

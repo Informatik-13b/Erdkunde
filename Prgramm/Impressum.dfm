@@ -21,6 +21,7 @@ object Autor: TAutor
     Top = 0
     Width = 500
     Height = 500
+    Cursor = crHandPoint
     Align = alClient
     Picture.Data = {
       0A544A504547496D61676529200100FFD8FFE000104A46494600010101004800
